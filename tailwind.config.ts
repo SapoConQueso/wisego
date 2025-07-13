@@ -61,7 +61,10 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				/* WiseGO Custom Colors */
+				'wisego-blue': 'hsl(var(--wisego-blue))',
+				'wisego-orange': 'hsl(var(--wisego-orange))'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
