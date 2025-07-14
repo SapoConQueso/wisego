@@ -5,6 +5,7 @@ import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
 import { Menu, Search, ChevronRight, Info, BarChart3, MapPin, MessageSquare, User } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useUser } from "@/hooks/useUser";
 
 interface MainDashboardProps {
   onNavigate: (view: string) => void;
@@ -12,18 +13,19 @@ interface MainDashboardProps {
 
 export function MainDashboard({ onNavigate }: MainDashboardProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const { getUserDisplayName } = useUser();
 
   const menuItems = [
     { icon: Info, label: "Conócenos", action: () => onNavigate("about") },
-    { icon: BarChart3, label: "Comparar", action: () => {} },
-    { icon: MapPin, label: "Mapa", action: () => {} },
-    { icon: MessageSquare, label: "Chatbots", action: () => {} },
+    { icon: BarChart3, label: "Comparar", action: () => onNavigate("compare") },
+    { icon: MapPin, label: "Mapa", action: () => onNavigate("map") },
+    { icon: MessageSquare, label: "Chatbots", action: () => onNavigate("chatbots") },
   ];
 
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-primary text-white p-4 flex items-center justify-between">
+      <header className="bg-primary text-primary-foreground p-4 flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <WiseGoLogo size="sm" />
           <span className="text-xl font-bold">WiseGO!</span>
@@ -33,7 +35,7 @@ export function MainDashboard({ onNavigate }: MainDashboardProps) {
           <ThemeToggle />
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
+              <Button variant="ghost" size="sm" className="text-primary-foreground hover:bg-primary-foreground/10">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
@@ -68,13 +70,14 @@ export function MainDashboard({ onNavigate }: MainDashboardProps) {
             placeholder="Buscar..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-white border-0 rounded-full"
+            className="pl-10 bg-background border-0 rounded-full"
           />
           <Button 
             size="sm"
+            onClick={() => onNavigate("profile")}
             className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-4"
           >
-            Santiago L. 👤
+            {getUserDisplayName()} 👤
           </Button>
         </div>
       </div>
@@ -82,7 +85,7 @@ export function MainDashboard({ onNavigate }: MainDashboardProps) {
       {/* Main Content */}
       <main className="p-4 space-y-6">
         {/* Hero Section */}
-        <div className="bg-primary text-white rounded-xl p-6 text-center relative overflow-hidden">
+        <div className="bg-primary text-primary-foreground rounded-xl p-6 text-center relative overflow-hidden">
           <div className="absolute inset-0 opacity-10">
             <svg width="100%" height="100%" viewBox="0 0 400 200">
               <path d="M0,100 Q100,50 200,100 T400,100 L400,200 L0,200 Z" fill="white" />
@@ -105,10 +108,19 @@ export function MainDashboard({ onNavigate }: MainDashboardProps) {
                 ¡Ya están abiertas las inscripciones para el Open ULima!
               </p>
               <div className="space-y-2">
-                <Button size="sm" className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full">
+                <Button 
+                  size="sm" 
+                  onClick={() => window.open("https://www.ulima.edu.pe", "_blank")}
+                  className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full"
+                >
                   ¡Inscripciones aquí!
                 </Button>
-                <Button variant="outline" size="sm" className="rounded-full">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => onNavigate("about")}
+                  className="rounded-full"
+                >
                   Más información
                 </Button>
               </div>
@@ -117,7 +129,7 @@ export function MainDashboard({ onNavigate }: MainDashboardProps) {
         </div>
 
         {/* Event Card */}
-        <div className="bg-white rounded-xl border overflow-hidden">
+        <div className="bg-card text-card-foreground rounded-xl border overflow-hidden">
           <div className="bg-gradient-to-r from-orange-400 to-red-500 p-6 text-white">
             <div className="text-4xl font-bold mb-2">
               <span className="border-2 border-white rounded px-2 py-1">OPEN</span>
