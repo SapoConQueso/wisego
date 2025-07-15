@@ -14,8 +14,21 @@ import { ProfilePage } from "@/components/ProfilePage";
 
 type ViewType = "login" | "register" | "birthdate" | "dashboard" | "about" | "chatbots" | "vocational-test" | "ai-chat" | "compare" | "map" | "profile";
 
+export interface UserSession {
+  isLoggedIn: boolean;
+  isGuest: boolean;
+  username: string;
+  email?: string;
+}
+
 const Index = () => {
   const [currentView, setCurrentView] = useState<ViewType>("login");
+  const [userSession, setUserSession] = useState<UserSession>({
+    isLoggedIn: false,
+    isGuest: false,
+    username: "",
+    email: ""
+  });
 
   const renderCurrentView = () => {
     switch (currentView) {
@@ -24,7 +37,24 @@ const Index = () => {
           <BackgroundPattern className="flex items-center justify-center p-4">
             <LoginForm 
               onSwitchToRegister={() => setCurrentView("register")}
-              onLogin={() => setCurrentView("dashboard")}
+              onLogin={() => {
+                setUserSession({
+                  isLoggedIn: true,
+                  isGuest: false,
+                  username: "usuario",
+                  email: "usuario@example.com"
+                });
+                setCurrentView("dashboard");
+              }}
+              onGuestAccess={() => {
+                setUserSession({
+                  isLoggedIn: true,
+                  isGuest: true,
+                  username: "Invitado",
+                  email: ""
+                });
+                setCurrentView("dashboard");
+              }}
             />
           </BackgroundPattern>
         );
@@ -50,7 +80,19 @@ const Index = () => {
         );
       
       case "dashboard":
-        return <MainDashboard onNavigate={(view) => setCurrentView(view as ViewType)} />;
+        return <MainDashboard 
+          onNavigate={(view) => setCurrentView(view as ViewType)} 
+          userSession={userSession}
+          onLogout={() => {
+            setUserSession({
+              isLoggedIn: false,
+              isGuest: false,
+              username: "",
+              email: ""
+            });
+            setCurrentView("login");
+          }}
+        />;
       
       case "about":
         return <AboutPage onBack={() => setCurrentView("dashboard")} />;

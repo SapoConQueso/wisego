@@ -3,17 +3,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
-import { Menu, Search, ChevronRight, Info, BarChart3, MapPin, MessageSquare, User } from "lucide-react";
+import { Menu, Search, ChevronRight, Info, BarChart3, MapPin, MessageSquare, User, LogOut } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useUser } from "@/hooks/useUser";
+import { UserSession } from "@/pages/Index";
 
 interface MainDashboardProps {
   onNavigate: (view: string) => void;
+  userSession: UserSession;
+  onLogout: () => void;
 }
 
-export function MainDashboard({ onNavigate }: MainDashboardProps) {
+export function MainDashboard({ onNavigate, userSession, onLogout }: MainDashboardProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const { getUserDisplayName } = useUser();
 
   const menuItems = [
     { icon: Info, label: "Conócenos", action: () => onNavigate("about") },
@@ -70,15 +71,45 @@ export function MainDashboard({ onNavigate }: MainDashboardProps) {
             placeholder="Buscar..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-background border-0 rounded-full"
+            className="pl-10 pr-44 bg-background border-0 rounded-full"
           />
-          <Button 
-            size="sm"
-            onClick={() => onNavigate("profile")}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-4"
-          >
-            {getUserDisplayName()} 👤
-          </Button>
+          {userSession.isLoggedIn ? (
+            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+              <Button 
+                size="sm"
+                onClick={() => onNavigate("profile")}
+                className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-4"
+              >
+                {userSession.username} 👤
+              </Button>
+              <Button 
+                size="sm"
+                variant="outline"
+                onClick={onLogout}
+                className="rounded-full px-3"
+              >
+                <LogOut className="h-4 w-4" />
+              </Button>
+            </div>
+          ) : (
+            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+              <Button 
+                size="sm"
+                variant="outline"
+                onClick={() => onNavigate("login")}
+                className="rounded-full px-3"
+              >
+                Iniciar Sesión
+              </Button>
+              <Button 
+                size="sm"
+                onClick={() => onNavigate("register")}
+                className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-3"
+              >
+                Registrarse
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 

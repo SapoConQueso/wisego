@@ -8,9 +8,10 @@ import { WiseGoLogo } from "./WiseGoLogo";
 interface LoginFormProps {
   onSwitchToRegister: () => void;
   onLogin: () => void;
+  onGuestAccess: () => void;
 }
 
-export function LoginForm({ onSwitchToRegister, onLogin }: LoginFormProps) {
+export function LoginForm({ onSwitchToRegister, onLogin, onGuestAccess }: LoginFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -77,13 +78,23 @@ export function LoginForm({ onSwitchToRegister, onLogin }: LoginFormProps) {
           ¿Has olvidado tu contraseña?
         </p>
         
-        <Button
-          variant="ghost" 
-          onClick={onSwitchToRegister}
-          className="w-full text-white hover:text-white hover:bg-white/10 rounded-full"
-        >
-          Registrarse
-        </Button>
+        <div className="space-y-2">
+          <Button
+            variant="ghost" 
+            onClick={onSwitchToRegister}
+            className="w-full text-white hover:text-white hover:bg-white/10 rounded-full"
+          >
+            Registrarse
+          </Button>
+          
+          <Button
+            variant="outline" 
+            onClick={onGuestAccess}
+            className="w-full bg-white/10 text-white border-white/30 hover:bg-white/20 rounded-full"
+          >
+            Acceder como Invitado
+          </Button>
+        </div>
       </div>
     </div>
   );

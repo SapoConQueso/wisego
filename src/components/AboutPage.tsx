@@ -61,14 +61,12 @@ export function AboutPage({ onBack }: AboutPageProps) {
             ¿Por qué elegir <span className="text-accent">WiseGo</span>?
           </h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. 
-            Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt 
-            nostrud amet est dolore exercitation enim irure ad minim. Irure magna veniam 
-            minim nulla adipiscing. Lorem aliqua culpa fugiat est elit elit dolor tempor culpa. 
-            Aliqua culpa consequat mollit. Irure Lorem occaecat lorem ullamco consectetur velit 
-            adipiscing esse nulla aliquip adipiscing aute. Adipiscing culpa consectetur mollit 
-            adipiscing esse sint elit aliquip dolore tempor amet aliqua culpa consectetur velit 
-            adipiscing elit dolor enim culpa dolor.
+            WiseGo te ayuda a encontrar tu carrera y universidad ideal utilizando inteligencia artificial 
+            de manera responsable. Nuestra plataforma es práctica, confiable y personalizable, diseñada 
+            para adaptarse a tus necesidades específicas. Con herramientas avanzadas de análisis y 
+            recomendaciones personalizadas, te guiamos en cada paso hacia el logro de tus metas académicas 
+            y profesionales. Creemos en el poder de la tecnología para transformar la educación y hacer 
+            que las decisiones importantes de tu futuro sean más informadas y acertadas.
           </p>
         </section>
 
@@ -76,9 +74,11 @@ export function AboutPage({ onBack }: AboutPageProps) {
         <section className="bg-primary text-white rounded-xl p-4">
           <h3 className="text-lg font-bold mb-3">NUESTRA VISIÓN</h3>
           <p className="text-sm leading-relaxed">
-            Ser Lorem officia aute anim incididunt tempor fugiat commodo anim magna veniam 
-            commodo exercitation fugiat mollit elit tempor sunt officia anim irure occaecat 
-            lorem ipsum ipsum deserunt labore cupidatat culpa aliquip dolore officia anim culpa.
+            Ser la plataforma líder en orientación educativa impulsada por inteligencia artificial, 
+            revolucionando la forma en que los estudiantes descubren su potencial y toman decisiones 
+            sobre su futuro académico y profesional. Aspiramos a crear un mundo donde cada persona 
+            pueda encontrar su camino ideal hacia el éxito, eliminando las barreras de información 
+            y facilitando el acceso a oportunidades educativas de calidad.
           </p>
         </section>
 
@@ -86,9 +86,11 @@ export function AboutPage({ onBack }: AboutPageProps) {
         <section className="bg-accent text-accent-foreground rounded-xl p-4">
           <h3 className="text-lg font-bold mb-3">NUESTRA MISIÓN</h3>
           <p className="text-sm leading-relaxed">
-            Sit Lorem officia aute anim incididunt tempor fugiat commodo anim magna 
-            veniam commodo magna tempor anim ipsum voluptate nulla nulla esse duis culpa 
-            tempor amet aliqua culpa cupidatat culpa anim culpa.
+            Empoderar a los estudiantes con herramientas inteligentes y personalizadas que les 
+            permitan tomar decisiones informadas sobre su educación superior. Utilizamos la 
+            inteligencia artificial de manera ética y responsable para analizar aptitudes, 
+            intereses y objetivos, ofreciendo recomendaciones precisas y actualizadas sobre 
+            carreras y universidades que se alineen con el perfil único de cada usuario.
           </p>
         </section>
 
