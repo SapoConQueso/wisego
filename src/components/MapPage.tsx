@@ -20,6 +20,9 @@ interface University {
   careers: string[];
   rating: number;
   distance: string;
+  phone: string;
+  website: string;
+  description: string;
 }
 
 const universities: University[] = [
@@ -28,45 +31,60 @@ const universities: University[] = [
     name: "Universidad de Lima",
     district: "Santiago de Surco",
     type: "Privada",
-    careers: ["Ingeniería", "Administración", "Comunicaciones", "Psicología"],
+    careers: ["Ingeniería de Sistemas", "Administración", "Comunicaciones", "Psicología", "Derecho", "Arquitectura"],
     rating: 4.5,
-    distance: "2.5 km"
+    distance: "2.5 km",
+    phone: "(01) 437-6767",
+    website: "www.ulima.edu.pe",
+    description: "Universidad privada reconocida por su excelencia académica y moderna infraestructura."
   },
   {
     id: "2",
     name: "Universidad Nacional Mayor de San Marcos",
     district: "Lima",
     type: "Pública",
-    careers: ["Medicina", "Derecho", "Ingeniería", "Letras"],
+    careers: ["Medicina", "Derecho", "Ingeniería", "Letras", "Economía", "Ciencias Sociales"],
     rating: 4.3,
-    distance: "5.2 km"
+    distance: "5.2 km",
+    phone: "(01) 619-7000",
+    website: "www.unmsm.edu.pe",
+    description: "La universidad más antigua de América, fundada en 1551, líder en investigación y formación académica."
   },
   {
     id: "3",
     name: "Universidad Peruana Cayetano Heredia",
     district: "San Martín de Porres",
     type: "Privada",
-    careers: ["Medicina", "Veterinaria", "Psicología", "Enfermería"],
+    careers: ["Medicina", "Veterinaria", "Psicología", "Enfermería", "Odontología", "Biología"],
     rating: 4.7,
-    distance: "8.1 km"
+    distance: "8.1 km",
+    phone: "(01) 319-0000",
+    website: "www.upch.edu.pe",
+    description: "Universidad especializada en ciencias de la salud con alto prestigio nacional e internacional."
   },
   {
     id: "4",
     name: "Universidad del Pacífico",
     district: "Jesús María",
     type: "Privada",
-    careers: ["Administración", "Economía", "Ingeniería"],
+    careers: ["Administración", "Economía", "Ingeniería Empresarial", "Contabilidad"],
     rating: 4.6,
-    distance: "4.3 km"
+    distance: "4.3 km",
+    phone: "(01) 219-0100",
+    website: "www.up.edu.pe",
+    description: "Universidad líder en ciencias empresariales y económicas del Perú."
   },
   {
     id: "5",
     name: "Pontificia Universidad Católica del Perú",
     district: "San Miguel",
     type: "Privada",
-    careers: ["Ingeniería", "Derecho", "Arquitectura", "Arte"],
+    careers: ["Ingeniería", "Derecho", "Arquitectura", "Arte", "Ciencias Sociales", "Letras"],
     rating: 4.4,
-    distance: "6.8 km"
+    distance: "6.8 km",
+    phone: "(01) 626-2000",
+    website: "www.pucp.edu.pe",
+    description: "Universidad católica con tradición en formación integral y responsabilidad social."
   }
 ];
 
@@ -74,6 +92,7 @@ export function MapPage({ onNavigate }: MapPageProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
   const [selectedDistrict, setSelectedDistrict] = useState<string>("all");
+  const [selectedUniversity, setSelectedUniversity] = useState<University | null>(null);
 
   const districts = [...new Set(universities.map(u => u.district))];
 
@@ -95,39 +114,39 @@ export function MapPage({ onNavigate }: MapPageProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-primary text-primary-foreground p-4 flex items-center justify-between">
+      <header className="bg-gradient-to-r from-primary to-accent text-primary-foreground p-4 flex items-center justify-between animate-fade-in">
         <div className="flex items-center space-x-3">
           <Button 
             variant="ghost" 
             size="sm" 
             onClick={() => onNavigate("dashboard")}
-            className="text-primary-foreground hover:bg-primary-foreground/10"
+            className="text-primary-foreground hover:bg-primary-foreground/10 transition-all duration-200 hover:scale-105"
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <WiseGoLogo size="sm" />
-          <span className="text-xl font-bold">Mapa de Universidades</span>
+          <span className="text-xl font-title font-bold gradient-text">Explorar Universidades</span>
         </div>
         <ThemeToggle />
       </header>
 
       <main className="p-4 space-y-6">
         {/* Search and Filters */}
-        <div className="max-w-4xl mx-auto space-y-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+        <div className="max-w-4xl mx-auto space-y-4 animate-slide-up">
+          <div className="relative group">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 group-focus-within:text-primary transition-colors" />
             <Input
               type="text"
-              placeholder="Buscar universidades o carreras..."
+              placeholder="Buscar universidades, carreras, distritos..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+              className="pl-10 font-body transition-all duration-300 focus:ring-2 focus:ring-primary/20 hover:shadow-md"
             />
           </div>
 
-          <div className="flex space-x-4">
+          <div className="flex flex-wrap gap-4">
             <Select value={filterType} onValueChange={setFilterType}>
-              <SelectTrigger className="w-48">
+              <SelectTrigger className="w-48 hover-lift">
                 <Filter className="h-4 w-4 mr-2" />
                 <SelectValue placeholder="Tipo de universidad" />
               </SelectTrigger>
@@ -139,7 +158,7 @@ export function MapPage({ onNavigate }: MapPageProps) {
             </Select>
 
             <Select value={selectedDistrict} onValueChange={setSelectedDistrict}>
-              <SelectTrigger className="w-48">
+              <SelectTrigger className="w-48 hover-lift">
                 <MapPin className="h-4 w-4 mr-2" />
                 <SelectValue placeholder="Distrito" />
               </SelectTrigger>
@@ -154,22 +173,31 @@ export function MapPage({ onNavigate }: MapPageProps) {
         </div>
 
         {/* Map Placeholder */}
-        <div className="max-w-4xl mx-auto">
-          <Card>
+        <div className="max-w-4xl mx-auto animate-scale-in">
+          <Card className="hover-lift">
             <CardContent className="p-0">
-              <div className="h-64 bg-muted rounded-lg flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20"></div>
+              <div className="h-80 bg-gradient-to-br from-primary/10 to-accent/10 rounded-lg flex items-center justify-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 animate-pulse"></div>
                 <div className="text-center z-10">
-                  <MapPin className="h-12 w-12 text-primary mx-auto mb-2" />
-                  <p className="text-lg font-semibold">Mapa Interactivo</p>
-                  <p className="text-sm text-muted-foreground">Vista de universidades en Lima</p>
+                  <MapPin className="h-16 w-16 text-primary mx-auto mb-4 animate-float" />
+                  <h3 className="text-2xl font-title font-bold gradient-text mb-2">Mapa Interactivo</h3>
+                  <p className="text-sm font-subtitle text-muted-foreground">Explora universidades en Lima y sus alrededores</p>
                 </div>
                 
-                {/* Simulated map markers */}
-                <div className="absolute top-16 left-20 w-3 h-3 bg-primary rounded-full animate-pulse"></div>
-                <div className="absolute top-32 right-24 w-3 h-3 bg-accent rounded-full animate-pulse"></div>
-                <div className="absolute bottom-20 left-32 w-3 h-3 bg-primary rounded-full animate-pulse"></div>
-                <div className="absolute bottom-24 right-20 w-3 h-3 bg-accent rounded-full animate-pulse"></div>
+                {/* Animated map markers */}
+                {filteredUniversities.slice(0, 5).map((_, index) => (
+                  <div 
+                    key={index}
+                    className={`absolute w-4 h-4 rounded-full animate-pulse ${
+                      index % 2 === 0 ? 'bg-primary' : 'bg-accent'
+                    }`}
+                    style={{
+                      top: `${20 + (index * 15)}%`,
+                      left: `${15 + (index * 18)}%`,
+                      animationDelay: `${index * 0.5}s`
+                    }}
+                  />
+                ))}
               </div>
             </CardContent>
           </Card>
@@ -177,57 +205,69 @@ export function MapPage({ onNavigate }: MapPageProps) {
 
         {/* Universities List */}
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold">Universidades Cercanas</h2>
-            <span className="text-sm text-muted-foreground">
-              {filteredUniversities.length} universidades encontradas
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-3xl font-title font-bold gradient-text">Universidades Encontradas</h2>
+            <span className="text-sm font-subtitle text-muted-foreground bg-muted px-3 py-1 rounded-full">
+              {filteredUniversities.length} resultados
             </span>
           </div>
 
-          <div className="space-y-4">
-            {filteredUniversities.map((university) => (
-              <Card key={university.id} className="hover:shadow-md transition-shadow">
+          <div className="space-y-6">
+            {filteredUniversities.map((university, index) => (
+              <Card 
+                key={university.id} 
+                className="hover-lift cursor-pointer animate-fade-in"
+                style={{ animationDelay: `${index * 0.1}s` }}
+                onClick={() => setSelectedUniversity(university)}
+              >
                 <CardHeader>
                   <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle className="text-lg">{university.name}</CardTitle>
-                      <CardDescription className="flex items-center space-x-1">
-                        <MapPin className="h-4 w-4" />
+                    <div className="flex-1">
+                      <CardTitle className="text-xl font-title font-bold text-primary hover:text-accent transition-colors">
+                        {university.name}
+                      </CardTitle>
+                      <CardDescription className="flex items-center space-x-2 mt-2 font-subtitle">
+                        <MapPin className="h-4 w-4 text-accent" />
                         <span>{university.district}</span>
                       </CardDescription>
+                      <p className="text-sm font-body text-muted-foreground mt-2">{university.description}</p>
                     </div>
-                    <div className="flex space-x-2">
-                      <Badge className={getTypeColor(university.type)}>
+                    <div className="flex flex-col items-end space-y-2">
+                      <Badge className={`${getTypeColor(university.type)} font-subtitle`}>
                         {university.type}
                       </Badge>
                       <div className="flex items-center space-x-1">
                         <Navigation className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">{university.distance}</span>
+                        <span className="text-sm font-body text-muted-foreground">{university.distance}</span>
                       </div>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-2">Carreras destacadas:</p>
+                      <p className="text-sm font-subtitle font-medium text-muted-foreground mb-3">Carreras disponibles:</p>
                       <div className="flex flex-wrap gap-2">
                         {university.careers.map((career, index) => (
-                          <Badge key={index} variant="outline" className="text-xs">
+                          <Badge 
+                            key={index} 
+                            variant="outline" 
+                            className="text-xs font-body hover:bg-primary hover:text-primary-foreground transition-all duration-200 cursor-pointer"
+                          >
                             {career}
                           </Badge>
                         ))}
                       </div>
                     </div>
 
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center space-x-1">
-                        <span className="text-sm text-muted-foreground">Calificación:</span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm font-subtitle text-muted-foreground">Calificación:</span>
                         <div className="flex">
                           {[...Array(5)].map((_, i) => (
                             <span
                               key={i}
-                              className={`text-sm ${
+                              className={`text-lg transition-colors ${
                                 i < Math.floor(university.rating) 
                                   ? 'text-yellow-400' 
                                   : 'text-gray-300'
@@ -237,14 +277,29 @@ export function MapPage({ onNavigate }: MapPageProps) {
                             </span>
                           ))}
                         </div>
-                        <span className="text-sm text-muted-foreground">({university.rating})</span>
+                        <span className="text-sm font-body text-muted-foreground">({university.rating})</span>
                       </div>
 
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm font-subtitle text-muted-foreground">Contacto:</span>
+                        <span className="text-sm font-body">{university.phone}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between items-center pt-4 border-t">
+                      <span className="text-sm font-body text-muted-foreground">{university.website}</span>
                       <div className="space-x-2">
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className="hover:bg-accent hover:text-accent-foreground transition-all duration-200"
+                        >
                           Ver en mapa
                         </Button>
-                        <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
+                        <Button 
+                          size="sm" 
+                          className="bg-gradient-to-r from-primary to-accent hover:shadow-lg transition-all duration-200"
+                        >
                           Más información
                         </Button>
                       </div>
