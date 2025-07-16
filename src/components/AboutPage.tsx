@@ -46,7 +46,7 @@ export function AboutPage({ onBack }: AboutPageProps) {
         {/* ¿Por qué elegir WiseGo? */}
         <section>
           <h2 className="text-lg font-bold mb-3">
-            {t.about.whyChoose.replace('WiseGo', '')} <span className="text-accent">WiseGo</span>
+            ¿Por qué elegir <span className="text-accent">WiseGO!</span>?
           </h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             {t.about.whyChooseText}
