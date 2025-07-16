@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
-import { ArrowLeft, User, Shield, Globe, Settings, CreditCard, Bell, Check, Edit, Crown, Plus } from "lucide-react";
+import { ArrowLeft, User, Shield, Globe, Settings, CreditCard, Bell, Check, Edit, Crown, Plus, Trash2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,39 +10,24 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { useUser } from "@/hooks/useUser";
-import { UserSession } from "@/hooks/useSession";
+import { useAuth } from "@/components/AuthProvider";
 
 interface ProfilePageProps {
   onNavigate: (view: string) => void;
-  userSession: UserSession;
 }
 
-export function ProfilePage({ onNavigate, userSession }: ProfilePageProps) {
-  const { user, updateUser } = useUser();
-  const [isVerified, setIsVerified] = useState(user.isVerified);
+export function ProfilePage({ onNavigate }: ProfilePageProps) {
+  const { user, session, isSubscribed, createCheckout, signOut, openCustomerPortal } = useAuth();
+  const [isVerified, setIsVerified] = useState(false);
   const [dniValue, setDniValue] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("es");
   const [notifications, setNotifications] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
-  const [tempName, setTempName] = useState(user.name);
+  const [tempName, setTempName] = useState(user?.user_metadata?.full_name || "");
   const [fontSize, setFontSize] = useState("normal");
   const [contrast, setContrast] = useState("normal");
-  const [isPremium, setIsPremium] = useState(false);
-  const [randomUser, setRandomUser] = useState({ name: "", email: "" });
   const { toast } = useToast();
-
-  // Generate random user on component mount
-  useEffect(() => {
-    const names = ["Carlos Mendoza", "Ana García", "Luis Rodriguez", "María Fernández", "Diego Silva", "Sofía Torres"];
-    const emails = ["carlos.mendoza@email.com", "ana.garcia@email.com", "luis.rodriguez@email.com", "maria.fernandez@email.com", "diego.silva@email.com", "sofia.torres@email.com"];
-    const randomIndex = Math.floor(Math.random() * names.length);
-    setRandomUser({
-      name: names[randomIndex],
-      email: emails[randomIndex]
-    });
-  }, []);
 
   // Apply theme changes based on settings
   useEffect(() => {
@@ -82,7 +67,6 @@ export function ProfilePage({ onNavigate, userSession }: ProfilePageProps) {
   const handleVerifyDNI = () => {
     if (dniValue.length === 8 && /^\d+$/.test(dniValue)) {
       setIsVerified(true);
-      updateUser({ isVerified: true });
       toast({
         title: "Verificación exitosa",
         description: "Tu cuenta ha sido verificada correctamente.",
@@ -98,12 +82,46 @@ export function ProfilePage({ onNavigate, userSession }: ProfilePageProps) {
 
   const handleSaveName = () => {
     if (tempName.trim()) {
-      updateUser({ name: tempName.trim() });
       setIsEditingName(false);
       toast({
         title: "Nombre actualizado",
         description: "Tu nombre ha sido actualizado correctamente.",
       });
+    }
+  };
+
+  const handleSubscribe = async () => {
+    try {
+      await createCheckout();
+      toast({
+        title: "Redirigiendo a Stripe",
+        description: "Te redirigiremos a la página de pago segura.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "No se pudo iniciar el proceso de suscripción.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (confirm("¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.")) {
+      try {
+        await signOut();
+        toast({
+          title: "Cuenta eliminada",
+          description: "Tu cuenta ha sido eliminada exitosamente.",
+        });
+        onNavigate("login");
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "No se pudo eliminar la cuenta.",
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -155,26 +173,24 @@ export function ProfilePage({ onNavigate, userSession }: ProfilePageProps) {
                         <Check className="h-4 w-4" />
                       </Button>
                     </div>
-                  ) : (
-                     <>
-                       <CardTitle className="text-2xl">
-                         {userSession.isGuest ? "Invitado" : (randomUser.name || user.name)}
-                       </CardTitle>
-                       {!userSession.isGuest && (
-                         <Button 
-                           variant="ghost" 
-                           size="sm"
-                           onClick={() => setIsEditingName(true)}
-                         >
-                           <Edit className="h-4 w-4" />
-                         </Button>
-                       )}
-                     </>
-                   )}
+                   ) : (
+                      <>
+                        <CardTitle className="text-2xl">
+                          {user?.user_metadata?.full_name || user?.email || "Usuario"}
+                        </CardTitle>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => setIsEditingName(true)}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      </>
+                    )}
                  </div>
-                 <CardDescription>
-                   {userSession.isGuest ? "Usuario invitado" : `Estudiante • Registro: ${user.registrationDate.toLocaleDateString('es-ES', { year: 'numeric', month: 'long' })}`}
-                 </CardDescription>
+                  <CardDescription>
+                    Estudiante • Registro: {user?.created_at ? new Date(user.created_at).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' }) : 'Reciente'}
+                  </CardDescription>
                 <div className="flex items-center space-x-2 mt-2">
                   {isVerified ? (
                     <Badge className="bg-green-100 text-green-800 border-green-300">
@@ -191,7 +207,7 @@ export function ProfilePage({ onNavigate, userSession }: ProfilePageProps) {
         </Card>
 
         {/* Account Verification */}
-        {!userSession.isGuest && (
+        {user && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
@@ -364,15 +380,15 @@ export function ProfilePage({ onNavigate, userSession }: ProfilePageProps) {
         </Card>
 
         {/* Premium Subscription */}
-        {!userSession.isGuest && (
-          <Card className={isPremium ? "border-wisego-orange bg-gradient-to-r from-wisego-orange/5 to-primary/5" : ""}>
+        {user && (
+          <Card className={isSubscribed ? "border-wisego-orange bg-gradient-to-r from-wisego-orange/5 to-primary/5" : ""}>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Crown className="h-5 w-5 text-wisego-orange" />
                   <span>Suscripción Premium</span>
                 </div>
-                {isPremium && (
+                {isSubscribed && (
                   <Badge className="bg-wisego-orange text-white">
                     <Crown className="h-3 w-3 mr-1" />
                     Premium
@@ -380,14 +396,14 @@ export function ProfilePage({ onNavigate, userSession }: ProfilePageProps) {
                 )}
               </CardTitle>
               <CardDescription>
-                {isPremium 
+                {isSubscribed 
                   ? "Tienes acceso completo a Test Vocacional IA y Chat IA General"
                   : "Accede a Test Vocacional IA y Chat IA General por S/25 al mes"
                 }
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {!isPremium ? (
+              {!isSubscribed ? (
                 <>
                   <div className="space-y-3">
                     <h4 className="font-semibold text-primary">Beneficios Premium:</h4>
@@ -417,30 +433,9 @@ export function ProfilePage({ onNavigate, userSession }: ProfilePageProps) {
                       <span className="text-2xl font-bold text-wisego-orange">S/25</span>
                     </div>
                     
-                    <div className="space-y-3">
-                      <Label>Información de pago</Label>
-                      <div className="space-y-2">
-                        <Input 
-                          placeholder="Número de tarjeta" 
-                          className="text-center tracking-wider"
-                        />
-                        <div className="grid grid-cols-2 gap-2">
-                          <Input placeholder="MM/AA" />
-                          <Input placeholder="CVV" />
-                        </div>
-                        <Input placeholder="Nombre del titular" />
-                      </div>
-                    </div>
-                    
                     <Button 
                       className="w-full bg-wisego-orange hover:bg-wisego-orange/90 text-white"
-                      onClick={() => {
-                        setIsPremium(true);
-                        toast({
-                          title: "¡Suscripción activada!",
-                          description: "Ahora tienes acceso completo a todas las funciones premium.",
-                        });
-                      }}
+                      onClick={handleSubscribe}
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Suscribirse a Premium
@@ -460,7 +455,11 @@ export function ProfilePage({ onNavigate, userSession }: ProfilePageProps) {
                 <p className="text-sm text-muted-foreground mb-4">
                   Disfruta de todos los beneficios exclusivos
                 </p>
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => openCustomerPortal()}
+                >
                   Gestionar Suscripción
                 </Button>
               </div>
@@ -469,29 +468,33 @@ export function ProfilePage({ onNavigate, userSession }: ProfilePageProps) {
           </Card>
         )}
 
-        {/* Account Actions */}
+        {/* Account Management */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Settings className="h-5 w-5" />
               <span>Gestión de Cuenta</span>
             </CardTitle>
+            <CardDescription>
+              Opciones para gestionar tu cuenta
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Button variant="outline" className="w-full justify-start">
-              <Bell className="h-4 w-4 mr-2" />
-              Preferencias de notificación
+            <Button 
+              variant="outline" 
+              className="w-full"
+              onClick={() => setIsEditingName(true)}
+            >
+              <Edit className="h-4 w-4 mr-2" />
+              Cambiar Nombre
             </Button>
-            <Button variant="outline" className="w-full justify-start">
-              <Shield className="h-4 w-4 mr-2" />
-              Privacidad y seguridad
-            </Button>
-            <Button variant="outline" className="w-full justify-start">
-              <User className="h-4 w-4 mr-2" />
-              Editar información personal
-            </Button>
-            <Button variant="destructive" className="w-full justify-start mt-4">
-              Cerrar sesión
+            <Button 
+              variant="destructive" 
+              className="w-full"
+              onClick={handleDeleteAccount}
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Eliminar Cuenta
             </Button>
           </CardContent>
         </Card>

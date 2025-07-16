@@ -99,14 +99,6 @@ function AppContent() {
       case "profile":
         return <ProfilePage 
           onNavigate={(view) => setCurrentView(view as ViewType)}
-          userSession={{
-            isLoggedIn: !!user,
-            isGuest: false,
-            username: user?.user_metadata?.username || user?.email?.split('@')[0] || 'Usuario',
-            email: user?.email,
-            isPremium: isSubscribed,
-            apiKeys: {}
-          }}
         />;
       
       case "community":
