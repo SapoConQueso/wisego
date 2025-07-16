@@ -2,11 +2,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
-import { ArrowLeft, MapPin, Search, Filter, Navigation } from "lucide-react";
+import { ArrowLeft, MapPin, Search, Filter, Navigation, Crown, Lock, Eye, Building, Users, Calendar, Route } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
 
 interface MapPageProps {
   onNavigate: (view: string) => void;
@@ -93,6 +94,16 @@ export function MapPage({ onNavigate }: MapPageProps) {
   const [filterType, setFilterType] = useState<string>("all");
   const [selectedDistrict, setSelectedDistrict] = useState<string>("all");
   const [selectedUniversity, setSelectedUniversity] = useState<University | null>(null);
+  const [isPremium, setIsPremium] = useState(false); // Simular estado premium
+  const { toast } = useToast();
+
+  const handlePremiumAction = (action: string) => {
+    toast({
+      title: "Funcionalidad Premium",
+      description: `${action} está disponible solo para usuarios Premium. ¡Suscríbete por S/25 al mes!`,
+      variant: "destructive",
+    });
+  };
 
   const districts = [...new Set(universities.map(u => u.district))];
 
@@ -131,6 +142,32 @@ export function MapPage({ onNavigate }: MapPageProps) {
       </header>
 
       <main className="p-4 space-y-6">
+        {/* Premium Banner */}
+        {!isPremium && (
+          <div className="max-w-4xl mx-auto animate-fade-in">
+            <Card className="border-wisego-orange bg-gradient-to-r from-wisego-orange/5 to-primary/5">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <Crown className="h-6 w-6 text-wisego-orange" />
+                    <div>
+                      <h3 className="font-title font-bold text-primary">¡Desbloquea Funciones Premium!</h3>
+                      <p className="text-sm text-muted-foreground">Tours virtuales 3D y mapas interactivos por S/25/mes</p>
+                    </div>
+                  </div>
+                  <Button 
+                    className="bg-wisego-orange hover:bg-wisego-orange/90 text-white"
+                    onClick={() => onNavigate("profile")}
+                  >
+                    <Crown className="h-4 w-4 mr-2" />
+                    Suscribirse
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* Search and Filters */}
         <div className="max-w-4xl mx-auto space-y-4 animate-slide-up">
           <div className="relative group">
@@ -288,12 +325,13 @@ export function MapPage({ onNavigate }: MapPageProps) {
 
                     <div className="flex justify-between items-center pt-4 border-t">
                       <span className="text-sm font-body text-muted-foreground">{university.website}</span>
-                      <div className="space-x-2">
+                      <div className="flex flex-wrap gap-2">
                         <Button 
                           variant="outline" 
                           size="sm"
                           className="hover:bg-accent hover:text-accent-foreground transition-all duration-200"
                         >
+                          <Building className="h-4 w-4 mr-1" />
                           Ver en mapa
                         </Button>
                         <Button 
@@ -302,6 +340,51 @@ export function MapPage({ onNavigate }: MapPageProps) {
                         >
                           Más información
                         </Button>
+                        {isPremium ? (
+                          <>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              className="bg-wisego-orange/10 text-wisego-orange border-wisego-orange hover:bg-wisego-orange hover:text-white"
+                            >
+                              <Eye className="h-4 w-4 mr-1" />
+                              Tour Virtual
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              className="bg-primary/10 text-primary border-primary hover:bg-primary hover:text-white"
+                            >
+                              <Route className="h-4 w-4 mr-1" />
+                              Recorrido 3D
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              className="relative opacity-60"
+                              onClick={() => handlePremiumAction("Tour Virtual")}
+                            >
+                              <Lock className="h-4 w-4 mr-1" />
+                              <Eye className="h-4 w-4 mr-1" />
+                              Tour Virtual
+                              <Crown className="h-3 w-3 ml-1 text-wisego-orange" />
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              className="relative opacity-60"
+                              onClick={() => handlePremiumAction("Recorrido 3D")}
+                            >
+                              <Lock className="h-4 w-4 mr-1" />
+                              <Route className="h-4 w-4 mr-1" />
+                              Recorrido 3D
+                              <Crown className="h-3 w-3 ml-1 text-wisego-orange" />
+                            </Button>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>

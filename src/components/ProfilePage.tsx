@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
-import { ArrowLeft, User, Shield, Globe, Settings, CreditCard, Bell, Check, Edit } from "lucide-react";
+import { ArrowLeft, User, Shield, Globe, Settings, CreditCard, Bell, Check, Edit, Crown, Plus } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,7 +25,57 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
   const [darkMode, setDarkMode] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
   const [tempName, setTempName] = useState(user.name);
+  const [fontSize, setFontSize] = useState("normal");
+  const [contrast, setContrast] = useState("normal");
+  const [isPremium, setIsPremium] = useState(false);
+  const [randomUser, setRandomUser] = useState({ name: "", email: "" });
   const { toast } = useToast();
+
+  // Generate random user on component mount
+  useEffect(() => {
+    const names = ["Carlos Mendoza", "Ana García", "Luis Rodriguez", "María Fernández", "Diego Silva", "Sofía Torres"];
+    const emails = ["carlos.mendoza@email.com", "ana.garcia@email.com", "luis.rodriguez@email.com", "maria.fernandez@email.com", "diego.silva@email.com", "sofia.torres@email.com"];
+    const randomIndex = Math.floor(Math.random() * names.length);
+    setRandomUser({
+      name: names[randomIndex],
+      email: emails[randomIndex]
+    });
+  }, []);
+
+  // Apply theme changes based on settings
+  useEffect(() => {
+    const root = document.documentElement;
+    if (darkMode) {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [darkMode]);
+
+  // Apply font size changes
+  useEffect(() => {
+    const root = document.documentElement;
+    switch(fontSize) {
+      case "small":
+        root.style.fontSize = "14px";
+        break;
+      case "large":
+        root.style.fontSize = "18px";
+        break;
+      default:
+        root.style.fontSize = "16px";
+    }
+  }, [fontSize]);
+
+  // Apply contrast changes
+  useEffect(() => {
+    const root = document.documentElement;
+    if (contrast === "high") {
+      root.style.filter = "contrast(1.5)";
+    } else {
+      root.style.filter = "none";
+    }
+  }, [contrast]);
 
   const handleVerifyDNI = () => {
     if (dniValue.length === 8 && /^\d+$/.test(dniValue)) {
@@ -104,16 +154,16 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                       </Button>
                     </div>
                   ) : (
-                    <>
-                      <CardTitle className="text-2xl">{user.name}</CardTitle>
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        onClick={() => setIsEditingName(true)}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                    </>
+                     <>
+                       <CardTitle className="text-2xl">{randomUser.name || user.name}</CardTitle>
+                       <Button 
+                         variant="ghost" 
+                         size="sm"
+                         onClick={() => setIsEditingName(true)}
+                       >
+                         <Edit className="h-4 w-4" />
+                       </Button>
+                     </>
                   )}
                 </div>
                 <CardDescription>
@@ -259,19 +309,153 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
             <div className="space-y-2">
               <Label>Tamaño de texto</Label>
               <div className="grid grid-cols-3 gap-2">
-                <Button variant="outline" size="sm">Pequeño</Button>
-                <Button variant="default" size="sm">Normal</Button>
-                <Button variant="outline" size="sm">Grande</Button>
+                <Button 
+                  variant={fontSize === "small" ? "default" : "outline"} 
+                  size="sm"
+                  onClick={() => setFontSize("small")}
+                >
+                  Pequeño
+                </Button>
+                <Button 
+                  variant={fontSize === "normal" ? "default" : "outline"} 
+                  size="sm"
+                  onClick={() => setFontSize("normal")}
+                >
+                  Normal
+                </Button>
+                <Button 
+                  variant={fontSize === "large" ? "default" : "outline"} 
+                  size="sm"
+                  onClick={() => setFontSize("large")}
+                >
+                  Grande
+                </Button>
               </div>
             </div>
 
             <div className="space-y-2">
               <Label>Contraste</Label>
               <div className="grid grid-cols-2 gap-2">
-                <Button variant="default" size="sm">Normal</Button>
-                <Button variant="outline" size="sm">Alto</Button>
+                <Button 
+                  variant={contrast === "normal" ? "default" : "outline"} 
+                  size="sm"
+                  onClick={() => setContrast("normal")}
+                >
+                  Normal
+                </Button>
+                <Button 
+                  variant={contrast === "high" ? "default" : "outline"} 
+                  size="sm"
+                  onClick={() => setContrast("high")}
+                >
+                  Alto
+                </Button>
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Premium Subscription */}
+        <Card className={isPremium ? "border-wisego-orange bg-gradient-to-r from-wisego-orange/5 to-primary/5" : ""}>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Crown className="h-5 w-5 text-wisego-orange" />
+                <span>Suscripción Premium</span>
+              </div>
+              {isPremium && (
+                <Badge className="bg-wisego-orange text-white">
+                  <Crown className="h-3 w-3 mr-1" />
+                  Premium
+                </Badge>
+              )}
+            </CardTitle>
+            <CardDescription>
+              {isPremium 
+                ? "Tienes acceso completo a chatbots y mapas universitarios"
+                : "Accede a chatbots especializados y mapas interactivos de universidades por S/25 al mes"
+              }
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {!isPremium ? (
+              <>
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-primary">Beneficios Premium:</h4>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-center space-x-2">
+                      <Check className="h-4 w-4 text-green-500" />
+                      <span>Acceso a chatbots especializados por universidad</span>
+                    </li>
+                    <li className="flex items-center space-x-2">
+                      <Check className="h-4 w-4 text-green-500" />
+                      <span>Mapas interactivos 3D de universidades</span>
+                    </li>
+                    <li className="flex items-center space-x-2">
+                      <Check className="h-4 w-4 text-green-500" />
+                      <span>Tours virtuales completos</span>
+                    </li>
+                    <li className="flex items-center space-x-2">
+                      <Check className="h-4 w-4 text-green-500" />
+                      <span>Recomendaciones personalizadas</span>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div className="space-y-4 p-4 bg-muted/50 rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <span className="text-lg font-semibold">Precio mensual:</span>
+                    <span className="text-2xl font-bold text-wisego-orange">S/25</span>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <Label>Información de pago</Label>
+                    <div className="space-y-2">
+                      <Input 
+                        placeholder="Número de tarjeta" 
+                        className="text-center tracking-wider"
+                      />
+                      <div className="grid grid-cols-2 gap-2">
+                        <Input placeholder="MM/AA" />
+                        <Input placeholder="CVV" />
+                      </div>
+                      <Input placeholder="Nombre del titular" />
+                    </div>
+                  </div>
+                  
+                  <Button 
+                    className="w-full bg-wisego-orange hover:bg-wisego-orange/90 text-white"
+                    onClick={() => {
+                      setIsPremium(true);
+                      toast({
+                        title: "¡Suscripción activada!",
+                        description: "Ahora tienes acceso completo a todas las funciones premium.",
+                      });
+                    }}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Suscribirse a Premium
+                  </Button>
+                  
+                  <p className="text-xs text-muted-foreground text-center">
+                    Puedes cancelar en cualquier momento. Se renovará automáticamente cada mes.
+                  </p>
+                </div>
+              </>
+            ) : (
+              <div className="text-center py-4">
+                <div className="w-16 h-16 bg-wisego-orange/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Crown className="h-8 w-8 text-wisego-orange" />
+                </div>
+                <p className="text-wisego-orange font-medium">¡Eres usuario Premium!</p>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Disfruta de todos los beneficios exclusivos
+                </p>
+                <Button variant="outline" size="sm">
+                  Gestionar Suscripción
+                </Button>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -279,7 +463,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              <CreditCard className="h-5 w-5" />
+              <Settings className="h-5 w-5" />
               <span>Gestión de Cuenta</span>
             </CardTitle>
           </CardHeader>
