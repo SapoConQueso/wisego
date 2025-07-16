@@ -1,14 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
+import { LanguageSelector } from "./LanguageSelector";
 import { Menu, Search, ChevronRight, Info, BarChart3, MapPin, MessageSquare, User, LogOut, Users, X, Crown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useSearch } from "@/hooks/useSearch";
 import { useAuth } from "@/components/AuthProvider";
 import { Card, CardContent } from "@/components/ui/card";
+import { useLanguage } from "@/hooks/useLanguage";
+import { getTranslation } from "@/lib/translations";
 
 interface MainDashboardProps {
   onNavigate: (view: string) => void;
@@ -19,13 +22,19 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
   const { user, isGuest, signOut } = useAuth();
   const { searchQuery, setSearchQuery, searchResults, hasResults } = useSearch(onNavigate);
   const [showSearchResults, setShowSearchResults] = useState(false);
+  const { currentLanguage, initializeLanguage } = useLanguage();
+  const t = getTranslation(currentLanguage);
+
+  useEffect(() => {
+    initializeLanguage();
+  }, [initializeLanguage]);
 
   const menuItems = [
-    { icon: Info, label: "Conócenos", action: () => onNavigate("about") },
-    { icon: BarChart3, label: "Comparar", action: () => onNavigate("compare") },
-    { icon: MapPin, label: "Mapa", action: () => onNavigate("map") },
-    { icon: MessageSquare, label: "Chatbots", action: () => onNavigate("chatbots") },
-    { icon: Users, label: "Comunidad", action: () => onNavigate("community") },
+    { icon: Info, label: t.nav.about, action: () => onNavigate("about") },
+    { icon: BarChart3, label: t.nav.compare, action: () => onNavigate("compare") },
+    { icon: MapPin, label: t.nav.map, action: () => onNavigate("map") },
+    { icon: MessageSquare, label: t.nav.chatbots, action: () => onNavigate("chatbots") },
+    { icon: Users, label: t.nav.community, action: () => onNavigate("community") },
   ];
 
   return (
@@ -38,6 +47,7 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
         </div>
         
         <div className="flex items-center space-x-2">
+          <LanguageSelector />
           <ThemeToggle />
           <Sheet>
             <SheetTrigger asChild>
@@ -77,7 +87,7 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 h-4 w-4" />
           <Input
             type="text"
-            placeholder="Buscar carreras, universidades, funciones..."
+            placeholder={t.dashboard.searchPlaceholder}
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
@@ -156,16 +166,16 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
                 size="sm"
                 variant="ghost"
                 onClick={() => onNavigate("login")}
-                className="rounded-full px-3 text-white/70 hover:text-white hover:bg-white/20 border border-white/30"
-              >
-                Iniciar Sesión
-              </Button>
-              <Button 
-                size="sm"
-                onClick={() => onNavigate("register")}
-                className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-3 shadow-lg"
-              >
-                Registrarse
+                 className="rounded-full px-3 text-white/70 hover:text-white hover:bg-white/20 border border-white/30"
+               >
+                 {t.nav.login}
+               </Button>
+               <Button 
+                 size="sm"
+                 onClick={() => onNavigate("register")}
+                 className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-3 shadow-lg"
+               >
+                 {t.nav.register}
               </Button>
             </div>
           )}
@@ -189,9 +199,9 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
           </div>
           <div className="relative z-10">
             <WiseGoLogo size="lg" className="mx-auto mb-6" />
-            <h1 className="text-4xl sm:text-5xl font-bold font-title mb-4 tracking-wide">WiseGO!</h1>
+            <h1 className="text-4xl sm:text-5xl font-bold font-title mb-4 tracking-wide">{t.dashboard.title}</h1>
             <p className="text-lg sm:text-xl font-subtitle text-white/90 max-w-2xl mx-auto">
-              Tu compañero inteligente para elegir la carrera perfecta
+              {t.dashboard.subtitle}
             </p>
           </div>
         </div>
@@ -205,15 +215,14 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
               </div>
               <div className="flex-1">
                 <div className="flex items-center space-x-3 mb-3">
-                  <h3 className="font-semibold font-title text-white text-lg">¡Bienvenido al Modo Demo!</h3>
+                  <h3 className="font-semibold font-title text-white text-lg">{t.dashboard.welcomeDemo}</h3>
                   <Badge className="bg-accent text-white shadow-lg border border-accent/50">
                     <Crown className="h-3 w-3 mr-1" />
-                    Acceso Completo
+                    {t.dashboard.fullAccess}
                   </Badge>
                 </div>
                 <p className="text-sm font-subtitle text-white/90 leading-relaxed">
-                  Estás usando WiseGO en modo demostración con acceso completo a todas las funciones premium. 
-                  Perfecto para la presentación de Junior StartUp. ¡Explora libremente todos los chatbots y herramientas!
+                  {t.dashboard.demoDescription}
                 </p>
               </div>
             </div>
@@ -228,7 +237,7 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
             </div>
             <div className="flex-1">
               <p className="text-base font-medium font-title text-white mb-4">
-                ¡Ya están abiertas las inscripciones para el Open ULima!
+                {t.dashboard.announcement}
               </p>
               <div className="flex flex-wrap gap-3">
                 <Button 
@@ -236,7 +245,7 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
                   onClick={() => window.open("https://www.ulima.edu.pe", "_blank")}
                   className="bg-accent text-white hover:bg-accent/90 rounded-full shadow-lg border border-accent/50 font-subtitle"
                 >
-                  ¡Inscripciones aquí!
+                  {t.dashboard.announcementButton}
                 </Button>
                 <Button 
                   variant="ghost" 
@@ -244,7 +253,7 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
                   onClick={() => onNavigate("about")}
                   className="rounded-full text-white hover:bg-white/20 border border-white/30 font-subtitle"
                 >
-                  Más información
+                  {t.dashboard.moreInfo}
                 </Button>
               </div>
             </div>
@@ -253,7 +262,7 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
 
         {/* Quick Actions */}
         <div className="bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl p-6 shadow-xl">
-          <h2 className="text-2xl sm:text-3xl font-bold font-title mb-8 text-center text-white">Accesos Rápidos</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold font-title mb-8 text-center text-white">{t.dashboard.quickActions}</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {menuItems.map((item, index) => (
               <Button

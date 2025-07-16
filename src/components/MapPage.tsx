@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
+import { LanguageSelector } from "./LanguageSelector";
 import { ArrowLeft, Search, Filter, MapPin, Clock, DollarSign, Star, Crown, Lock, Navigation, Building, Eye, Route } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,6 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { MapComponent } from "./MapComponent";
+import { useLanguage } from "@/hooks/useLanguage";
+import { getTranslation } from "@/lib/translations";
 
 interface MapPageProps {
   onNavigate: (view: string) => void;
@@ -96,12 +99,19 @@ export function MapPage({ onNavigate }: MapPageProps) {
   const [selectedDistrict, setSelectedDistrict] = useState<string>("all");
   const [selectedUniversity, setSelectedUniversity] = useState<University | null>(null);
   const [isPremium, setIsPremium] = useState(false); // Simular estado premium
+  const [isDemoMode, setIsDemoMode] = useState(true); // Simular modo demo
   const { toast } = useToast();
+  const { currentLanguage, initializeLanguage } = useLanguage();
+  const t = getTranslation(currentLanguage);
+
+  useEffect(() => {
+    initializeLanguage();
+  }, [initializeLanguage]);
 
   const handlePremiumAction = (action: string) => {
     toast({
-      title: "Funcionalidad Premium",
-      description: `${action} está disponible solo para usuarios Premium. ¡Suscríbete por S/25 al mes!`,
+      title: t.map.premiumFeature,
+      description: `${action} ${t.map.premiumMessage}`,
       variant: "destructive",
     });
   };
@@ -137,14 +147,17 @@ export function MapPage({ onNavigate }: MapPageProps) {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <WiseGoLogo size="sm" />
-          <span className="text-xl font-title font-bold gradient-text">Explorar Universidades</span>
+          <span className="text-xl font-title font-bold gradient-text">{t.map.title}</span>
         </div>
-        <ThemeToggle />
+        <div className="flex items-center space-x-2">
+          <LanguageSelector />
+          <ThemeToggle />
+        </div>
       </header>
 
       <main className="p-4 space-y-6">
         {/* Premium Banner */}
-        {!isPremium && (
+        {!isPremium && !isDemoMode && (
           <div className="max-w-4xl mx-auto animate-fade-in">
             <Card className="border-wisego-orange bg-gradient-to-r from-wisego-orange/5 to-primary/5">
               <CardContent className="p-6">
@@ -152,8 +165,8 @@ export function MapPage({ onNavigate }: MapPageProps) {
                   <div className="flex items-center space-x-3">
                     <Crown className="h-6 w-6 text-wisego-orange" />
                     <div>
-                      <h3 className="font-title font-bold text-primary">¡Desbloquea Funciones Premium!</h3>
-                      <p className="text-sm text-muted-foreground">Tours virtuales 3D y mapas interactivos por S/25/mes</p>
+                      <h3 className="font-title font-bold text-primary">{t.map.premiumTitle}</h3>
+                      <p className="text-sm text-muted-foreground">{t.map.premiumDescription}</p>
                     </div>
                   </div>
                   <Button 
@@ -161,7 +174,7 @@ export function MapPage({ onNavigate }: MapPageProps) {
                     onClick={() => onNavigate("profile")}
                   >
                     <Crown className="h-4 w-4 mr-2" />
-                    Suscribirse
+                    {t.map.subscribe}
                   </Button>
                 </div>
               </CardContent>
@@ -175,7 +188,7 @@ export function MapPage({ onNavigate }: MapPageProps) {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 group-focus-within:text-primary transition-colors" />
             <Input
               type="text"
-              placeholder="Buscar universidades, carreras, distritos..."
+              placeholder={t.map.searchPlaceholder}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 font-body transition-all duration-300 focus:ring-2 focus:ring-primary/20 hover:shadow-md"
@@ -189,9 +202,9 @@ export function MapPage({ onNavigate }: MapPageProps) {
                 <SelectValue placeholder="Tipo de universidad" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todas</SelectItem>
-                <SelectItem value="Pública">Públicas</SelectItem>
-                <SelectItem value="Privada">Privadas</SelectItem>
+                <SelectItem value="all">{t.map.allTypes}</SelectItem>
+                <SelectItem value="Pública">{t.map.public}</SelectItem>
+                <SelectItem value="Privada">{t.map.private}</SelectItem>
               </SelectContent>
             </Select>
 
@@ -201,7 +214,7 @@ export function MapPage({ onNavigate }: MapPageProps) {
                 <SelectValue placeholder="Distrito" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todos los distritos</SelectItem>
+                <SelectItem value="all">{t.map.allDistricts}</SelectItem>
                 {districts.map(district => (
                   <SelectItem key={district} value={district}>{district}</SelectItem>
                 ))}
@@ -212,16 +225,16 @@ export function MapPage({ onNavigate }: MapPageProps) {
 
         {/* Interactive Map */}
         <div className="max-w-6xl mx-auto mb-12">
-          <h2 className="text-3xl font-bold mb-8 text-center font-title gradient-text">Mapa Interactivo de Universidades</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center font-title gradient-text">{t.map.interactiveMap}</h2>
           <MapComponent />
         </div>
 
         {/* Universities List */}
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-title font-bold gradient-text">Universidades Encontradas</h2>
+            <h2 className="text-3xl font-title font-bold gradient-text">{t.map.universitiesFound}</h2>
             <span className="text-sm font-subtitle text-muted-foreground bg-muted px-3 py-1 rounded-full">
-              {filteredUniversities.length} resultados
+              {filteredUniversities.length} {t.map.results}
             </span>
           </div>
 
@@ -259,7 +272,7 @@ export function MapPage({ onNavigate }: MapPageProps) {
                 <CardContent>
                   <div className="space-y-4">
                     <div>
-                      <p className="text-sm font-subtitle font-medium text-muted-foreground mb-3">Carreras disponibles:</p>
+                      <p className="text-sm font-subtitle font-medium text-muted-foreground mb-3">{t.map.careers}</p>
                       <div className="flex flex-wrap gap-2">
                         {university.careers.map((career, index) => (
                           <Badge 
@@ -275,7 +288,7 @@ export function MapPage({ onNavigate }: MapPageProps) {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="flex items-center space-x-2">
-                        <span className="text-sm font-subtitle text-muted-foreground">Calificación:</span>
+                        <span className="text-sm font-subtitle text-muted-foreground">{t.map.rating}</span>
                         <div className="flex">
                           {[...Array(5)].map((_, i) => (
                             <span
@@ -294,7 +307,7 @@ export function MapPage({ onNavigate }: MapPageProps) {
                       </div>
 
                       <div className="flex items-center space-x-2">
-                        <span className="text-sm font-subtitle text-muted-foreground">Contacto:</span>
+                        <span className="text-sm font-subtitle text-muted-foreground">{t.map.contact}</span>
                         <span className="text-sm font-body">{university.phone}</span>
                       </div>
                     </div>
@@ -307,23 +320,47 @@ export function MapPage({ onNavigate }: MapPageProps) {
                           size="sm"
                           className="hover:bg-accent hover:text-accent-foreground transition-all duration-200"
                         >
-                          <Building className="h-4 w-4 mr-1" />
-                          Ver en mapa
+                          <Route className="h-4 w-4 mr-1" />
+                          {t.map.howToGet}
                         </Button>
                         <Button 
                           size="sm" 
                           className="bg-gradient-to-r from-primary to-accent hover:shadow-lg transition-all duration-200"
                         >
-                          Más información
+                          <Building className="h-4 w-4 mr-1" />
+                          {t.map.viewDetails}
                         </Button>
                         <Button 
                           variant="outline" 
                           size="sm"
-                          className="bg-wisego-orange/10 text-wisego-orange border-wisego-orange hover:bg-wisego-orange hover:text-white"
-                          onClick={() => onNavigate("university-tour")}
+                          className={`${isPremium || isDemoMode ? 'bg-blue-100 text-blue-800 border-blue-300' : 'bg-wisego-orange/10 text-wisego-orange border-wisego-orange'} hover:bg-blue-200 transition-all duration-200`}
+                          onClick={() => {
+                            if (isPremium || isDemoMode) {
+                              onNavigate("university-tour");
+                            } else {
+                              handlePremiumAction(t.map.viewInside);
+                            }
+                          }}
                         >
                           <Eye className="h-4 w-4 mr-1" />
-                          Ver Universidad por Dentro
+                          {t.map.viewInside}
+                          {!isPremium && !isDemoMode && <Lock className="h-3 w-3 ml-1" />}
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className={`${isPremium || isDemoMode ? 'bg-green-100 text-green-800 border-green-300' : 'bg-wisego-orange/10 text-wisego-orange border-wisego-orange'} hover:bg-green-200 transition-all duration-200`}
+                          onClick={() => {
+                            if (isPremium || isDemoMode) {
+                              onNavigate("university-tour");
+                            } else {
+                              handlePremiumAction(t.map.virtualTour);
+                            }
+                          }}
+                        >
+                          <Eye className="h-4 w-4 mr-1" />
+                          {t.map.virtualTour}
+                          {!isPremium && !isDemoMode && <Lock className="h-3 w-3 ml-1" />}
                         </Button>
                       </div>
                     </div>
