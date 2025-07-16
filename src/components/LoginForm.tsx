@@ -57,7 +57,7 @@ export function LoginForm({ onSwitchToRegister, onGuestLogin }: LoginFormProps) 
             Aviso Legal
           </CollapsibleTrigger>
           <CollapsibleContent className="mt-3 animate-accordion-down data-[state=closed]:animate-accordion-up">
-            <div className="p-4 bg-muted/10 border border-muted/20 rounded-lg">
+            <div className="p-4 bg-warning/10 border-2 border-warning/30 rounded-lg shadow-md">
               <p className="text-sm text-muted-foreground text-center leading-relaxed">
                 La información proporcionada en esta demo de la aplicación puede no ser verídica y se presenta únicamente con fines ilustrativos y de demostración. Los usuarios deben verificar independientemente cualquier información antes de tomar decisiones basadas en ella.
               </p>
