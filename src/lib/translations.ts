@@ -219,6 +219,12 @@ export interface Translations {
     getStarted: string;
   };
   
+  // Compare Page
+  compare: {
+    title: string;
+    searchPlaceholder: string;
+  };
+
   // Chat functionality
   chat: {
     welcomeMessage: string;
@@ -445,6 +451,10 @@ export const translations: Record<Language, Translations> = {
       welcome: 'Bienvenido',
       getStarted: 'Comenzar'
     },
+    compare: {
+      title: 'Comparación Inteligente',
+      searchPlaceholder: 'Buscar carreras, universidades, especialidades...'
+    },
     chat: {
       welcomeMessage: '¡Hola! Soy tu asistente de orientación educativa. ¿En qué puedo ayudarte hoy?',
       startConversation: '¡Comienza la conversación escribiendo un mensaje!',
@@ -663,6 +673,10 @@ export const translations: Record<Language, Translations> = {
       filter: 'Filter',
       welcome: 'Welcome',
       getStarted: 'Get Started'
+    },
+    compare: {
+      title: 'Smart Comparison',
+      searchPlaceholder: 'Search careers, universities, specialties...'
     },
     chat: {
       welcomeMessage: 'Hello! I am your educational guidance assistant. How can I help you today?',
@@ -883,6 +897,10 @@ export const translations: Record<Language, Translations> = {
       welcome: 'Allin hamusqayki',
       getStarted: 'Qallariy'
     },
+    compare: {
+      title: 'Allqa Tupay',
+      searchPlaceholder: 'Llamkaykuna, yachaywasikuna, especializacionkuna maskay...'
+    },
     chat: {
       welcomeMessage: '¡Napaykullayki! Yachana pusaq yanasqayki kani. ¿Imapichus yanapasayki kunan punchaw?',
       startConversation: '¡Huk willaywan qillqaspa rimanakuyta qallariy!',
@@ -1101,6 +1119,10 @@ export const translations: Record<Language, Translations> = {
       filter: 'Churiña',
       welcome: 'Suma jutawi',
       getStarted: 'Qalltaña'
+    },
+    compare: {
+      title: 'Yäqha Uñacht\'aña',
+      searchPlaceholder: 'Lurañanak, yatiñütan, especializacionanak thaqhaña...'
     },
     chat: {
       welcomeMessage: '¡Suma jutawi! Yatiñ irptayiri yanapirimaawa. ¿Kunjamatsa yanapäta jichha uruwi?',

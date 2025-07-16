@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
+import { LanguageSelector } from "./LanguageSelector";
 import { ArrowLeft, Search, Filter, MapPin, Clock, DollarSign, Star, Crown, Lock, Navigation, Building, Eye, Route } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,6 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { MapComponent } from "./MapComponent";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { getTranslation } from "@/lib/translations";
 
 interface MapPageProps {
   onNavigate: (view: string) => void;
@@ -97,11 +100,13 @@ export function MapPage({ onNavigate }: MapPageProps) {
   const [selectedUniversity, setSelectedUniversity] = useState<University | null>(null);
   const [isPremium] = useState(false);
   const { toast } = useToast();
+  const { currentLanguage } = useLanguage();
+  const t = getTranslation(currentLanguage);
 
   const handlePremiumAction = (action: string) => {
     toast({
-      title: "Función Premium",
-      description: `${action} está disponible solo para usuarios premium. ¡Suscríbete para acceder!`,
+      title: t.map.premiumFeature,
+      description: `${action} ${t.map.premiumMessage}`,
       variant: "default",
     });
   };
@@ -136,9 +141,12 @@ export function MapPage({ onNavigate }: MapPageProps) {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <WiseGoLogo size="sm" />
-          <span className="text-xl font-bold">Mapa Universitario</span>
+          <span className="text-xl font-bold">{t.map.title}</span>
         </div>
-        <ThemeToggle />
+        <div className="flex items-center space-x-2">
+          <LanguageSelector />
+          <ThemeToggle />
+        </div>
       </header>
 
       <main className="p-4 space-y-6">
@@ -173,7 +181,7 @@ export function MapPage({ onNavigate }: MapPageProps) {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
                 type="text"
-                placeholder="Buscar universidades, carreras o distritos..."
+                placeholder={t.map.searchPlaceholder}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
@@ -186,9 +194,9 @@ export function MapPage({ onNavigate }: MapPageProps) {
                   <SelectValue placeholder="Tipo" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todos los tipos</SelectItem>
-                  <SelectItem value="Pública">Pública</SelectItem>
-                  <SelectItem value="Privada">Privada</SelectItem>
+                  <SelectItem value="all">{t.map.allTypes}</SelectItem>
+                  <SelectItem value="Pública">{t.map.public}</SelectItem>
+                  <SelectItem value="Privada">{t.map.private}</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -197,7 +205,7 @@ export function MapPage({ onNavigate }: MapPageProps) {
                   <SelectValue placeholder="Distrito" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="all">{t.map.allDistricts}</SelectItem>
                   <SelectItem value="Lima">Lima</SelectItem>
                   <SelectItem value="Surco">Surco</SelectItem>
                   <SelectItem value="San Miguel">San Miguel</SelectItem>
@@ -211,16 +219,16 @@ export function MapPage({ onNavigate }: MapPageProps) {
 
         {/* Interactive Map */}
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl font-bold mb-4 text-center">Mapa Interactivo de Universidades</h2>
+          <h2 className="text-2xl font-bold mb-4 text-center">{t.map.interactiveMap}</h2>
           <MapComponent />
         </div>
 
         {/* Universities List */}
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-3xl font-bold">Universidades Encontradas</h2>
+            <h2 className="text-3xl font-bold">{t.map.universitiesFound}</h2>
             <span className="text-sm text-muted-foreground bg-muted px-3 py-1 rounded-full">
-              {filteredUniversities.length} resultados
+              {filteredUniversities.length} {t.map.results}
             </span>
           </div>
 
@@ -265,7 +273,7 @@ export function MapPage({ onNavigate }: MapPageProps) {
                     <div className="space-y-2">
                       <h4 className="font-semibold flex items-center gap-2">
                         <Building className="h-4 w-4" />
-                        Carreras Principales
+                        {t.map.careers}
                       </h4>
                       <div className="flex flex-wrap gap-1">
                         {university.careers.map((career, i) => (
@@ -277,7 +285,7 @@ export function MapPage({ onNavigate }: MapPageProps) {
                     </div>
                     
                     <div className="space-y-2">
-                      <h4 className="font-semibold">Información de Contacto</h4>
+                      <h4 className="font-semibold">{t.map.contact}</h4>
                       <p className="text-sm text-muted-foreground">{university.phone}</p>
                       <p className="text-sm text-primary">{university.website}</p>
                     </div>
@@ -295,7 +303,7 @@ export function MapPage({ onNavigate }: MapPageProps) {
                       className="flex items-center gap-1 hover:bg-primary hover:text-primary-foreground"
                     >
                       <Eye className="h-4 w-4" />
-                      Ver Detalles
+                      {t.map.viewDetails}
                     </Button>
                     
                     <Button 
@@ -309,7 +317,7 @@ export function MapPage({ onNavigate }: MapPageProps) {
                       className="flex items-center gap-1 hover:bg-accent hover:text-accent-foreground"
                     >
                       <Route className="h-4 w-4" />
-                      Cómo Llegar
+                      {t.map.howToGet}
                     </Button>
 
                     <Button 
@@ -320,13 +328,13 @@ export function MapPage({ onNavigate }: MapPageProps) {
                         if (isPremium) {
                           onNavigate("university-tour");
                         } else {
-                          handlePremiumAction("Ver por dentro");
+                          handlePremiumAction(t.map.viewInside);
                         }
                       }}
                       className={`flex items-center gap-1 ${isPremium ? 'bg-blue-100 text-blue-800 border-blue-300' : 'bg-wisego-orange/10 text-wisego-orange border-wisego-orange'} hover:bg-blue-200 transition-all duration-200`}
                     >
                       <Eye className="h-4 w-4" />
-                      Ver por dentro
+                      {t.map.viewInside}
                       {!isPremium && <Lock className="h-3 w-3" />}
                     </Button>
 
@@ -338,13 +346,13 @@ export function MapPage({ onNavigate }: MapPageProps) {
                         if (isPremium) {
                           onNavigate("university-tour");
                         } else {
-                          handlePremiumAction("Tour virtual");
+                          handlePremiumAction(t.map.virtualTour);
                         }
                       }}
                       className={`flex items-center gap-1 ${isPremium ? 'bg-green-100 text-green-800 border-green-300' : 'bg-wisego-orange/10 text-wisego-orange border-wisego-orange'} hover:bg-green-200 transition-all duration-200`}
                     >
                       <Eye className="h-4 w-4" />
-                      Tour virtual
+                      {t.map.virtualTour}
                       {!isPremium && <Lock className="h-3 w-3" />}
                     </Button>
                   </div>

@@ -2,12 +2,15 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
+import { LanguageSelector } from "./LanguageSelector";
 import { ArrowLeft, Search, Plus, X, BarChart3, Users, MapPin, DollarSign, Star, Clock, Award } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { getTranslation } from "@/lib/translations";
 
 interface ComparePageProps {
   onNavigate: (view: string) => void;
@@ -160,6 +163,8 @@ const careers: Career[] = [
 export function ComparePage({ onNavigate }: ComparePageProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCareers, setSelectedCareers] = useState<Career[]>([]);
+  const { currentLanguage } = useLanguage();
+  const t = getTranslation(currentLanguage);
 
   const filteredCareers = careers.filter(career =>
     career.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -237,9 +242,12 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <WiseGoLogo size="sm" />
-          <span className="text-xl font-title font-bold gradient-text">Comparación Inteligente</span>
+          <span className="text-xl font-title font-bold gradient-text">{t.compare?.title || "Comparación Inteligente"}</span>
         </div>
-        <ThemeToggle />
+        <div className="flex items-center space-x-2">
+          <LanguageSelector />
+          <ThemeToggle />
+        </div>
       </header>
 
       <main className="p-4 space-y-6">
@@ -249,7 +257,7 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 group-focus-within:text-primary transition-colors" />
             <Input
               type="text"
-              placeholder="Buscar carreras, universidades, especialidades..."
+              placeholder={t.compare?.searchPlaceholder || "Buscar carreras, universidades, especialidades..."}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 font-body transition-all duration-300 focus:ring-2 focus:ring-primary/20 hover:shadow-md"

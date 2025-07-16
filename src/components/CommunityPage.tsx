@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
+import { LanguageSelector } from "./LanguageSelector";
 import { 
   ArrowLeft, 
   Heart, 
@@ -24,6 +25,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { UserSession } from "@/hooks/useSession";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { getTranslation } from "@/lib/translations";
 
 interface CommunityPageProps {
   onNavigate: (view: string) => void;
@@ -60,6 +63,8 @@ export function CommunityPage({ onNavigate, userSession }: CommunityPageProps) {
   const [showNewPost, setShowNewPost] = useState(false);
   const [commentText, setCommentText] = useState<{ [key: number]: string }>({});
   const { toast } = useToast();
+  const { currentLanguage } = useLanguage();
+  const t = getTranslation(currentLanguage);
 
   // Sample posts data
   useEffect(() => {
@@ -129,8 +134,8 @@ export function CommunityPage({ onNavigate, userSession }: CommunityPageProps) {
   const handleVote = (postId: number, voteType: "up" | "down") => {
     if (userSession.isGuest) {
       toast({
-        title: "Acceso restringido",
-        description: "Los invitados no pueden votar. Crea una cuenta para participar.",
+        title: t.community.restrictedAccess,
+        description: t.community.guestsCannotVote,
         variant: "destructive",
       });
       return;
@@ -165,8 +170,8 @@ export function CommunityPage({ onNavigate, userSession }: CommunityPageProps) {
   const handleNewPost = () => {
     if (userSession.isGuest) {
       toast({
-        title: "Acceso restringido",
-        description: "Los invitados no pueden crear publicaciones. Crea una cuenta para participar.",
+        title: t.community.restrictedAccess,
+        description: t.community.guestsCannotPost,
         variant: "destructive",
       });
       return;
@@ -194,16 +199,16 @@ export function CommunityPage({ onNavigate, userSession }: CommunityPageProps) {
     setShowNewPost(false);
     
     toast({
-      title: "Publicación creada",
-      description: "Tu publicación ha sido añadida a la comunidad.",
+      title: t.community.publicationCreated,
+      description: t.community.publicationCreatedDesc,
     });
   };
 
   const handleComment = (postId: number) => {
     if (userSession.isGuest) {
       toast({
-        title: "Acceso restringido",
-        description: "Los invitados no pueden comentar. Crea una cuenta para participar.",
+        title: t.community.restrictedAccess,
+        description: t.community.guestsCannotComment,
         variant: "destructive",
       });
       return;
@@ -229,8 +234,8 @@ export function CommunityPage({ onNavigate, userSession }: CommunityPageProps) {
     setCommentText({ ...commentText, [postId]: "" });
     
     toast({
-      title: "Comentario añadido",
-      description: "Tu comentario ha sido publicado.",
+      title: t.community.commentAdded,
+      description: t.community.commentAddedDesc,
     });
   };
 
@@ -254,11 +259,11 @@ export function CommunityPage({ onNavigate, userSession }: CommunityPageProps) {
   const getAuthorBadge = (authorType: string) => {
     switch (authorType) {
       case "alumni":
-        return <Badge variant="secondary" className="text-xs">Egresado</Badge>;
+        return <Badge variant="secondary" className="text-xs">{t.community.graduate}</Badge>;
       case "verified":
-        return <Badge className="text-xs bg-green-100 text-green-800">Verificado</Badge>;
+        return <Badge className="text-xs bg-green-100 text-green-800">{t.community.verified}</Badge>;
       default:
-        return <Badge variant="outline" className="text-xs">Estudiante</Badge>;
+        return <Badge variant="outline" className="text-xs">{t.community.student}</Badge>;
     }
   };
 
@@ -276,18 +281,21 @@ export function CommunityPage({ onNavigate, userSession }: CommunityPageProps) {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <WiseGoLogo size="sm" />
-          <span className="text-xl font-bold">Comunidad</span>
+          <span className="text-xl font-bold">{t.community.title}</span>
         </div>
-        <ThemeToggle />
+        <div className="flex items-center space-x-2">
+          <LanguageSelector />
+          <ThemeToggle />
+        </div>
       </header>
 
       <main className="p-4 space-y-6 max-w-4xl mx-auto">
         {/* Header Info */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl text-center">Comunidad WiseGO</CardTitle>
+            <CardTitle className="text-2xl text-center">{t.community.communityWiseGO}</CardTitle>
             <CardDescription className="text-center">
-              Conecta con estudiantes y egresados. Comparte experiencias, haz preguntas y obtén testimonios verificados.
+              {t.community.communityDescription}
             </CardDescription>
           </CardHeader>
         </Card>
@@ -300,21 +308,21 @@ export function CommunityPage({ onNavigate, userSession }: CommunityPageProps) {
               size="sm"
               onClick={() => setSelectedFilter("all")}
             >
-              Todos
+              {t.community.all}
             </Button>
             <Button 
               variant={selectedFilter === "testimonies" ? "default" : "outline"}
               size="sm"
               onClick={() => setSelectedFilter("testimonies")}
             >
-              Testimonios
+              {t.community.testimonies}
             </Button>
             <Button 
               variant={selectedFilter === "questions" ? "default" : "outline"}
               size="sm"
               onClick={() => setSelectedFilter("questions")}
             >
-              Preguntas
+              {t.community.questions}
             </Button>
           </div>
           
@@ -324,7 +332,7 @@ export function CommunityPage({ onNavigate, userSession }: CommunityPageProps) {
             disabled={userSession.isGuest}
           >
             <Plus className="h-4 w-4" />
-            <span>Nueva Publicación</span>
+            <span>{t.community.newPublication}</span>
           </Button>
         </div>
 
@@ -332,22 +340,22 @@ export function CommunityPage({ onNavigate, userSession }: CommunityPageProps) {
         {showNewPost && (
           <Card>
             <CardHeader>
-              <CardTitle>Nueva Publicación</CardTitle>
+              <CardTitle>{t.community.newPost}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <Textarea
-                placeholder="¿Qué quieres compartir con la comunidad?"
+                placeholder={t.community.shareWithCommunity}
                 value={newPostContent}
                 onChange={(e) => setNewPostContent(e.target.value)}
                 rows={4}
               />
               <div className="flex justify-end space-x-2">
                 <Button variant="outline" onClick={() => setShowNewPost(false)}>
-                  Cancelar
+                  {t.community.cancel}
                 </Button>
                 <Button onClick={handleNewPost}>
                   <Send className="h-4 w-4 mr-2" />
-                  Publicar
+                  {t.community.publish}
                 </Button>
               </div>
             </CardContent>
@@ -381,7 +389,7 @@ export function CommunityPage({ onNavigate, userSession }: CommunityPageProps) {
                   </div>
                   {post.isTestimony && (
                     <Badge className="bg-blue-100 text-blue-800">
-                      Testimonio
+                      {t.community.testimony}
                     </Badge>
                   )}
                 </div>
@@ -428,7 +436,7 @@ export function CommunityPage({ onNavigate, userSession }: CommunityPageProps) {
                     
                     <Button variant="ghost" size="sm" className="h-8 px-2">
                       <Share className="h-4 w-4 mr-1" />
-                      <span className="text-sm">Compartir</span>
+                      <span className="text-sm">{t.community.sharePost}</span>
                     </Button>
                   </div>
                 </div>
@@ -462,7 +470,7 @@ export function CommunityPage({ onNavigate, userSession }: CommunityPageProps) {
                 {/* Comment Input */}
                 <div className="flex space-x-2">
                   <Input
-                    placeholder={userSession.isGuest ? "Inicia sesión para comentar" : "Escribir un comentario..."}
+                    placeholder={userSession.isGuest ? t.community.loginToComment : t.community.writeComment}
                     value={commentText[post.id] || ""}
                     onChange={(e) => setCommentText({ ...commentText, [post.id]: e.target.value })}
                     disabled={userSession.isGuest}
@@ -484,7 +492,7 @@ export function CommunityPage({ onNavigate, userSession }: CommunityPageProps) {
         {filteredPosts.length === 0 && (
           <Card>
             <CardContent className="text-center py-8">
-              <p className="text-muted-foreground">No hay publicaciones para mostrar en esta categoría.</p>
+              <p className="text-muted-foreground">{t.community.noPublications}</p>
             </CardContent>
           </Card>
         )}
