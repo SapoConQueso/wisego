@@ -3,19 +3,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
-import { Menu, Search, ChevronRight, Info, BarChart3, MapPin, MessageSquare, User, LogOut, Users, X } from "lucide-react";
+import { Menu, Search, ChevronRight, Info, BarChart3, MapPin, MessageSquare, User, LogOut, Users, X, Crown } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { UserSession } from "@/hooks/useSession";
 import { useSearch } from "@/hooks/useSearch";
+import { useAuth } from "@/components/AuthProvider";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface MainDashboardProps {
   onNavigate: (view: string) => void;
-  userSession: UserSession;
   onLogout: () => void;
 }
 
-export function MainDashboard({ onNavigate, userSession, onLogout }: MainDashboardProps) {
+export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
+  const { user, isGuest, signOut } = useAuth();
   const { searchQuery, setSearchQuery, searchResults, hasResults } = useSearch(onNavigate);
   const [showSearchResults, setShowSearchResults] = useState(false);
 
@@ -121,19 +122,25 @@ export function MainDashboard({ onNavigate, userSession, onLogout }: MainDashboa
             </Button>
           )}
 
-          {userSession.isLoggedIn ? (
+          {(user || isGuest) ? (
             <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
               <Button 
                 size="sm"
                 onClick={() => onNavigate("profile")}
                 className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-4"
               >
-                {userSession.username} 👤
+                {isGuest ? "👤 Invitado" : (user?.user_metadata?.username || user?.email?.split('@')[0] || 'Usuario')} 👤
               </Button>
               <Button 
                 size="sm"
                 variant="outline"
-                onClick={onLogout}
+                onClick={() => {
+                  if (isGuest) {
+                    signOut();
+                  } else {
+                    onLogout();
+                  }
+                }}
                 className="rounded-full px-3"
               >
                 <LogOut className="h-4 w-4" />
@@ -175,6 +182,30 @@ export function MainDashboard({ onNavigate, userSession, onLogout }: MainDashboa
             <h1 className="text-3xl font-bold mb-4">WiseGO!</h1>
           </div>
         </div>
+
+        {/* Guest Welcome Banner */}
+        {isGuest && (
+          <div className="bg-gradient-to-r from-wisego-orange/10 to-primary/10 border border-wisego-orange/20 rounded-xl p-4">
+            <div className="flex items-start space-x-3">
+              <div className="bg-wisego-orange/20 p-2 rounded-lg">
+                <Crown className="h-5 w-5 text-wisego-orange" />
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center space-x-2 mb-2">
+                  <h3 className="font-semibold text-primary">¡Bienvenido al Modo Demo!</h3>
+                  <Badge className="bg-wisego-orange text-white">
+                    <Crown className="h-3 w-3 mr-1" />
+                    Acceso Completo
+                  </Badge>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Estás usando WiseGO en modo demostración con acceso completo a todas las funciones premium. 
+                  Perfecto para la presentación de Junior StartUp. ¡Explora libremente todos los chatbots y herramientas!
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Announcement */}
         <div className="bg-card border rounded-xl p-4">

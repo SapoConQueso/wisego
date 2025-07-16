@@ -19,16 +19,16 @@ type ViewType = "login" | "register" | "dashboard" | "about" | "chatbots" | "voc
 
 function AppContent() {
   const [currentView, setCurrentView] = useState<ViewType>("dashboard");
-  const { user, isLoading, signOut, isSubscribed } = useAuth();
+  const { user, isLoading, signOut, isSubscribed, isGuest } = useAuth();
 
   // Check if user is logged in and redirect to login if not
   useEffect(() => {
-    if (!isLoading && !user) {
+    if (!isLoading && !user && !isGuest) {
       setCurrentView("login");
-    } else if (!isLoading && user) {
+    } else if (!isLoading && (user || isGuest)) {
       setCurrentView("dashboard");
     }
-  }, [user, isLoading]);
+  }, [user, isLoading, isGuest]);
 
   if (isLoading) {
     return (
@@ -48,6 +48,7 @@ function AppContent() {
           <BackgroundPattern className="flex items-center justify-center p-4">
             <LoginForm 
               onSwitchToRegister={() => setCurrentView("register")}
+              onGuestLogin={() => setCurrentView("dashboard")}
             />
           </BackgroundPattern>
         );
@@ -64,14 +65,6 @@ function AppContent() {
       case "dashboard":
         return <MainDashboard 
           onNavigate={(view) => setCurrentView(view as ViewType)}
-          userSession={{
-            isLoggedIn: !!user,
-            isGuest: false,
-            username: user?.user_metadata?.username || user?.email?.split('@')[0] || 'Usuario',
-            email: user?.email,
-            isPremium: isSubscribed,
-            apiKeys: {}
-          }}
           onLogout={async () => {
             await signOut();
             setCurrentView("login");

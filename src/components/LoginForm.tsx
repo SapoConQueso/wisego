@@ -9,14 +9,15 @@ import { toast } from "sonner";
 
 interface LoginFormProps {
   onSwitchToRegister: () => void;
+  onGuestLogin: () => void;
 }
 
-export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
+export function LoginForm({ onSwitchToRegister, onGuestLogin }: LoginFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { signIn } = useAuth();
+  const { signIn, signInAsGuest } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +35,12 @@ export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleGuestLogin = () => {
+    signInAsGuest();
+    onGuestLogin();
+    toast.success("¡Bienvenido como invitado! Tienes acceso completo a todas las funciones.");
   };
 
   return (
@@ -108,6 +115,22 @@ export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
             className="w-full text-white hover:text-white hover:bg-white/10 rounded-full"
           >
             Registrarse
+          </Button>
+          
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-white/20" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-primary px-2 text-white/60">O</span>
+            </div>
+          </div>
+          
+          <Button
+            onClick={handleGuestLogin}
+            className="w-full bg-wisego-orange hover:bg-wisego-orange/90 text-white rounded-full font-semibold"
+          >
+            🎯 Acceder como Invitado (Demo Completa)
           </Button>
           
         </div>

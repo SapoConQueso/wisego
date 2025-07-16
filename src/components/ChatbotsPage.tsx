@@ -13,7 +13,7 @@ interface ChatbotsPageProps {
 }
 
 export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
-  const { isSubscribed, createCheckout } = useAuth();
+  const { isSubscribed, createCheckout, isGuest } = useAuth();
 
   const handlePremiumAction = (chatbotName: string) => {
     toast.error(`${chatbotName} está disponible solo para usuarios Premium. ¡Suscríbete!`);
@@ -21,11 +21,18 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
 
   const handleSubscribe = async () => {
     try {
+      if (isGuest) {
+        toast.error("Los invitados no pueden realizar compras. Regístrate para acceder a suscripciones.");
+        return;
+      }
       await createCheckout();
     } catch (error) {
       toast.error("Error al crear la suscripción");
     }
   };
+
+  // En modo invitado, consideramos que tiene acceso completo
+  const hasAccess = isSubscribed || isGuest;
 
   return (
     <div className="min-h-screen bg-background">
@@ -48,8 +55,8 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
 
       {/* Main Content */}
       <main className="p-4 space-y-6">
-        {/* Premium Banner */}
-        {!isSubscribed && (
+      {/* Premium Banner */}
+        {!hasAccess && (
           <div className="max-w-4xl mx-auto animate-fade-in">
             <Card className="border-wisego-orange bg-gradient-to-r from-wisego-orange/5 to-primary/5">
               <CardContent className="p-6">
@@ -81,10 +88,10 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
 
         <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           {/* Test Vocacional Bot */}
-          <Card className={`border-2 transition-colors ${isSubscribed ? 'hover:border-primary cursor-pointer' : 'opacity-60 cursor-not-allowed'}`}
-                onClick={() => isSubscribed ? onNavigate("vocational-test") : handlePremiumAction("Test Vocacional IA")}>
+          <Card className={`border-2 transition-colors ${hasAccess ? 'hover:border-primary cursor-pointer' : 'opacity-60 cursor-not-allowed'}`}
+                onClick={() => hasAccess ? onNavigate("vocational-test") : handlePremiumAction("Test Vocacional IA")}>
             <CardHeader className="text-center relative">
-              {!isSubscribed && (
+              {!hasAccess && (
                 <Badge className="absolute top-2 right-2 bg-wisego-orange text-white">
                   <Crown className="h-3 w-3 mr-1" />
                   Premium
@@ -95,7 +102,7 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
               </div>
               <CardTitle className="text-xl flex items-center justify-center space-x-2">
                 <span>Test Vocacional IA</span>
-                {!isSubscribed && <Lock className="h-4 w-4 text-muted-foreground" />}
+                {!hasAccess && <Lock className="h-4 w-4 text-muted-foreground" />}
               </CardTitle>
               <CardDescription>
                 Descubre tu carrera ideal con nuestro asistente especializado
@@ -117,10 +124,10 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
                 </div>
               </div>
               <Button 
-                className={`w-full ${isSubscribed ? 'bg-primary hover:bg-primary/90' : 'bg-muted cursor-not-allowed'}`}
-                disabled={!isSubscribed}
+                className={`w-full ${hasAccess ? 'bg-primary hover:bg-primary/90' : 'bg-muted cursor-not-allowed'}`}
+                disabled={!hasAccess}
               >
-                {isSubscribed ? 'Iniciar Test Vocacional' : (
+                {hasAccess ? 'Iniciar Test Vocacional' : (
                   <div className="flex items-center space-x-2">
                     <Lock className="h-4 w-4" />
                     <span>Requiere Premium</span>
@@ -131,10 +138,10 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
           </Card>
 
           {/* Chat General */}
-          <Card className={`border-2 transition-colors ${isSubscribed ? 'hover:border-accent cursor-pointer' : 'opacity-60 cursor-not-allowed'}`}
-                onClick={() => isSubscribed ? onNavigate("ai-chat") : handlePremiumAction("Chat IA General")}>
+          <Card className={`border-2 transition-colors ${hasAccess ? 'hover:border-accent cursor-pointer' : 'opacity-60 cursor-not-allowed'}`}
+                onClick={() => hasAccess ? onNavigate("ai-chat") : handlePremiumAction("Chat IA General")}>
             <CardHeader className="text-center relative">
-              {!isSubscribed && (
+              {!hasAccess && (
                 <Badge className="absolute top-2 right-2 bg-wisego-orange text-white">
                   <Crown className="h-3 w-3 mr-1" />
                   Premium
@@ -145,7 +152,7 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
               </div>
               <CardTitle className="text-xl flex items-center justify-center space-x-2">
                 <span>Chat IA General</span>
-                {!isSubscribed && <Lock className="h-4 w-4 text-muted-foreground" />}
+                {!hasAccess && <Lock className="h-4 w-4 text-muted-foreground" />}
               </CardTitle>
               <CardDescription>
                 Conversa con nuestro asistente sobre cualquier tema educativo
@@ -167,10 +174,10 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
                 </div>
               </div>
               <Button 
-                className={`w-full ${isSubscribed ? 'bg-accent hover:bg-accent/90' : 'bg-muted cursor-not-allowed'}`}
-                disabled={!isSubscribed}
+                className={`w-full ${hasAccess ? 'bg-accent hover:bg-accent/90' : 'bg-muted cursor-not-allowed'}`}
+                disabled={!hasAccess}
               >
-                {isSubscribed ? 'Iniciar Conversación' : (
+                {hasAccess ? 'Iniciar Conversación' : (
                   <div className="flex items-center space-x-2">
                     <Lock className="h-4 w-4" />
                     <span>Requiere Premium</span>

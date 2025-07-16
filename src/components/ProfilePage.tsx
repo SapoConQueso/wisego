@@ -17,7 +17,7 @@ interface ProfilePageProps {
 }
 
 export function ProfilePage({ onNavigate }: ProfilePageProps) {
-  const { user, session, isSubscribed, createCheckout, signOut, openCustomerPortal } = useAuth();
+  const { user, session, isSubscribed, createCheckout, signOut, openCustomerPortal, isGuest } = useAuth();
   const [isVerified, setIsVerified] = useState(false);
   const [dniValue, setDniValue] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("es");
@@ -176,23 +176,30 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                    ) : (
                       <>
                         <CardTitle className="text-2xl">
-                          {user?.user_metadata?.full_name || user?.email || "Usuario"}
+                          {isGuest ? "Usuario Invitado (Demo)" : (user?.user_metadata?.full_name || user?.email || "Usuario")}
                         </CardTitle>
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => setIsEditingName(true)}
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
+                        {!isGuest && (
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => setIsEditingName(true)}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        )}
                       </>
                     )}
                  </div>
                   <CardDescription>
-                    Estudiante • Registro: {user?.created_at ? new Date(user.created_at).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' }) : 'Reciente'}
+                    {isGuest ? "Acceso completo de demostración • Todas las funciones disponibles" : `Estudiante • Registro: ${user?.created_at ? new Date(user.created_at).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' }) : 'Reciente'}`}
                   </CardDescription>
                 <div className="flex items-center space-x-2 mt-2">
-                  {isVerified ? (
+                  {isGuest ? (
+                    <Badge className="bg-wisego-orange text-white">
+                      <Crown className="h-3 w-3 mr-1" />
+                      Demo Premium
+                    </Badge>
+                  ) : isVerified ? (
                     <Badge className="bg-green-100 text-green-800 border-green-300">
                       <Check className="h-3 w-3 mr-1" />
                       Verificado
@@ -207,7 +214,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
         </Card>
 
         {/* Account Verification */}
-        {user && (
+        {user && !isGuest && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
@@ -380,7 +387,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
         </Card>
 
         {/* Premium Subscription */}
-        {user && (
+        {(user || isGuest) && (
           <Card className={isSubscribed ? "border-wisego-orange bg-gradient-to-r from-wisego-orange/5 to-primary/5" : ""}>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
@@ -396,14 +403,38 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                 )}
               </CardTitle>
               <CardDescription>
-                {isSubscribed 
-                  ? "Tienes acceso completo a Test Vocacional IA y Chat IA General"
-                  : "Accede a Test Vocacional IA y Chat IA General por S/25 al mes"
+                {isGuest 
+                  ? "Modo demostración: Acceso completo a todas las funciones premium"
+                  : isSubscribed 
+                    ? "Tienes acceso completo a Test Vocacional IA y Chat IA General"
+                    : "Accede a Test Vocacional IA y Chat IA General por S/25 al mes"
                 }
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {!isSubscribed ? (
+              {isGuest ? (
+                <div className="text-center py-4">
+                  <div className="w-16 h-16 bg-wisego-orange/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Crown className="h-8 w-8 text-wisego-orange" />
+                  </div>
+                  <p className="text-wisego-orange font-medium">¡Modo Demo Premium Activo!</p>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Tienes acceso completo a todas las funciones para la demostración
+                  </p>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => {
+                      toast({
+                        title: "Función de demostración",
+                        description: "Regístrate para acceder a suscripciones reales.",
+                      });
+                    }}
+                  >
+                    Crear Cuenta Real
+                  </Button>
+                </div>
+              ) : !isSubscribed ? (
                 <>
                   <div className="space-y-3">
                     <h4 className="font-semibold text-primary">Beneficios Premium:</h4>

@@ -13,12 +13,14 @@ export interface UserSession {
   isSubscribed: boolean;
   subscriptionTier: string | null;
   subscriptionEnd: string | null;
+  isGuest: boolean;
 }
 
 export interface AuthContextType extends UserSession {
   signUp: (email: string, password: string, fullName: string, username: string) => Promise<{ error?: string }>;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
+  signInAsGuest: () => void;
   checkSubscription: () => Promise<void>;
   createCheckout: () => Promise<void>;
   openCustomerPortal: () => Promise<void>;
@@ -33,6 +35,7 @@ export function useSupabaseAuth(): AuthContextType {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscriptionTier, setSubscriptionTier] = useState<string | null>(null);
   const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
+  const [isGuest, setIsGuest] = useState(false);
 
   useEffect(() => {
     // Get initial session
@@ -102,7 +105,17 @@ export function useSupabaseAuth(): AuthContextType {
   };
 
   const signOut = async () => {
+    setIsGuest(false);
     await supabase.auth.signOut();
+  };
+
+  const signInAsGuest = () => {
+    setIsGuest(true);
+    setUser(null);
+    setSession(null);
+    setIsSubscribed(true); // Guest has full access
+    setSubscriptionTier("Premium");
+    setIsLoading(false);
   };
 
   const checkSubscription = async () => {
@@ -127,6 +140,9 @@ export function useSupabaseAuth(): AuthContextType {
 
   const createCheckout = async () => {
     try {
+      if (isGuest) {
+        throw new Error('Los invitados no pueden realizar compras. Regístrate para acceder a suscripciones.');
+      }
       if (!session) throw new Error('No hay sesión activa');
       
       const { data, error } = await supabase.functions.invoke('create-checkout', {
@@ -147,6 +163,9 @@ export function useSupabaseAuth(): AuthContextType {
 
   const openCustomerPortal = async () => {
     try {
+      if (isGuest) {
+        throw new Error('Los invitados no pueden acceder al portal. Regístrate para gestionar tu suscripción.');
+      }
       if (!session) throw new Error('No hay sesión activa');
       
       const { data, error } = await supabase.functions.invoke('customer-portal', {
@@ -172,9 +191,11 @@ export function useSupabaseAuth(): AuthContextType {
     isSubscribed,
     subscriptionTier,
     subscriptionEnd,
+    isGuest,
     signUp,
     signIn,
     signOut,
+    signInAsGuest,
     checkSubscription,
     createCheckout,
     openCustomerPortal
