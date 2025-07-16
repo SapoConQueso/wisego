@@ -4,15 +4,12 @@ import { createClient, User, Session } from "@supabase/supabase-js";
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Supabase environment variables missing:', { 
-    url: !!supabaseUrl, 
-    key: !!supabaseAnonKey 
-  });
-  throw new Error('Supabase no está configurado correctamente. Por favor reconecta tu proyecto a Supabase.');
-}
+// Fallback for when Supabase is not connected
+const isSupabaseConfigured = !!(supabaseUrl && supabaseAnonKey);
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = isSupabaseConfigured 
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null;
 
 export interface UserSession {
   user: User | null;
@@ -43,6 +40,11 @@ export function useSupabaseAuth(): AuthContextType {
   const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!supabase) {
+      // Fallback when Supabase is not configured
+      setIsLoading(false);
+      return;
+    }
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -76,6 +78,8 @@ export function useSupabaseAuth(): AuthContextType {
   }, []);
 
   const signUp = async (email: string, password: string, fullName: string, username: string) => {
+    if (!supabase) return { error: "Supabase no está configurado. Por favor reconecta el proyecto." };
+    
     try {
       const { error } = await supabase.auth.signUp({
         email,
@@ -96,6 +100,8 @@ export function useSupabaseAuth(): AuthContextType {
   };
 
   const signIn = async (email: string, password: string) => {
+    if (!supabase) return { error: "Supabase no está configurado. Por favor reconecta el proyecto." };
+    
     try {
       const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -110,12 +116,14 @@ export function useSupabaseAuth(): AuthContextType {
   };
 
   const signOut = async () => {
+    if (!supabase) return;
     await supabase.auth.signOut();
   };
 
   const checkSubscription = async () => {
+    if (!supabase || !session) return;
+    
     try {
-      if (!session) return;
       
       const { data, error } = await supabase.functions.invoke('check-subscription', {
         headers: {
@@ -134,8 +142,9 @@ export function useSupabaseAuth(): AuthContextType {
   };
 
   const createCheckout = async () => {
+    if (!supabase || !session) throw new Error('Supabase no está configurado o no hay sesión activa');
+    
     try {
-      if (!session) throw new Error('No hay sesión activa');
       
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         headers: {
@@ -154,8 +163,9 @@ export function useSupabaseAuth(): AuthContextType {
   };
 
   const openCustomerPortal = async () => {
+    if (!supabase || !session) throw new Error('Supabase no está configurado o no hay sesión activa');
+    
     try {
-      if (!session) throw new Error('No hay sesión activa');
       
       const { data, error } = await supabase.functions.invoke('customer-portal', {
         headers: {
