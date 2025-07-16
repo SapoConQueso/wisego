@@ -12,9 +12,10 @@ import { ComparePage } from "@/components/ComparePage";
 import { MapPage } from "@/components/MapPageSimple";
 import { ProfilePage } from "@/components/ProfilePage";
 import { CommunityPage } from "@/components/CommunityPage";
+import { UniversityTourPage } from "@/components/UniversityTourPage";
 import { useSession } from "@/hooks/useSession";
 
-type ViewType = "login" | "register" | "birthdate" | "dashboard" | "about" | "chatbots" | "vocational-test" | "ai-chat" | "compare" | "map" | "profile" | "community";
+type ViewType = "login" | "register" | "birthdate" | "dashboard" | "about" | "chatbots" | "vocational-test" | "ai-chat" | "compare" | "map" | "profile" | "community" | "university-tour";
 
 const Index = () => {
   const [currentView, setCurrentView] = useState<ViewType>("dashboard");
@@ -99,6 +100,9 @@ const Index = () => {
       
       case "community":
         return <CommunityPage onNavigate={(view) => setCurrentView(view as ViewType)} userSession={userSession} />;
+      
+      case "university-tour":
+        return <UniversityTourPage onNavigate={(view) => setCurrentView(view as ViewType)} />;
       
       default:
         return null;

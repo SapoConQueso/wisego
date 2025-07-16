@@ -316,51 +316,15 @@ export function MapPage({ onNavigate }: MapPageProps) {
                         >
                           Más información
                         </Button>
-                        {isPremium ? (
-                          <>
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              className="bg-wisego-orange/10 text-wisego-orange border-wisego-orange hover:bg-wisego-orange hover:text-white"
-                            >
-                              <Eye className="h-4 w-4 mr-1" />
-                              Tour Virtual
-                            </Button>
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              className="bg-primary/10 text-primary border-primary hover:bg-primary hover:text-white"
-                            >
-                              <Route className="h-4 w-4 mr-1" />
-                              Recorrido 3D
-                            </Button>
-                          </>
-                        ) : (
-                          <>
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              className="relative opacity-60"
-                              onClick={() => handlePremiumAction("Tour Virtual")}
-                            >
-                              <Lock className="h-4 w-4 mr-1" />
-                              <Eye className="h-4 w-4 mr-1" />
-                              Tour Virtual
-                              <Crown className="h-3 w-3 ml-1 text-wisego-orange" />
-                            </Button>
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              className="relative opacity-60"
-                              onClick={() => handlePremiumAction("Recorrido 3D")}
-                            >
-                              <Lock className="h-4 w-4 mr-1" />
-                              <Route className="h-4 w-4 mr-1" />
-                              Recorrido 3D
-                              <Crown className="h-3 w-3 ml-1 text-wisego-orange" />
-                            </Button>
-                          </>
-                        )}
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className="bg-wisego-orange/10 text-wisego-orange border-wisego-orange hover:bg-wisego-orange hover:text-white"
+                          onClick={() => onNavigate("university-tour")}
+                        >
+                          <Eye className="h-4 w-4 mr-1" />
+                          Ver Universidad por Dentro
+                        </Button>
                       </div>
                     </div>
                   </div>

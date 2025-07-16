@@ -1,9 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import { Input } from '@/components/ui/input';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ExternalLink, MapPin, Navigation } from 'lucide-react';
 
 interface University {
   id: string;
@@ -51,121 +49,61 @@ const universities: University[] = [
   }
 ];
 
+const openGoogleMaps = (university: University) => {
+  const query = encodeURIComponent(`${university.name} ${university.location}`);
+  const url = `https://www.google.com/maps/search/?api=1&query=${query}`;
+  window.open(url, '_blank');
+};
+
 export function MapComponent() {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const [accessToken, setAccessToken] = useState('');
-  const [showTokenInput, setShowTokenInput] = useState(true);
-
-  const initializeMap = () => {
-    if (!mapContainer.current || !accessToken) return;
-
-    // Set Mapbox access token
-    mapboxgl.accessToken = accessToken;
-    
-    try {
-      map.current = new mapboxgl.Map({
-        container: mapContainer.current,
-        style: 'mapbox://styles/mapbox/streets-v12',
-        center: [-77.0428, -12.0464], // Lima, Peru
-        zoom: 11,
-      });
-
-      // Add navigation controls
-      map.current.addControl(
-        new mapboxgl.NavigationControl(),
-        'top-right'
-      );
-
-      // Add markers for universities
-      universities.forEach(university => {
-        const markerColor = university.type === 'Pública' ? '#e74c3c' : '#3498db';
-        
-        // Create marker
-        const marker = new mapboxgl.Marker({ color: markerColor })
-          .setLngLat(university.coordinates)
-          .addTo(map.current!);
-
-        // Create popup
-        const popup = new mapboxgl.Popup({ offset: 25 })
-          .setHTML(`
-            <div class="p-2">
-              <h3 class="font-bold text-sm">${university.name}</h3>
-              <p class="text-xs text-gray-600">${university.location}</p>
-              <p class="text-xs"><span class="font-medium">Tipo:</span> ${university.type}</p>
-            </div>
-          `);
-
-        marker.setPopup(popup);
-      });
-
-      setShowTokenInput(false);
-    } catch (error) {
-      console.error('Error initializing map:', error);
-      alert('Error al inicializar el mapa. Verifica tu token de Mapbox.');
-    }
-  };
-
-  useEffect(() => {
-    return () => {
-      map.current?.remove();
-    };
-  }, []);
-
-  if (showTokenInput) {
-    return (
-      <div className="flex items-center justify-center h-96 bg-muted rounded-lg">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle>Configurar Mapbox</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              Para usar el mapa interactivo, necesitas un token público de Mapbox.
-            </p>
-            <Input
-              type="text"
-              placeholder="Ingresa tu token público de Mapbox"
-              value={accessToken}
-              onChange={(e) => setAccessToken(e.target.value)}
-            />
-            <div className="space-y-2">
-              <Button 
-                onClick={initializeMap} 
-                disabled={!accessToken}
-                className="w-full"
-              >
-                Cargar Mapa
-              </Button>
-              <p className="text-xs text-muted-foreground">
-                Obtén tu token en{' '}
-                <a 
-                  href="https://mapbox.com/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-primary hover:underline"
-                >
-                  mapbox.com
-                </a>
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   return (
     <div className="relative h-96 w-full">
-      <div ref={mapContainer} className="absolute inset-0 rounded-lg shadow-lg" />
-      <div className="absolute top-4 left-4 bg-card p-2 rounded shadow-lg">
-        <div className="flex items-center space-x-2 text-sm">
-          <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-          <span>Privadas</span>
-          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-          <span>Públicas</span>
-        </div>
-      </div>
+      <Card className="h-full">
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <MapPin className="h-5 w-5" />
+            <span>Ubicaciones de Universidades</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-muted-foreground text-sm">
+            Encuentra la ubicación exacta de cada universidad en Google Maps
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {universities.map(university => (
+              <Button
+                key={university.id}
+                variant="outline"
+                className="justify-between h-auto p-4 hover:bg-accent"
+                onClick={() => openGoogleMaps(university)}
+              >
+                <div className="text-left">
+                  <div className="font-medium text-sm">{university.name}</div>
+                  <div className="text-xs text-muted-foreground">{university.location}</div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className={`w-2 h-2 rounded-full ${
+                    university.type === 'Pública' ? 'bg-red-500' : 'bg-blue-500'
+                  }`}></span>
+                  <ExternalLink className="h-4 w-4" />
+                </div>
+              </Button>
+            ))}
+          </div>
+          
+          <div className="flex items-center justify-center space-x-4 text-sm text-muted-foreground pt-4 border-t">
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+              <span>Privadas</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+              <span>Públicas</span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
