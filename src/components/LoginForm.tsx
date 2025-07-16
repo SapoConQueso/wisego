@@ -48,6 +48,13 @@ export function LoginForm({ onSwitchToRegister, onGuestLogin }: LoginFormProps) 
       <div className="flex flex-col items-center mb-8">
         <WiseGoLogo size="lg" className="mb-4" />
         <h1 className="text-4xl font-bold text-primary">WiseGO!</h1>
+        
+        {/* Disclaimer */}
+        <div className="mt-6 p-4 bg-muted/10 border border-muted/20 rounded-lg max-w-md">
+          <p className="text-sm text-muted-foreground text-center leading-relaxed">
+            <strong>Aviso Legal:</strong> La información proporcionada en esta plataforma puede no ser verídica y se presenta únicamente con fines ilustrativos y de demostración. Los usuarios deben verificar independientemente cualquier información antes de tomar decisiones basadas en ella.
+          </p>
+        </div>
       </div>
       
       <div className="bg-primary rounded-xl p-6 space-y-4">
