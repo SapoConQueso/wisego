@@ -219,6 +219,14 @@ export interface Translations {
     getStarted: string;
   };
   
+  // Chat functionality
+  chat: {
+    welcomeMessage: string;
+    startConversation: string;
+    typing: string;
+    placeholder: string;
+  };
+
   // Language selector
   language: {
     select: string;
@@ -437,6 +445,12 @@ export const translations: Record<Language, Translations> = {
       welcome: 'Bienvenido',
       getStarted: 'Comenzar'
     },
+    chat: {
+      welcomeMessage: '¡Hola! Soy tu asistente de orientación educativa. ¿En qué puedo ayudarte hoy?',
+      startConversation: '¡Comienza la conversación escribiendo un mensaje!',
+      typing: 'Escribiendo...',
+      placeholder: 'Escribe tu mensaje...'
+    },
     language: {
       select: 'Seleccionar idioma',
       current: 'Idioma actual'
@@ -649,6 +663,12 @@ export const translations: Record<Language, Translations> = {
       filter: 'Filter',
       welcome: 'Welcome',
       getStarted: 'Get Started'
+    },
+    chat: {
+      welcomeMessage: 'Hello! I am your educational guidance assistant. How can I help you today?',
+      startConversation: 'Start the conversation by writing a message!',
+      typing: 'Typing...',
+      placeholder: 'Type your message...'
     },
     language: {
       select: 'Select language',
@@ -863,6 +883,12 @@ export const translations: Record<Language, Translations> = {
       welcome: 'Allin hamusqayki',
       getStarted: 'Qallariy'
     },
+    chat: {
+      welcomeMessage: '¡Napaykullayki! Yachana pusaq yanasqayki kani. ¿Imapichus yanapasayki kunan punchaw?',
+      startConversation: '¡Huk willaywan qillqaspa rimanakuyta qallariy!',
+      typing: 'Qillqaspa...',
+      placeholder: 'Willayniykita qillqay...'
+    },
     language: {
       select: 'Simi akllay',
       current: 'Kunan simi'
@@ -1075,6 +1101,12 @@ export const translations: Record<Language, Translations> = {
       filter: 'Churiña',
       welcome: 'Suma jutawi',
       getStarted: 'Qalltaña'
+    },
+    chat: {
+      welcomeMessage: '¡Suma jutawi! Yatiñ irptayiri yanapirimaawa. ¿Kunjamatsa yanapäta jichha uruwi?',
+      startConversation: '¡Aruskipaña qalltañataki maya yatiyäwi qillqam!',
+      typing: 'Qillqaskiwa...',
+      placeholder: 'Yatiyäwima qillqantam...'
     },
     language: {
       select: 'Aru ajlliña',

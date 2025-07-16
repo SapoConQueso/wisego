@@ -1,14 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
-import { ArrowLeft, Send, Bot, User, Settings, Key } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { LanguageSelector } from "./LanguageSelector";
+import { ArrowLeft, Send, Bot, User } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { getTranslation } from "@/lib/translations";
 
 interface Message {
   id: number;
@@ -26,21 +25,23 @@ interface DeepseekChatProps {
 export function DeepseekChat({ onNavigate, title, systemPrompt = "Eres un asistente especializado en orientación educativa. Ayuda a los usuarios con preguntas sobre carreras, universidades y educación." }: DeepseekChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
-  const [apiKey, setApiKey] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { currentLanguage } = useLanguage();
+  const t = getTranslation(currentLanguage);
 
-  // Función para obtener la API key (siempre del usuario ahora)
-  const getApiKey = () => {
-    return apiKey;
-  };
-
-  // Verificar si tenemos una API key válida
-  const hasValidApiKey = () => {
-    const key = getApiKey();
-    return key && key.trim().length > 0;
-  };
+  // Mensaje inicial de bienvenida
+  useEffect(() => {
+    if (messages.length === 0) {
+      const welcomeMessage: Message = {
+        id: Date.now(),
+        text: t.chat.welcomeMessage || "¡Hola! Soy tu asistente de orientación educativa. ¿En qué puedo ayudarte hoy?",
+        isBot: true,
+        timestamp: new Date()
+      };
+      setMessages([welcomeMessage]);
+    }
+  }, [t.chat.welcomeMessage, messages.length]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -48,52 +49,73 @@ export function DeepseekChat({ onNavigate, title, systemPrompt = "Eres un asiste
 
   useEffect(scrollToBottom, [messages]);
 
-  const callDeepseekAPI = async (userMessage: string): Promise<string> => {
-    const finalApiKey = getApiKey();
+  // Simulación de respuesta de IA (reemplazará la llamada real más tarde)
+  const simulateAIResponse = async (userMessage: string): Promise<string> => {
+    // Simulamos un delay para hacer parecer que está procesando
+    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
     
-    if (!finalApiKey.trim()) {
-      throw new Error("Por favor, configura tu API Key de Deepseek primero.");
+    // Respuestas predefinidas inteligentes basadas en palabras clave
+    const responses = {
+      saludo: [
+        "¡Hola! Me alegra poder ayudarte con tu orientación educativa. ¿Tienes alguna carrera específica en mente?",
+        "¡Perfecto! Estoy aquí para guiarte en tu búsqueda educativa. ¿Qué te interesa estudiar?",
+        "¡Excelente! Puedo ayudarte a explorar diferentes opciones educativas. ¿Cuáles son tus intereses principales?"
+      ],
+      carrera: [
+        "Hay muchas carreras fascinantes disponibles. ¿Podrías contarme más sobre tus intereses y habilidades para poder recomendarte mejor?",
+        "Para ayudarte a elegir la carrera ideal, me gustaría conocer: ¿qué materias te gustan más? ¿Prefieres trabajar con personas, datos, o proyectos creativos?",
+        "Excelente pregunta sobre carreras. ¿Hay algún campo específico que te llame la atención? Por ejemplo: tecnología, salud, arte, negocios, etc."
+      ],
+      universidad: [
+        "Las universidades en Perú ofrecen excelentes programas. ¿Tienes preferencia por alguna región específica o modalidad de estudio?",
+        "Hay muchas opciones universitarias. Para recomendarte mejor, ¿qué factores son más importantes para ti: ubicación, costos, prestigio, o especialización?",
+        "Te puedo ayudar a comparar universidades. ¿Estás considerando universidades públicas, privadas, o ambas opciones?"
+      ],
+      ingenieria: [
+        "¡La ingeniería es un campo excelente! Hay muchas especializaciones: industrial, sistemas, civil, mecánica, etc. ¿Alguna te interesa más?",
+        "Las carreras de ingeniería tienen gran demanda laboral. ¿Te inclinas más hacia la tecnología, la construcción, o los procesos industriales?",
+        "Perfecto, la ingeniería ofrece muchas oportunidades. ¿Prefieres trabajar con software, hardware, infraestructura, o procesos?"
+      ],
+      medicina: [
+        "La medicina es una carrera muy noble y demandante. ¿Te atrae más la práctica clínica, la investigación, o alguna especialidad específica?",
+        "Estudiar medicina requiere mucha dedicación pero es muy gratificante. ¿Has considerado las diferentes ramas como pediatría, cirugía, o medicina familiar?",
+        "Excelente elección considerar medicina. ¿Te interesa más el contacto directo con pacientes o la investigación médica?"
+      ],
+      administracion: [
+        "La administración de empresas es muy versátil. ¿Te interesa más el área de finanzas, marketing, recursos humanos, o operaciones?",
+        "Los negocios ofrecen muchas oportunidades. ¿Tienes interés en emprender tu propio negocio o trabajar en empresas establecidas?",
+        "La gestión empresarial es clave en todas las industrias. ¿Qué tipo de organizaciones te atraen más: startups, corporaciones, ONG?"
+      ],
+      default: [
+        "Esa es una excelente pregunta. Basándome en mi experiencia en orientación educativa, te recomiendo considerar varios factores importantes.",
+        "Me parece muy interesante tu consulta. Para darte una respuesta más específica, ¿podrías contarme un poco más sobre tu situación actual?",
+        "Gracias por tu pregunta. En mi experiencia ayudando estudiantes, he visto que es importante considerar tanto tus intereses como las oportunidades del mercado laboral."
+      ]
+    };
+
+    // Detectar palabras clave en el mensaje del usuario
+    const message = userMessage.toLowerCase();
+    let responseCategory = 'default';
+    
+    if (message.includes('hola') || message.includes('buenos') || message.includes('saludos')) {
+      responseCategory = 'saludo';
+    } else if (message.includes('carrera') || message.includes('estudiar') || message.includes('profesión')) {
+      responseCategory = 'carrera';
+    } else if (message.includes('universidad') || message.includes('instituto') || message.includes('centro de estudios')) {
+      responseCategory = 'universidad';
+    } else if (message.includes('ingeniería') || message.includes('ingenieria') || message.includes('ingeniero')) {
+      responseCategory = 'ingenieria';
+    } else if (message.includes('medicina') || message.includes('doctor') || message.includes('médico') || message.includes('salud')) {
+      responseCategory = 'medicina';
+    } else if (message.includes('administración') || message.includes('administracion') || message.includes('negocios') || message.includes('empresas')) {
+      responseCategory = 'administracion';
     }
 
-    try {
-      const response = await fetch('https://api.deepseek.com/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${finalApiKey}`
-        },
-        body: JSON.stringify({
-          model: 'deepseek-chat',
-          messages: [
-            {
-              role: 'system',
-              content: systemPrompt
-            },
-            ...messages.map(msg => ({
-              role: msg.isBot ? 'assistant' : 'user',
-              content: msg.text
-            })),
-            {
-              role: 'user',
-              content: userMessage
-            }
-          ],
-          temperature: 0.7,
-          max_tokens: 1000,
-          stream: false
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error ${response.status}: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      return data.choices[0]?.message?.content || "Lo siento, no pude generar una respuesta.";
-    } catch (error) {
-      console.error('Error calling Deepseek API:', error);
-      throw error;
-    }
+    // Seleccionar una respuesta aleatoria de la categoría
+    const categoryResponses = responses[responseCategory as keyof typeof responses];
+    const randomResponse = categoryResponses[Math.floor(Math.random() * categoryResponses.length)];
+    
+    return randomResponse;
   };
 
   const sendMessage = async () => {
@@ -109,10 +131,9 @@ export function DeepseekChat({ onNavigate, title, systemPrompt = "Eres un asiste
     setMessages(prev => [...prev, userMessage]);
     setInputValue("");
     setIsLoading(true);
-    setError("");
 
     try {
-      const botResponse = await callDeepseekAPI(userMessage.text);
+      const botResponse = await simulateAIResponse(userMessage.text);
       
       const botMessage: Message = {
         id: Date.now() + 1,
@@ -123,12 +144,10 @@ export function DeepseekChat({ onNavigate, title, systemPrompt = "Eres un asiste
 
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
-      setError(error instanceof Error ? error.message : "Error desconocido");
-      
       // Agregar mensaje de error como respuesta del bot
       const errorMessage: Message = {
         id: Date.now() + 1,
-        text: `Error: ${error instanceof Error ? error.message : "No se pudo conectar con el servicio."}`,
+        text: `Error: ${error instanceof Error ? error.message : "No se pudo conectar con el servicio. Inténtalo de nuevo."}`,
         isBot: true,
         timestamp: new Date()
       };
@@ -163,59 +182,10 @@ export function DeepseekChat({ onNavigate, title, systemPrompt = "Eres un asiste
         </div>
         
         <div className="flex items-center space-x-2">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="ghost" size="sm" className="text-primary-foreground hover:bg-primary-foreground/10">
-                <Settings className="h-5 w-5" />
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Configuración de API</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="apikey">API Key de Deepseek</Label>
-                  <div className="flex space-x-2 mt-2">
-                    <Key className="h-4 w-4 mt-3 text-muted-foreground" />
-                    <Input
-                      id="apikey"
-                      type="password"
-                      value={apiKey}
-                      onChange={(e) => setApiKey(e.target.value)}
-                      placeholder="sk-..."
-                      className="flex-1"
-                    />
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    Obtén tu API Key en: https://platform.deepseek.com/
-                  </p>
-                </div>
-                <div>
-                  <Label htmlFor="systemprompt">Prompt del Sistema</Label>
-                  <Textarea
-                    id="systemprompt"
-                    value={systemPrompt}
-                    readOnly
-                    className="mt-2"
-                    rows={3}
-                  />
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
+          <LanguageSelector />
           <ThemeToggle />
         </div>
       </header>
-
-      {/* Error Alert */}
-      {error && (
-        <Alert className="m-4 border-destructive">
-          <AlertDescription>
-            {error}
-          </AlertDescription>
-        </Alert>
-      )}
 
       {/* Chat Area */}
       <div className="flex-1 overflow-y-auto p-4">
@@ -225,48 +195,9 @@ export function DeepseekChat({ onNavigate, title, systemPrompt = "Eres un asiste
             <div className="space-y-2">
               <h3 className="text-xl font-semibold">{title}</h3>
               <p className="text-muted-foreground max-w-md">
-                {hasValidApiKey() ? "¡Hola! ¿En qué puedo ayudarte hoy?" : "Para comenzar, configura tu API Key de Deepseek"}
+                {t.chat.startConversation || "¡Comienza la conversación escribiendo un mensaje!"}
               </p>
             </div>
-            
-            {!hasValidApiKey() && (
-              <div className="space-y-4 max-w-md">
-                <Alert>
-                  <AlertDescription>
-                    💡 <strong>¿Cómo obtener una API Key?</strong><br/>
-                    1. Ve a <a href="https://platform.deepseek.com" target="_blank" className="text-primary hover:underline">platform.deepseek.com</a><br/>
-                    2. Regístrate o inicia sesión<br/>
-                    3. Ve a "API Keys" y crea una nueva<br/>
-                    4. Copia la key y pégala arriba
-                  </AlertDescription>
-                </Alert>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="quick-api-key">API Key de Deepseek</Label>
-                  <div className="flex space-x-2">
-                    <Input
-                      id="quick-api-key"
-                      type="password"
-                      placeholder="sk-..."
-                      value={apiKey}
-                      onChange={(e) => setApiKey(e.target.value)}
-                      className="font-mono"
-                    />
-                    <Button 
-                      size="sm"
-                      onClick={() => {
-                        if (hasValidApiKey()) {
-                          setError("");
-                        }
-                      }}
-                      disabled={!hasValidApiKey()}
-                    >
-                      Conectar
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         ) : (
           <div className="space-y-4 max-w-4xl mx-auto">
@@ -297,7 +228,7 @@ export function DeepseekChat({ onNavigate, title, systemPrompt = "Eres un asiste
                   <CardContent className="p-3">
                     <div className="flex items-center space-x-2">
                       <Bot className="h-5 w-5 animate-pulse" />
-                      <p className="text-sm">Escribiendo...</p>
+                      <p className="text-sm">{t.chat.typing || "Escribiendo..."}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -315,13 +246,13 @@ export function DeepseekChat({ onNavigate, title, systemPrompt = "Eres un asiste
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder={hasValidApiKey() ? "Escribe tu mensaje..." : "Configura tu API Key primero..."}
-            disabled={!hasValidApiKey() || isLoading}
+            placeholder={t.chat.placeholder || "Escribe tu mensaje..."}
+            disabled={isLoading}
             className="flex-1"
           />
           <Button 
             onClick={sendMessage} 
-            disabled={!inputValue.trim() || !hasValidApiKey() || isLoading}
+            disabled={!inputValue.trim() || isLoading}
             size="sm"
           >
             <Send className="h-4 w-4" />

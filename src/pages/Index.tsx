@@ -13,6 +13,7 @@ import { ProfilePage } from "@/components/ProfilePage";
 import { CommunityPage } from "@/components/CommunityPage";
 import { UniversityTourPage } from "@/components/UniversityTourPage";
 import { AuthProvider, useAuth } from "@/components/AuthProvider";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Toaster } from "@/components/ui/sonner";
 
 type ViewType = "login" | "register" | "dashboard" | "about" | "chatbots" | "vocational-test" | "ai-chat" | "compare" | "map" | "profile" | "community" | "university-tour";
@@ -120,10 +121,12 @@ function AppContent() {
 
 const Index = () => {
   return (
-    <AuthProvider>
-      <AppContent />
-      <Toaster />
-    </AuthProvider>
+    <LanguageProvider>
+      <AuthProvider>
+        <AppContent />
+        <Toaster />
+      </AuthProvider>
+    </LanguageProvider>
   );
 };
 
