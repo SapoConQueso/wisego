@@ -4,6 +4,14 @@ import { createClient, User, Session } from "@supabase/supabase-js";
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('Supabase environment variables missing:', { 
+    url: !!supabaseUrl, 
+    key: !!supabaseAnonKey 
+  });
+  throw new Error('Supabase no está configurado correctamente. Por favor reconecta tu proyecto a Supabase.');
+}
+
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export interface UserSession {
