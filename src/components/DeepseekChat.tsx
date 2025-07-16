@@ -38,8 +38,17 @@ export function DeepseekChat({ onNavigate, title, systemPrompt = "Eres un asiste
   useEffect(scrollToBottom, [messages]);
 
   const callDeepseekAPI = async (userMessage: string): Promise<string> => {
-    if (!apiKey.trim()) {
-      throw new Error("Por favor, configura tu API Key de Deepseek primero.");
+    // Usar las API keys específicas según el tipo de chat
+    let finalApiKey = "";
+    if (title === "Test Vocacional IA") {
+      finalApiKey = "sk-6c6b73b29e854804b16c32eb32153dd0";
+    } else if (title === "Chat IA General") {
+      finalApiKey = "sk-f7645a1fdbe245bb816f9d304951062b";
+    } else {
+      finalApiKey = apiKey;
+      if (!finalApiKey.trim()) {
+        throw new Error("Por favor, configura tu API Key de Deepseek primero.");
+      }
     }
 
     try {
@@ -47,7 +56,7 @@ export function DeepseekChat({ onNavigate, title, systemPrompt = "Eres un asiste
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
+          'Authorization': `Bearer ${finalApiKey}`
         },
         body: JSON.stringify({
           model: 'deepseek-chat',

@@ -11,8 +11,9 @@ import { AiChatPage } from "@/components/AiChatPage";
 import { ComparePage } from "@/components/ComparePage";
 import { MapPage } from "@/components/MapPage";
 import { ProfilePage } from "@/components/ProfilePage";
+import { CommunityPage } from "@/components/CommunityPage";
 
-type ViewType = "login" | "register" | "birthdate" | "dashboard" | "about" | "chatbots" | "vocational-test" | "ai-chat" | "compare" | "map" | "profile";
+type ViewType = "login" | "register" | "birthdate" | "dashboard" | "about" | "chatbots" | "vocational-test" | "ai-chat" | "compare" | "map" | "profile" | "community";
 
 export interface UserSession {
   isLoggedIn: boolean;
@@ -98,7 +99,7 @@ const Index = () => {
         return <AboutPage onBack={() => setCurrentView("dashboard")} />;
       
       case "chatbots":
-        return <ChatbotsPage onNavigate={(view) => setCurrentView(view as ViewType)} />;
+        return <ChatbotsPage onNavigate={(view) => setCurrentView(view as ViewType)} userSession={userSession} />;
       
       case "vocational-test":
         return <VocationalTestPage onNavigate={(view) => setCurrentView(view as ViewType)} />;
@@ -113,7 +114,10 @@ const Index = () => {
         return <MapPage onNavigate={(view) => setCurrentView(view as ViewType)} />;
       
       case "profile":
-        return <ProfilePage onNavigate={(view) => setCurrentView(view as ViewType)} />;
+        return <ProfilePage onNavigate={(view) => setCurrentView(view as ViewType)} userSession={userSession} />;
+      
+      case "community":
+        return <CommunityPage onNavigate={(view) => setCurrentView(view as ViewType)} userSession={userSession} />;
       
       default:
         return null;

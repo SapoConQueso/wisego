@@ -9,9 +9,15 @@ import { useToast } from "@/hooks/use-toast";
 
 interface ChatbotsPageProps {
   onNavigate: (view: string) => void;
+  userSession?: {
+    isLoggedIn: boolean;
+    isGuest: boolean;
+    username: string;
+    email?: string;
+  };
 }
 
-export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
+export function ChatbotsPage({ onNavigate, userSession }: ChatbotsPageProps) {
   const [isPremium, setIsPremium] = useState(false); // Simular estado premium
   const { toast } = useToast();
 
@@ -75,15 +81,24 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
           <p className="text-muted-foreground">Elige el chatbot que mejor se adapte a tus necesidades</p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           {/* Test Vocacional Bot */}
-          <Card className="border-2 hover:border-primary transition-colors cursor-pointer"
-                onClick={() => onNavigate("vocational-test")}>
-            <CardHeader className="text-center">
+          <Card className={`border-2 transition-colors ${isPremium ? 'hover:border-primary cursor-pointer' : 'opacity-60 cursor-not-allowed'}`}
+                onClick={() => isPremium ? onNavigate("vocational-test") : handlePremiumAction("Test Vocacional IA")}>
+            <CardHeader className="text-center relative">
+              {!isPremium && (
+                <Badge className="absolute top-2 right-2 bg-wisego-orange text-white">
+                  <Crown className="h-3 w-3 mr-1" />
+                  Premium
+                </Badge>
+              )}
               <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                 <GraduationCap className="h-8 w-8 text-primary" />
               </div>
-              <CardTitle className="text-xl">Test Vocacional IA</CardTitle>
+              <CardTitle className="text-xl flex items-center justify-center space-x-2">
+                <span>Test Vocacional IA</span>
+                {!isPremium && <Lock className="h-4 w-4 text-muted-foreground" />}
+              </CardTitle>
               <CardDescription>
                 Descubre tu carrera ideal con nuestro asistente especializado
               </CardDescription>
@@ -103,20 +118,37 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
                   <span>Recomendaciones basadas en tu perfil</span>
                 </div>
               </div>
-              <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                Iniciar Test Vocacional
+              <Button 
+                className={`w-full ${isPremium ? 'bg-primary hover:bg-primary/90' : 'bg-muted cursor-not-allowed'}`}
+                disabled={!isPremium}
+              >
+                {isPremium ? 'Iniciar Test Vocacional' : (
+                  <div className="flex items-center space-x-2">
+                    <Lock className="h-4 w-4" />
+                    <span>Requiere Premium</span>
+                  </div>
+                )}
               </Button>
             </CardContent>
           </Card>
 
           {/* Chat General */}
-          <Card className="border-2 hover:border-accent transition-colors cursor-pointer"
-                onClick={() => onNavigate("ai-chat")}>
-            <CardHeader className="text-center">
+          <Card className={`border-2 transition-colors ${isPremium ? 'hover:border-accent cursor-pointer' : 'opacity-60 cursor-not-allowed'}`}
+                onClick={() => isPremium ? onNavigate("ai-chat") : handlePremiumAction("Chat IA General")}>
+            <CardHeader className="text-center relative">
+              {!isPremium && (
+                <Badge className="absolute top-2 right-2 bg-wisego-orange text-white">
+                  <Crown className="h-3 w-3 mr-1" />
+                  Premium
+                </Badge>
+              )}
               <div className="mx-auto w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mb-4">
                 <MessageCircle className="h-8 w-8 text-accent" />
               </div>
-              <CardTitle className="text-xl">Chat IA General</CardTitle>
+              <CardTitle className="text-xl flex items-center justify-center space-x-2">
+                <span>Chat IA General</span>
+                {!isPremium && <Lock className="h-4 w-4 text-muted-foreground" />}
+              </CardTitle>
               <CardDescription>
                 Conversa con nuestro asistente sobre cualquier tema educativo
               </CardDescription>
@@ -136,151 +168,11 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
                   <span>Orientación académica personalizada</span>
                 </div>
               </div>
-              <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-                Iniciar Conversación
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* Premium Chatbots */}
-          <Card className={`border-2 transition-colors ${isPremium ? 'hover:border-wisego-orange cursor-pointer' : 'opacity-60 cursor-not-allowed'}`}
-                onClick={() => isPremium ? onNavigate("ai-chat") : handlePremiumAction("Chatbot UNMSM")}>
-            <CardHeader className="text-center relative">
-              {!isPremium && (
-                <Badge className="absolute top-2 right-2 bg-wisego-orange text-white">
-                  <Crown className="h-3 w-3 mr-1" />
-                  Premium
-                </Badge>
-              )}
-              <div className="mx-auto w-16 h-16 bg-wisego-orange/10 rounded-full flex items-center justify-center mb-4">
-                <Building2 className="h-8 w-8 text-wisego-orange" />
-              </div>
-              <CardTitle className="text-xl flex items-center justify-center space-x-2">
-                <span>Chatbot UNMSM</span>
-                {!isPremium && <Lock className="h-4 w-4 text-muted-foreground" />}
-              </CardTitle>
-              <CardDescription>
-                Asistente especializado en la Universidad Nacional Mayor de San Marcos
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2 text-sm text-muted-foreground">
-                <div className="flex items-center space-x-2">
-                  <BrainCircuit className="h-4 w-4" />
-                  <span>Información específica de carreras UNMSM</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <BookOpen className="h-4 w-4" />
-                  <span>Requisitos de admisión actualizados</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Users className="h-4 w-4" />
-                  <span>Experiencias de estudiantes actuales</span>
-                </div>
-              </div>
-              <Button 
-                className={`w-full ${isPremium ? 'bg-wisego-orange hover:bg-wisego-orange/90' : 'bg-muted cursor-not-allowed'}`}
-                disabled={!isPremium}
-              >
-                {isPremium ? 'Chatear con UNMSM Bot' : (
-                  <div className="flex items-center space-x-2">
-                    <Lock className="h-4 w-4" />
-                    <span>Requiere Premium</span>
-                  </div>
-                )}
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className={`border-2 transition-colors ${isPremium ? 'hover:border-primary cursor-pointer' : 'opacity-60 cursor-not-allowed'}`}
-                onClick={() => isPremium ? onNavigate("ai-chat") : handlePremiumAction("Chatbot UNI")}>
-            <CardHeader className="text-center relative">
-              {!isPremium && (
-                <Badge className="absolute top-2 right-2 bg-wisego-orange text-white">
-                  <Crown className="h-3 w-3 mr-1" />
-                  Premium
-                </Badge>
-              )}
-              <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                <Building2 className="h-8 w-8 text-primary" />
-              </div>
-              <CardTitle className="text-xl flex items-center justify-center space-x-2">
-                <span>Chatbot UNI</span>
-                {!isPremium && <Lock className="h-4 w-4 text-muted-foreground" />}
-              </CardTitle>
-              <CardDescription>
-                Experto en Universidad Nacional de Ingeniería
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2 text-sm text-muted-foreground">
-                <div className="flex items-center space-x-2">
-                  <BrainCircuit className="h-4 w-4" />
-                  <span>Especializado en carreras de ingeniería</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <BookOpen className="h-4 w-4" />
-                  <span>Información de laboratorios y proyectos</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Users className="h-4 w-4" />
-                  <span>Conexión con estudiantes UNI</span>
-                </div>
-              </div>
-              <Button 
-                className={`w-full ${isPremium ? 'bg-primary hover:bg-primary/90' : 'bg-muted cursor-not-allowed'}`}
-                disabled={!isPremium}
-              >
-                {isPremium ? 'Chatear con UNI Bot' : (
-                  <div className="flex items-center space-x-2">
-                    <Lock className="h-4 w-4" />
-                    <span>Requiere Premium</span>
-                  </div>
-                )}
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className={`border-2 transition-colors ${isPremium ? 'hover:border-accent cursor-pointer' : 'opacity-60 cursor-not-allowed'}`}
-                onClick={() => isPremium ? onNavigate("ai-chat") : handlePremiumAction("Chatbot PUCP")}>
-            <CardHeader className="text-center relative">
-              {!isPremium && (
-                <Badge className="absolute top-2 right-2 bg-wisego-orange text-white">
-                  <Crown className="h-3 w-3 mr-1" />
-                  Premium
-                </Badge>
-              )}
-              <div className="mx-auto w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mb-4">
-                <Building2 className="h-8 w-8 text-accent" />
-              </div>
-              <CardTitle className="text-xl flex items-center justify-center space-x-2">
-                <span>Chatbot PUCP</span>
-                {!isPremium && <Lock className="h-4 w-4 text-muted-foreground" />}
-              </CardTitle>
-              <CardDescription>
-                Guía para la Pontificia Universidad Católica del Perú
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2 text-sm text-muted-foreground">
-                <div className="flex items-center space-x-2">
-                  <BrainCircuit className="h-4 w-4" />
-                  <span>Información académica completa PUCP</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <BookOpen className="h-4 w-4" />
-                  <span>Becas y programas de intercambio</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Users className="h-4 w-4" />
-                  <span>Vida estudiantil y actividades</span>
-                </div>
-              </div>
               <Button 
                 className={`w-full ${isPremium ? 'bg-accent hover:bg-accent/90' : 'bg-muted cursor-not-allowed'}`}
                 disabled={!isPremium}
               >
-                {isPremium ? 'Chatear con PUCP Bot' : (
+                {isPremium ? 'Iniciar Conversación' : (
                   <div className="flex items-center space-x-2">
                     <Lock className="h-4 w-4" />
                     <span>Requiere Premium</span>
@@ -290,6 +182,7 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
             </CardContent>
           </Card>
         </div>
+
 
         {/* Tips Section */}
         <div className="max-w-2xl mx-auto mt-12">

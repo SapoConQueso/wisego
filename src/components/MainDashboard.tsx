@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
-import { Menu, Search, ChevronRight, Info, BarChart3, MapPin, MessageSquare, User, LogOut } from "lucide-react";
+import { Menu, Search, ChevronRight, Info, BarChart3, MapPin, MessageSquare, User, LogOut, Users } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { UserSession } from "@/pages/Index";
 
@@ -21,6 +21,7 @@ export function MainDashboard({ onNavigate, userSession, onLogout }: MainDashboa
     { icon: BarChart3, label: "Comparar", action: () => onNavigate("compare") },
     { icon: MapPin, label: "Mapa", action: () => onNavigate("map") },
     { icon: MessageSquare, label: "Chatbots", action: () => onNavigate("chatbots") },
+    { icon: Users, label: "Comunidad", action: () => onNavigate("community") },
   ];
 
   return (

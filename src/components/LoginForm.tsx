@@ -74,9 +74,16 @@ export function LoginForm({ onSwitchToRegister, onLogin, onGuestAccess }: LoginF
           </label>
         </div>
         
-        <p className="text-xs text-white/80 text-center">
+        <Button
+          variant="ghost"
+          className="text-xs text-white/80 hover:text-white hover:bg-white/10 p-0 h-auto"
+          onClick={() => {
+            // Simulate forgot password action
+            alert("Se ha enviado un enlace de recuperación a tu correo electrónico.");
+          }}
+        >
           ¿Has olvidado tu contraseña?
-        </p>
+        </Button>
         
         <div className="space-y-2">
           <Button

@@ -14,9 +14,15 @@ import { useUser } from "@/hooks/useUser";
 
 interface ProfilePageProps {
   onNavigate: (view: string) => void;
+  userSession: {
+    isLoggedIn: boolean;
+    isGuest: boolean;
+    username: string;
+    email?: string;
+  };
 }
 
-export function ProfilePage({ onNavigate }: ProfilePageProps) {
+export function ProfilePage({ onNavigate, userSession }: ProfilePageProps) {
   const { user, updateUser } = useUser();
   const [isVerified, setIsVerified] = useState(user.isVerified);
   const [dniValue, setDniValue] = useState("");
@@ -155,20 +161,24 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                     </div>
                   ) : (
                      <>
-                       <CardTitle className="text-2xl">{randomUser.name || user.name}</CardTitle>
-                       <Button 
-                         variant="ghost" 
-                         size="sm"
-                         onClick={() => setIsEditingName(true)}
-                       >
-                         <Edit className="h-4 w-4" />
-                       </Button>
+                       <CardTitle className="text-2xl">
+                         {userSession.isGuest ? "Invitado" : (randomUser.name || user.name)}
+                       </CardTitle>
+                       {!userSession.isGuest && (
+                         <Button 
+                           variant="ghost" 
+                           size="sm"
+                           onClick={() => setIsEditingName(true)}
+                         >
+                           <Edit className="h-4 w-4" />
+                         </Button>
+                       )}
                      </>
-                  )}
-                </div>
-                <CardDescription>
-                  Estudiante • Registro: {user.registrationDate.toLocaleDateString('es-ES', { year: 'numeric', month: 'long' })}
-                </CardDescription>
+                   )}
+                 </div>
+                 <CardDescription>
+                   {userSession.isGuest ? "Usuario invitado" : `Estudiante • Registro: ${user.registrationDate.toLocaleDateString('es-ES', { year: 'numeric', month: 'long' })}`}
+                 </CardDescription>
                 <div className="flex items-center space-x-2 mt-2">
                   {isVerified ? (
                     <Badge className="bg-green-100 text-green-800 border-green-300">
@@ -185,51 +195,53 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
         </Card>
 
         {/* Account Verification */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Shield className="h-5 w-5" />
-              <span>Verificación de Cuenta</span>
-            </CardTitle>
-            <CardDescription>
-              Verifica tu identidad con tu DNI peruano para acceder a todas las funciones
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {!isVerified ? (
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="dni">Documento Nacional de Identidad (DNI)</Label>
-                  <Input
-                    id="dni"
-                    type="text"
-                    placeholder="12345678"
-                    value={dniValue}
-                    onChange={(e) => setDniValue(e.target.value.replace(/\D/g, '').slice(0, 8))}
-                    className="mt-1"
-                    maxLength={8}
-                  />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Ingresa tu DNI de 8 dígitos sin espacios ni guiones
+        {!userSession.isGuest && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Shield className="h-5 w-5" />
+                <span>Verificación de Cuenta</span>
+              </CardTitle>
+              <CardDescription>
+                Verifica tu identidad con tu DNI peruano para acceder a todas las funciones
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {!isVerified ? (
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="dni">Documento Nacional de Identidad (DNI)</Label>
+                    <Input
+                      id="dni"
+                      type="text"
+                      placeholder="12345678"
+                      value={dniValue}
+                      onChange={(e) => setDniValue(e.target.value.replace(/\D/g, '').slice(0, 8))}
+                      className="mt-1"
+                      maxLength={8}
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Ingresa tu DNI de 8 dígitos sin espacios ni guiones
+                    </p>
+                  </div>
+                  <Button onClick={handleVerifyDNI} className="w-full">
+                    Verificar DNI
+                  </Button>
+                </div>
+              ) : (
+                <div className="text-center py-4">
+                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Check className="h-8 w-8 text-green-600" />
+                  </div>
+                  <p className="text-green-600 font-medium">¡Cuenta verificada exitosamente!</p>
+                  <p className="text-sm text-muted-foreground">
+                    Ahora tienes acceso completo a todas las funciones de WiseGO
                   </p>
                 </div>
-                <Button onClick={handleVerifyDNI} className="w-full">
-                  Verificar DNI
-                </Button>
-              </div>
-            ) : (
-              <div className="text-center py-4">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Check className="h-8 w-8 text-green-600" />
-                </div>
-                <p className="text-green-600 font-medium">¡Cuenta verificada exitosamente!</p>
-                <p className="text-sm text-muted-foreground">
-                  Ahora tienes acceso completo a todas las funciones de WiseGO
-                </p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         {/* Language Settings */}
         <Card>
@@ -356,93 +368,94 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
         </Card>
 
         {/* Premium Subscription */}
-        <Card className={isPremium ? "border-wisego-orange bg-gradient-to-r from-wisego-orange/5 to-primary/5" : ""}>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Crown className="h-5 w-5 text-wisego-orange" />
-                <span>Suscripción Premium</span>
-              </div>
-              {isPremium && (
-                <Badge className="bg-wisego-orange text-white">
-                  <Crown className="h-3 w-3 mr-1" />
-                  Premium
-                </Badge>
-              )}
-            </CardTitle>
-            <CardDescription>
-              {isPremium 
-                ? "Tienes acceso completo a chatbots y mapas universitarios"
-                : "Accede a chatbots especializados y mapas interactivos de universidades por S/25 al mes"
-              }
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {!isPremium ? (
-              <>
-                <div className="space-y-3">
-                  <h4 className="font-semibold text-primary">Beneficios Premium:</h4>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
-                    <li className="flex items-center space-x-2">
-                      <Check className="h-4 w-4 text-green-500" />
-                      <span>Acceso a chatbots especializados por universidad</span>
-                    </li>
-                    <li className="flex items-center space-x-2">
-                      <Check className="h-4 w-4 text-green-500" />
-                      <span>Mapas interactivos 3D de universidades</span>
-                    </li>
-                    <li className="flex items-center space-x-2">
-                      <Check className="h-4 w-4 text-green-500" />
-                      <span>Tours virtuales completos</span>
-                    </li>
-                    <li className="flex items-center space-x-2">
-                      <Check className="h-4 w-4 text-green-500" />
-                      <span>Recomendaciones personalizadas</span>
-                    </li>
-                  </ul>
+        {!userSession.isGuest && (
+          <Card className={isPremium ? "border-wisego-orange bg-gradient-to-r from-wisego-orange/5 to-primary/5" : ""}>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Crown className="h-5 w-5 text-wisego-orange" />
+                  <span>Suscripción Premium</span>
                 </div>
-                
-                <div className="space-y-4 p-4 bg-muted/50 rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <span className="text-lg font-semibold">Precio mensual:</span>
-                    <span className="text-2xl font-bold text-wisego-orange">S/25</span>
-                  </div>
-                  
+                {isPremium && (
+                  <Badge className="bg-wisego-orange text-white">
+                    <Crown className="h-3 w-3 mr-1" />
+                    Premium
+                  </Badge>
+                )}
+              </CardTitle>
+              <CardDescription>
+                {isPremium 
+                  ? "Tienes acceso completo a Test Vocacional IA y Chat IA General"
+                  : "Accede a Test Vocacional IA y Chat IA General por S/25 al mes"
+                }
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {!isPremium ? (
+                <>
                   <div className="space-y-3">
-                    <Label>Información de pago</Label>
-                    <div className="space-y-2">
-                      <Input 
-                        placeholder="Número de tarjeta" 
-                        className="text-center tracking-wider"
-                      />
-                      <div className="grid grid-cols-2 gap-2">
-                        <Input placeholder="MM/AA" />
-                        <Input placeholder="CVV" />
-                      </div>
-                      <Input placeholder="Nombre del titular" />
-                    </div>
+                    <h4 className="font-semibold text-primary">Beneficios Premium:</h4>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li className="flex items-center space-x-2">
+                        <Check className="h-4 w-4 text-green-500" />
+                        <span>Test Vocacional IA especializado</span>
+                      </li>
+                      <li className="flex items-center space-x-2">
+                        <Check className="h-4 w-4 text-green-500" />
+                        <span>Chat IA General para consultas académicas</span>
+                      </li>
+                      <li className="flex items-center space-x-2">
+                        <Check className="h-4 w-4 text-green-500" />
+                        <span>Recomendaciones personalizadas</span>
+                      </li>
+                      <li className="flex items-center space-x-2">
+                        <Check className="h-4 w-4 text-green-500" />
+                        <span>Soporte prioritario</span>
+                      </li>
+                    </ul>
                   </div>
                   
-                  <Button 
-                    className="w-full bg-wisego-orange hover:bg-wisego-orange/90 text-white"
-                    onClick={() => {
-                      setIsPremium(true);
-                      toast({
-                        title: "¡Suscripción activada!",
-                        description: "Ahora tienes acceso completo a todas las funciones premium.",
-                      });
-                    }}
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Suscribirse a Premium
-                  </Button>
-                  
-                  <p className="text-xs text-muted-foreground text-center">
-                    Puedes cancelar en cualquier momento. Se renovará automáticamente cada mes.
-                  </p>
-                </div>
-              </>
-            ) : (
+                  <div className="space-y-4 p-4 bg-muted/50 rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-semibold">Precio mensual:</span>
+                      <span className="text-2xl font-bold text-wisego-orange">S/25</span>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <Label>Información de pago</Label>
+                      <div className="space-y-2">
+                        <Input 
+                          placeholder="Número de tarjeta" 
+                          className="text-center tracking-wider"
+                        />
+                        <div className="grid grid-cols-2 gap-2">
+                          <Input placeholder="MM/AA" />
+                          <Input placeholder="CVV" />
+                        </div>
+                        <Input placeholder="Nombre del titular" />
+                      </div>
+                    </div>
+                    
+                    <Button 
+                      className="w-full bg-wisego-orange hover:bg-wisego-orange/90 text-white"
+                      onClick={() => {
+                        setIsPremium(true);
+                        toast({
+                          title: "¡Suscripción activada!",
+                          description: "Ahora tienes acceso completo a todas las funciones premium.",
+                        });
+                      }}
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Suscribirse a Premium
+                    </Button>
+                    
+                    <p className="text-xs text-muted-foreground text-center">
+                      Puedes cancelar en cualquier momento. Se renovará automáticamente cada mes.
+                    </p>
+                  </div>
+                </>
+              ) : (
               <div className="text-center py-4">
                 <div className="w-16 h-16 bg-wisego-orange/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Crown className="h-8 w-8 text-wisego-orange" />
@@ -457,7 +470,8 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
               </div>
             )}
           </CardContent>
-        </Card>
+          </Card>
+        )}
 
         {/* Account Actions */}
         <Card>
