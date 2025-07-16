@@ -471,8 +471,8 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
                         <X className="h-4 w-4 mr-2" />
                         Ya agregada
                       </>
-                    ) : selectedCareers.length >= 3 ? (
-                      "Máximo 3 carreras"
+                    ) : selectedCareers.length >= 5 ? (
+                      "Máximo 5 carreras"
                     ) : (
                       <>
                         <Plus className="h-4 w-4 mr-2" />
