@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { MapComponent } from "./MapComponent";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslation } from "@/lib/translations";
 
 interface MapPageProps {
@@ -101,12 +101,8 @@ export function MapPage({ onNavigate }: MapPageProps) {
   const [isPremium, setIsPremium] = useState(false); // Simular estado premium
   const [isDemoMode, setIsDemoMode] = useState(true); // Simular modo demo
   const { toast } = useToast();
-  const { currentLanguage, initializeLanguage } = useLanguage();
+  const { currentLanguage } = useLanguage();
   const t = getTranslation(currentLanguage);
-
-  useEffect(() => {
-    initializeLanguage();
-  }, [initializeLanguage]);
 
   const handlePremiumAction = (action: string) => {
     toast({

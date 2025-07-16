@@ -1,4 +1,4 @@
-import { Language } from '@/hooks/useLanguage';
+import { Language } from '@/contexts/LanguageContext';
 
 export interface Translations {
   // Navigation
@@ -53,6 +53,51 @@ export interface Translations {
     premiumFeature: string;
     premiumMessage: string;
   };
+
+  // About Page
+  about: {
+    title: string;
+    mission: string;
+    missionText: string;
+    vision: string;
+    visionText: string;
+    values: string;
+    valuesText: string;
+    team: string;
+    contact: string;
+  };
+
+  // Chatbots Page
+  chatbots: {
+    title: string;
+    subtitle: string;
+    aiAssistant: string;
+    careerAdvisor: string;
+    universityGuide: string;
+    testPrep: string;
+    premiumAccess: string;
+    startChat: string;
+  };
+
+  // Profile Page
+  profile: {
+    title: string;
+    personalInfo: string;
+    preferences: string;
+    subscription: string;
+    settings: string;
+    logout: string;
+  };
+
+  // Community Page  
+  community: {
+    title: string;
+    discussions: string;
+    groups: string;
+    events: string;
+    share: string;
+    join: string;
+  };
   
   // Common
   common: {
@@ -66,12 +111,21 @@ export interface Translations {
     next: string;
     search: string;
     filter: string;
+    welcome: string;
+    getStarted: string;
   };
   
   // Language selector
   language: {
     select: string;
     current: string;
+  };
+
+  // Theme
+  theme: {
+    light: string;
+    dark: string;
+    toggle: string;
   };
 }
 
@@ -124,6 +178,43 @@ export const translations: Record<Language, Translations> = {
       premiumFeature: 'Funcionalidad Premium',
       premiumMessage: 'está disponible solo para usuarios Premium. ¡Suscríbete por S/25 al mes!'
     },
+    about: {
+      title: 'Conócenos',
+      mission: 'Nuestra Misión',
+      missionText: 'Ayudar a los estudiantes a tomar decisiones informadas sobre su futuro académico y profesional.',
+      vision: 'Nuestra Visión',
+      visionText: 'Ser la plataforma líder en orientación educativa en Latinoamérica.',
+      values: 'Nuestros Valores',
+      valuesText: 'Innovación, accesibilidad, diversidad e inclusión educativa.',
+      team: 'Nuestro Equipo',
+      contact: 'Contacto'
+    },
+    chatbots: {
+      title: 'Asistentes IA',
+      subtitle: 'Chatea con nuestros especialistas virtuales',
+      aiAssistant: 'Asistente General',
+      careerAdvisor: 'Consejero Vocacional',
+      universityGuide: 'Guía Universitaria',
+      testPrep: 'Preparación de Exámenes',
+      premiumAccess: 'Acceso Premium',
+      startChat: 'Iniciar Chat'
+    },
+    profile: {
+      title: 'Mi Perfil',
+      personalInfo: 'Información Personal',
+      preferences: 'Preferencias',
+      subscription: 'Suscripción',
+      settings: 'Configuración',
+      logout: 'Cerrar Sesión'
+    },
+    community: {
+      title: 'Comunidad',
+      discussions: 'Discusiones',
+      groups: 'Grupos',
+      events: 'Eventos',
+      share: 'Compartir',
+      join: 'Unirse'
+    },
     common: {
       loading: 'Cargando...',
       error: 'Error',
@@ -134,11 +225,18 @@ export const translations: Record<Language, Translations> = {
       back: 'Atrás',
       next: 'Siguiente',
       search: 'Buscar',
-      filter: 'Filtrar'
+      filter: 'Filtrar',
+      welcome: 'Bienvenido',
+      getStarted: 'Comenzar'
     },
     language: {
       select: 'Seleccionar idioma',
       current: 'Idioma actual'
+    },
+    theme: {
+      light: 'Modo Claro',
+      dark: 'Modo Oscuro',
+      toggle: 'Cambiar Tema'
     }
   },
   en: {
@@ -189,6 +287,43 @@ export const translations: Record<Language, Translations> = {
       premiumFeature: 'Premium Feature',
       premiumMessage: 'is available only for Premium users. Subscribe for S/25 per month!'
     },
+    about: {
+      title: 'About Us',
+      mission: 'Our Mission',
+      missionText: 'Help students make informed decisions about their academic and professional future.',
+      vision: 'Our Vision',
+      visionText: 'To be the leading educational guidance platform in Latin America.',
+      values: 'Our Values',
+      valuesText: 'Innovation, accessibility, diversity and educational inclusion.',
+      team: 'Our Team',
+      contact: 'Contact'
+    },
+    chatbots: {
+      title: 'AI Assistants',
+      subtitle: 'Chat with our virtual specialists',
+      aiAssistant: 'General Assistant',
+      careerAdvisor: 'Career Counselor',
+      universityGuide: 'University Guide',
+      testPrep: 'Test Preparation',
+      premiumAccess: 'Premium Access',
+      startChat: 'Start Chat'
+    },
+    profile: {
+      title: 'My Profile',
+      personalInfo: 'Personal Information',
+      preferences: 'Preferences',
+      subscription: 'Subscription',
+      settings: 'Settings',
+      logout: 'Sign Out'
+    },
+    community: {
+      title: 'Community',
+      discussions: 'Discussions',
+      groups: 'Groups',
+      events: 'Events',
+      share: 'Share',
+      join: 'Join'
+    },
     common: {
       loading: 'Loading...',
       error: 'Error',
@@ -199,11 +334,18 @@ export const translations: Record<Language, Translations> = {
       back: 'Back',
       next: 'Next',
       search: 'Search',
-      filter: 'Filter'
+      filter: 'Filter',
+      welcome: 'Welcome',
+      getStarted: 'Get Started'
     },
     language: {
       select: 'Select language',
       current: 'Current language'
+    },
+    theme: {
+      light: 'Light Mode',
+      dark: 'Dark Mode',
+      toggle: 'Toggle Theme'
     }
   },
   qu: {
@@ -254,6 +396,43 @@ export const translations: Record<Language, Translations> = {
       premiumFeature: 'Premium Ruway',
       premiumMessage: 'Premium ruwaqkunapaqlla kanqa. ¡S/25 killapi qullqichay!'
     },
+    about: {
+      title: 'Ñuqayku',
+      mission: 'Ñuqanchik Munay',
+      missionText: 'Yachaqkunata yanapana yachayninpi hinaspa llamkayninpi allin akllaykunata ruwanankupaq.',
+      vision: 'Ñuqanchik Qhaway',
+      visionText: 'Latinoamérica nisqapi yachana pusaq plataforma kananchis.',
+      values: 'Ñuqanchik Chaniykunas',
+      valuesText: 'Musuq ruwana, aypaykuy, hukniraykuna hinaspa yachaypi churaychiy.',
+      team: 'Ñuqanchik Equipo',
+      contact: 'Rimanakuy'
+    },
+    chatbots: {
+      title: 'IA Yanapakunas',
+      subtitle: 'Especialista virtual nisqakunawan rimanakuy',
+      aiAssistant: 'Tukuy Yanapaq',
+      careerAdvisor: 'Llamkay Yachachiq',
+      universityGuide: 'Yachawasi Pusaq',
+      testPrep: 'Prueba Wakichiy',
+      premiumAccess: 'Premium Yaykuy',
+      startChat: 'Rimanakuy Qallariy'
+    },
+    profile: {
+      title: 'Ñuqapa Perfil',
+      personalInfo: 'Sapay Willakuy',
+      preferences: 'Munasqakuna',
+      subscription: 'Qullqichay',
+      settings: 'Ruruchiy',
+      logout: 'Lluqsiy'
+    },
+    community: {
+      title: 'Ayllu',
+      discussions: 'Rimanakuykuna',
+      groups: 'Huñukunas',
+      events: 'Ruwaykunas',
+      share: 'Rakiy',
+      join: 'Huñukuy'
+    },
     common: {
       loading: 'Cargaspa...',
       error: 'Pantay',
@@ -264,11 +443,18 @@ export const translations: Record<Language, Translations> = {
       back: 'Qhipaman',
       next: 'Qatiq',
       search: 'Maskay',
-      filter: 'Llalliy'
+      filter: 'Llalliy',
+      welcome: 'Allin hamusqayki',
+      getStarted: 'Qallariy'
     },
     language: {
       select: 'Simi akllay',
       current: 'Kunan simi'
+    },
+    theme: {
+      light: 'Kanchay Modo',
+      dark: 'Tutayaq Modo',
+      toggle: 'Tema Tikray'
     }
   },
   ay: {
@@ -319,6 +505,43 @@ export const translations: Record<Language, Translations> = {
       premiumFeature: 'Premium Luraña',
       premiumMessage: 'Premium apnaqirinakatakiw utji. ¡S/25 phaxsipi phusiri!'
     },
+    about: {
+      title: 'Jiwasanaka',
+      mission: 'Jiwasan Munaña',
+      missionText: 'Yatiqirinakaru yanapaña yatiyawinakataki ukhamarak irnaqañataki suma amtawinaka lurañataki.',
+      vision: 'Jiwasan Uñjaña',
+      visionText: 'Latinoamérica ukan yatiñ irptayiri plataforma nayriri ukhamaña.',
+      values: 'Jiwasan Chaninakas',
+      valuesText: 'Machaq luraña, juttari, kunayman ukat yatiñ uchaña.',
+      team: 'Jiwasan Equipo',
+      contact: 'Aruskipaña'
+    },
+    chatbots: {
+      title: 'IA Yanaptirinakas',
+      subtitle: 'Especialista virtuales nakamatxa aruskipam',
+      aiAssistant: 'Taqi Yanaptiri',
+      careerAdvisor: 'Irnaqañ Yatichiri',
+      universityGuide: 'Yatiñ uta Irnaqiri',
+      testPrep: 'Prueba Wakichawi',
+      premiumAccess: 'Premium Mantañani',
+      startChat: 'Aruskipaña Qalltaña'
+    },
+    profile: {
+      title: 'Nayan Perfil',
+      personalInfo: 'Jaqina Yatiyawipa',
+      preferences: 'Munataninkas',
+      subscription: 'Phusiri',
+      settings: 'Wakichawi',
+      logout: 'Mistuñani'
+    },
+    community: {
+      title: 'Marka',
+      discussions: 'Aruskipañanaks',
+      groups: 'Tantachawinaks',
+      events: 'Lurawinaks',
+      share: 'Churarañani',
+      join: 'Chikachasiñani'
+    },
     common: {
       loading: 'Apsusp...',
       error: 'Pantjata',
@@ -329,11 +552,18 @@ export const translations: Record<Language, Translations> = {
       back: 'Qhiparu',
       next: 'Arkiri',
       search: 'Thaqaña',
-      filter: 'Churiña'
+      filter: 'Churiña',
+      welcome: 'Suma jutawi',
+      getStarted: 'Qalltaña'
     },
     language: {
       select: 'Aru ajlliña',
       current: 'Jichha aru'
+    },
+    theme: {
+      light: 'Qhanañ Modo',
+      dark: 'Chʼamak Modo',
+      toggle: 'Tema Mayjt\'aña'
     }
   }
 };

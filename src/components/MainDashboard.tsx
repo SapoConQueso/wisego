@@ -10,7 +10,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useSearch } from "@/hooks/useSearch";
 import { useAuth } from "@/components/AuthProvider";
 import { Card, CardContent } from "@/components/ui/card";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslation } from "@/lib/translations";
 
 interface MainDashboardProps {
@@ -22,12 +22,8 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
   const { user, isGuest, signOut } = useAuth();
   const { searchQuery, setSearchQuery, searchResults, hasResults } = useSearch(onNavigate);
   const [showSearchResults, setShowSearchResults] = useState(false);
-  const { currentLanguage, initializeLanguage } = useLanguage();
+  const { currentLanguage } = useLanguage();
   const t = getTranslation(currentLanguage);
-
-  useEffect(() => {
-    initializeLanguage();
-  }, [initializeLanguage]);
 
   const menuItems = [
     { icon: Info, label: t.nav.about, action: () => onNavigate("about") },
