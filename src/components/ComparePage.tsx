@@ -427,7 +427,7 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
 
         {/* Available Careers */}
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-title font-bold mb-6 gradient-text text-center">Explora Todas las Carreras</h2>
+          <h2 className="text-3xl font-title font-bold mb-6 gradient-text text-center">{t.compare.exploreAllCareers}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredCareers.map((career, index) => (
               <Card 
@@ -457,21 +457,21 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
                     <div className="flex justify-between items-center p-2 bg-muted/50 rounded">
                       <span className="font-subtitle text-muted-foreground flex items-center">
                         <Clock className="h-4 w-4 mr-2" />
-                        Duración:
+                        {t.compare.duration}
                       </span>
                       <span className="font-medium">{career.duration}</span>
                     </div>
                     <div className="flex justify-between items-center p-2 bg-muted/50 rounded">
                       <span className="font-subtitle text-muted-foreground flex items-center">
                         <DollarSign className="h-4 w-4 mr-2" />
-                        Salario:
+                        {t.compare.salary}
                       </span>
                       <span className="font-medium">{career.avgSalary}</span>
                     </div>
                     <div className="flex justify-between items-center p-2 bg-muted/50 rounded">
                       <span className="font-subtitle text-muted-foreground flex items-center">
                         <MapPin className="h-4 w-4 mr-2" />
-                        Ubicación:
+                        {t.compare.location}
                       </span>
                       <span className="font-medium">{career.location}</span>
                     </div>
@@ -480,11 +480,11 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
                   {/* Quick Stats */}
                   <div className="grid grid-cols-2 gap-3 mb-4">
                     <div className="text-center p-2 bg-primary/10 rounded">
-                      <div className="text-xs font-subtitle text-muted-foreground">Prestigio</div>
+                      <div className="text-xs font-subtitle text-muted-foreground">{t.compare.prestige}</div>
                       <div className="font-bold text-primary">{career.prestige}/10</div>
                     </div>
                     <div className="text-center p-2 bg-accent/10 rounded">
-                      <div className="text-xs font-subtitle text-muted-foreground">Balance</div>
+                      <div className="text-xs font-subtitle text-muted-foreground">{t.compare.balance}</div>
                       <div className="font-bold text-accent">{career.workLifeBalance}/10</div>
                     </div>
                   </div>
@@ -498,14 +498,14 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
                     {selectedCareers.some(c => c.id === career.id) ? (
                       <>
                         <X className="h-4 w-4 mr-2" />
-                        Ya agregada
+                        {t.compare.alreadyAdded}
                       </>
                     ) : selectedCareers.length >= 5 ? (
-                      "Máximo 5 carreras"
+                      t.compare.maxCareers
                     ) : (
                       <>
                         <Plus className="h-4 w-4 mr-2" />
-                        Agregar a comparación
+                        {t.compare.addToComparison}
                       </>
                     )}
                   </Button>

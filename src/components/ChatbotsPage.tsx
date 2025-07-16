@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
+import { LanguageSelector } from "./LanguageSelector";
 import { ArrowLeft, Bot, MessageCircle, GraduationCap, Users, Crown, Lock, Building2, BookOpen, BrainCircuit } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +21,7 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
   const t = getTranslation(currentLanguage);
 
   const handlePremiumAction = (chatbotName: string) => {
-    toast.error(`${chatbotName} está disponible solo para usuarios Premium. ¡Suscríbete!`);
+    toast.error(`${chatbotName} ${t.chatbots.requiresPremium}`);
   };
 
   const handleSubscribe = async () => {
@@ -54,7 +55,10 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
           <WiseGoLogo size="sm" />
           <span className="text-xl font-bold">{t.chatbots.title}</span>
         </div>
-        <ThemeToggle />
+        <div className="flex items-center space-x-2">
+          <LanguageSelector />
+          <ThemeToggle />
+        </div>
       </header>
 
       {/* Main Content */}
@@ -68,8 +72,8 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
                   <div className="flex items-center space-x-3">
                     <Crown className="h-6 w-6 text-wisego-orange" />
                     <div>
-                      <h3 className="font-title font-bold text-primary">¡Accede a Chatbots Especializados!</h3>
-                      <p className="text-sm text-muted-foreground">Chatbots universitarios y especializados por S/25/mes</p>
+                      <h3 className="font-title font-bold text-primary">{t.chatbots.unlockSpecializedBots}</h3>
+                      <p className="text-sm text-muted-foreground">{t.chatbots.specializedUniversityBots}</p>
                     </div>
                   </div>
                   <Button 
@@ -77,7 +81,7 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
                     onClick={handleSubscribe}
                   >
                     <Crown className="h-4 w-4 mr-2" />
-                    Suscribirse
+                    {t.chatbots.subscribe}
                   </Button>
                 </div>
               </CardContent>
@@ -86,8 +90,8 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
         )}
 
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Asistentes Inteligentes</h1>
-          <p className="text-muted-foreground">Elige el chatbot que mejor se adapte a tus necesidades</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">{t.chatbots.intelligentAssistants}</h1>
+          <p className="text-muted-foreground">{t.chatbots.chooseBot}</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
@@ -105,36 +109,36 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
                 <GraduationCap className="h-8 w-8 text-primary" />
               </div>
               <CardTitle className="text-xl flex items-center justify-center space-x-2">
-                <span>Test Vocacional IA</span>
+                <span>{t.chatbots.vocationalTest}</span>
                 {!hasAccess && <Lock className="h-4 w-4 text-muted-foreground" />}
               </CardTitle>
               <CardDescription>
-                Descubre tu carrera ideal con nuestro asistente especializado
+                {t.chatbots.discoverCareer}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2 text-sm text-muted-foreground">
                 <div className="flex items-center space-x-2">
                   <Bot className="h-4 w-4" />
-                  <span>Análisis personalizado de aptitudes</span>
+                  <span>{t.chatbots.personalizedAnalysis}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <MessageCircle className="h-4 w-4" />
-                  <span>Conversación natural e intuitiva</span>
+                  <span>{t.chatbots.naturalConversation}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Users className="h-4 w-4" />
-                  <span>Recomendaciones basadas en tu perfil</span>
+                  <span>{t.chatbots.profileRecommendations}</span>
                 </div>
               </div>
               <Button 
                 className={`w-full ${hasAccess ? 'bg-primary hover:bg-primary/90' : 'bg-muted cursor-not-allowed'}`}
                 disabled={!hasAccess}
               >
-                {hasAccess ? 'Iniciar Test Vocacional' : (
+                {hasAccess ? t.chatbots.startVocationalTest : (
                   <div className="flex items-center space-x-2">
                     <Lock className="h-4 w-4" />
-                    <span>Requiere Premium</span>
+                    <span>{t.chatbots.requiresPremium}</span>
                   </div>
                 )}
               </Button>
@@ -155,36 +159,36 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
                 <MessageCircle className="h-8 w-8 text-accent" />
               </div>
               <CardTitle className="text-xl flex items-center justify-center space-x-2">
-                <span>Chat IA General</span>
+                <span>{t.chatbots.generalChat}</span>
                 {!hasAccess && <Lock className="h-4 w-4 text-muted-foreground" />}
               </CardTitle>
               <CardDescription>
-                Conversa con nuestro asistente sobre cualquier tema educativo
+                {t.chatbots.conversationDescription}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2 text-sm text-muted-foreground">
                 <div className="flex items-center space-x-2">
                   <Bot className="h-4 w-4" />
-                  <span>Respuestas instantáneas y precisas</span>
+                  <span>{t.chatbots.instantResponses}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <MessageCircle className="h-4 w-4" />
-                  <span>Ayuda con tareas y consultas</span>
+                  <span>{t.chatbots.homeworkHelp}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Users className="h-4 w-4" />
-                  <span>Orientación académica personalizada</span>
+                  <span>{t.chatbots.academicOrientation}</span>
                 </div>
               </div>
               <Button 
                 className={`w-full ${hasAccess ? 'bg-accent hover:bg-accent/90' : 'bg-muted cursor-not-allowed'}`}
                 disabled={!hasAccess}
               >
-                {hasAccess ? 'Iniciar Conversación' : (
+                {hasAccess ? t.chatbots.startConversation : (
                   <div className="flex items-center space-x-2">
                     <Lock className="h-4 w-4" />
-                    <span>Requiere Premium</span>
+                    <span>{t.chatbots.requiresPremium}</span>
                   </div>
                 )}
               </Button>
@@ -197,14 +201,14 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
         <div className="max-w-2xl mx-auto mt-12">
           <Card className="bg-muted/50">
             <CardHeader>
-              <CardTitle className="text-lg text-center">💡 Consejos para usar los chatbots</CardTitle>
+              <CardTitle className="text-lg text-center">{t.chatbots.tipsTitle}</CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>• Sé específico en tus preguntas para obtener mejores respuestas</li>
-                <li>• El test vocacional funciona mejor cuando respondes con honestidad</li>
-                <li>• Puedes hacer preguntas de seguimiento para profundizar en los temas</li>
-                <li>• Los chatbots aprenden de la conversación para mejorar sus respuestas</li>
+                <li>• {t.chatbots.tip1}</li>
+                <li>• {t.chatbots.tip2}</li>
+                <li>• {t.chatbots.tip3}</li>
+                <li>• {t.chatbots.tip4}</li>
               </ul>
             </CardContent>
           </Card>

@@ -223,6 +223,15 @@ export interface Translations {
   compare: {
     title: string;
     searchPlaceholder: string;
+    exploreAllCareers: string;
+    duration: string;
+    salary: string;
+    location: string;
+    prestige: string;
+    balance: string;
+    alreadyAdded: string;
+    maxCareers: string;
+    addToComparison: string;
   };
 
   // Chat functionality
@@ -453,7 +462,16 @@ export const translations: Record<Language, Translations> = {
     },
     compare: {
       title: 'Comparación Inteligente',
-      searchPlaceholder: 'Buscar carreras, universidades, especialidades...'
+      searchPlaceholder: 'Buscar carreras, universidades, especialidades...',
+      exploreAllCareers: 'Explora Todas las Carreras',
+      duration: 'Duración:',
+      salary: 'Salario:',
+      location: 'Ubicación:',
+      prestige: 'Prestigio',
+      balance: 'Balance',
+      alreadyAdded: 'Ya agregada',
+      maxCareers: 'Máximo 5 carreras',
+      addToComparison: 'Agregar a comparación'
     },
     chat: {
       welcomeMessage: '¡Hola! Soy tu asistente de orientación educativa. ¿En qué puedo ayudarte hoy?',
@@ -676,7 +694,16 @@ export const translations: Record<Language, Translations> = {
     },
     compare: {
       title: 'Smart Comparison',
-      searchPlaceholder: 'Search careers, universities, specialties...'
+      searchPlaceholder: 'Search careers, universities, specialties...',
+      exploreAllCareers: 'Explore All Careers',
+      duration: 'Duration:',
+      salary: 'Salary:',
+      location: 'Location:',
+      prestige: 'Prestige',
+      balance: 'Balance',
+      alreadyAdded: 'Already added',
+      maxCareers: 'Maximum 5 careers',
+      addToComparison: 'Add to comparison'
     },
     chat: {
       welcomeMessage: 'Hello! I am your educational guidance assistant. How can I help you today?',
@@ -899,7 +926,16 @@ export const translations: Record<Language, Translations> = {
     },
     compare: {
       title: 'Allqa Tupay',
-      searchPlaceholder: 'Llamkaykuna, yachaywasikuna, especializacionkuna maskay...'
+      searchPlaceholder: 'Llamkaykuna, yachaywasikuna, especializacionkuna maskay...',
+      exploreAllCareers: 'Llapan Llamkaykunata Qhaway',
+      duration: 'Tiempo:',
+      salary: 'Qullqi:',
+      location: 'Maypi:',
+      prestige: 'Allin Kay',
+      balance: 'Equilibrio',
+      alreadyAdded: 'Ñañachu yapasqa',
+      maxCareers: 'Pichqa llamkaykama',
+      addToComparison: 'Tupaymanmi yapay'
     },
     chat: {
       welcomeMessage: '¡Napaykullayki! Yachana pusaq yanasqayki kani. ¿Imapichus yanapasayki kunan punchaw?',
@@ -1122,7 +1158,16 @@ export const translations: Record<Language, Translations> = {
     },
     compare: {
       title: 'Yäqha Uñacht\'aña',
-      searchPlaceholder: 'Lurañanak, yatiñütan, especializacionanak thaqhaña...'
+      searchPlaceholder: 'Lurañanak, yatiñütan, especializacionanak thaqhaña...',
+      exploreAllCareers: 'Taqi Lurañanak Uñjañäni',
+      duration: 'Tiempo:',
+      salary: 'Qullqi:',
+      location: 'Kawki:',
+      prestige: 'Suma Kay',
+      balance: 'Equilibrio',
+      alreadyAdded: 'Uka yapata',
+      maxCareers: 'Phisqa luräwinakamaki',
+      addToComparison: 'Uñacht\'añaru yapäña'
     },
     chat: {
       welcomeMessage: '¡Suma jutawi! Yatiñ irptayiri yanapirimaawa. ¿Kunjamatsa yanapäta jichha uruwi?',
