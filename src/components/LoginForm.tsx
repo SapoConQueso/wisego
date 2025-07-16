@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Lock, Mail } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Lock, Mail, ChevronDown } from "lucide-react";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { useAuth } from "@/components/AuthProvider";
 import { toast } from "sonner";
@@ -49,12 +50,20 @@ export function LoginForm({ onSwitchToRegister, onGuestLogin }: LoginFormProps) 
         <WiseGoLogo size="lg" className="mb-4" />
         <h1 className="text-4xl font-bold text-primary">WiseGO!</h1>
         
-        {/* Disclaimer */}
-        <div className="mt-6 p-4 bg-muted/10 border border-muted/20 rounded-lg max-w-md">
-          <p className="text-sm text-muted-foreground text-center leading-relaxed">
-            <strong>Aviso Legal:</strong> La información proporcionada en esta plataforma puede no ser verídica y se presenta únicamente con fines ilustrativos y de demostración. Los usuarios deben verificar independientemente cualquier información antes de tomar decisiones basadas en ella.
-          </p>
-        </div>
+        {/* Disclaimer Desplegable */}
+        <Collapsible className="mt-6 max-w-md">
+          <CollapsibleTrigger className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors group">
+            <ChevronDown className="h-4 w-4 transition-transform group-data-[state=open]:rotate-180" />
+            Aviso Legal
+          </CollapsibleTrigger>
+          <CollapsibleContent className="mt-3 animate-accordion-down data-[state=closed]:animate-accordion-up">
+            <div className="p-4 bg-muted/10 border border-muted/20 rounded-lg">
+              <p className="text-sm text-muted-foreground text-center leading-relaxed">
+                La información proporcionada en esta plataforma puede no ser verídica y se presenta únicamente con fines ilustrativos y de demostración. Los usuarios deben verificar independientemente cualquier información antes de tomar decisiones basadas en ella.
+              </p>
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
       </div>
       
       <div className="bg-primary rounded-xl p-6 space-y-4">
