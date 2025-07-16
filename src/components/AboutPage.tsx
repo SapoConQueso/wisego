@@ -13,10 +13,11 @@ export function AboutPage({ onBack }: AboutPageProps) {
   const { currentLanguage } = useLanguage();
   const t = getTranslation(currentLanguage);
   const partners = [
-    { name: "Ramírez", image: "/api/placeholder/60/60" },
-    { name: "SMMUN", image: "/api/placeholder/60/60" },
-    { name: "SCORE", image: "/api/placeholder/60/60" },
-    { name: "PRIDE", image: "/api/placeholder/60/60" }
+    { name: "Karina Candia" },
+    { name: "Ramírez Gastón" },
+    { name: "Gonzalo Begazo" },
+    { name: "Score" },
+    { name: "SMMUN" }
   ];
 
   return (
@@ -39,23 +40,6 @@ export function AboutPage({ onBack }: AboutPageProps) {
         <ThemeToggle />
       </header>
 
-      {/* Hero Image */}
-      <div className="h-48 bg-gradient-to-b from-green-400 to-green-600 relative overflow-hidden">
-        <svg width="100%" height="100%" viewBox="0 0 400 200" className="absolute inset-0">
-          <defs>
-            <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#87CEEB" />
-              <stop offset="100%" stopColor="#98FB98" />
-            </linearGradient>
-          </defs>
-          <rect width="100%" height="60%" fill="url(#skyGradient)" />
-          <path d="M0,120 Q100,100 200,120 T400,120 L400,200 L0,200 Z" fill="#9ACD32" />
-          <path d="M0,140 Q150,120 300,140 T400,140 L400,200 L0,200 Z" fill="#228B22" />
-          <ellipse cx="50" cy="40" rx="20" ry="15" fill="white" opacity="0.8" />
-          <ellipse cx="150" cy="30" rx="25" ry="18" fill="white" opacity="0.7" />
-          <ellipse cx="300" cy="50" rx="18" ry="12" fill="white" opacity="0.9" />
-        </svg>
-      </div>
 
       {/* Content */}
       <main className="p-4 space-y-6">
@@ -99,13 +83,10 @@ export function AboutPage({ onBack }: AboutPageProps) {
             NUESTROS<br />
             <span className="text-accent">SOCIOS CLAVE</span>
           </h3>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-3">
             {partners.map((partner, index) => (
-              <div key={index} className="text-center">
-                <div className="w-16 h-16 rounded-full bg-muted mx-auto mb-2 flex items-center justify-center">
-                  <span className="text-xs font-bold">{partner.name}</span>
-                </div>
-                <p className="text-xs font-medium">{partner.name}</p>
+              <div key={index} className="text-center bg-muted rounded-lg p-3">
+                <p className="text-sm font-medium">{partner.name}</p>
               </div>
             ))}
           </div>
