@@ -57,7 +57,36 @@ const openGoogleMaps = (university: University) => {
 
 export function MapComponent() {
   return (
-    <div className="relative h-96 w-full">
+    <div className="relative h-96 w-full space-y-6">
+      {/* Animated Location Header */}
+      <div className="relative bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg p-6 overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-4 left-8 w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+          <div className="absolute top-8 right-12 w-3 h-3 bg-accent rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+          <div className="absolute bottom-6 left-16 w-1.5 h-1.5 bg-primary/60 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute bottom-4 right-8 w-2.5 h-2.5 bg-accent/60 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+          
+          {/* Moving Location Icon */}
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div className="relative">
+              <MapPin className="h-8 w-8 text-primary animate-bounce" />
+              <div className="absolute -inset-2 bg-primary/20 rounded-full animate-ping"></div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Content */}
+        <div className="relative z-10 text-center">
+          <h3 className="text-xl font-title font-bold text-primary mb-2">
+            Explora Universidades Cerca de Ti
+          </h3>
+          <p className="text-muted-foreground text-sm">
+            Descubre las mejores opciones académicas en tu zona
+          </p>
+        </div>
+      </div>
+
       <Card className="h-full">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
