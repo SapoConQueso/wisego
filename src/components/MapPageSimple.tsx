@@ -289,17 +289,13 @@ export function MapPage({ onNavigate }: MapPageProps) {
                       size="sm"
                       onClick={(e) => {
                         e.stopPropagation();
-                        if (isPremium) {
-                          // Mostrar información detallada
-                        } else {
-                          handlePremiumAction("Información detallada");
-                        }
+                        // Mostrar información detallada - función libre
+                        setSelectedUniversity(university);
                       }}
-                      className="flex items-center gap-1"
+                      className="flex items-center gap-1 hover:bg-primary hover:text-primary-foreground"
                     >
                       <Eye className="h-4 w-4" />
                       Ver Detalles
-                      {!isPremium && <Lock className="h-3 w-3" />}
                     </Button>
                     
                     <Button 
@@ -307,17 +303,13 @@ export function MapPage({ onNavigate }: MapPageProps) {
                       size="sm"
                       onClick={(e) => {
                         e.stopPropagation();
-                        if (isPremium) {
-                          // Mostrar ruta optimizada
-                        } else {
-                          handlePremiumAction("Ruta optimizada");
-                        }
+                        // Mostrar ruta - función libre
+                        window.open(`https://maps.google.com/maps?q=${university.name}`, '_blank');
                       }}
-                      className="flex items-center gap-1"
+                      className="flex items-center gap-1 hover:bg-accent hover:text-accent-foreground"
                     >
                       <Route className="h-4 w-4" />
                       Cómo Llegar
-                      {!isPremium && <Lock className="h-3 w-3" />}
                     </Button>
                   </div>
                 </CardContent>
