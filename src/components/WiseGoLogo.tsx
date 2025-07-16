@@ -14,7 +14,7 @@ export function WiseGoLogo({ size = "md", className = "" }: WiseGoLogoProps) {
     <img 
       src="/lovable-uploads/2ea8f684-4e74-415b-b5d2-9026d653377f.png"
       alt="WiseGO Logo"
-      className={`${dimensions} ${className} object-contain`}
+      className={`${dimensions} ${className} object-contain rounded-full border-2 border-gray-200 shadow-sm`}
     />
   );
 }

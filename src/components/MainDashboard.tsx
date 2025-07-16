@@ -38,9 +38,9 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary via-primary/95 to-primary/90">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-gradient-to-r from-primary/95 to-primary text-primary-foreground p-4 flex items-center justify-between shadow-lg backdrop-blur-sm border-b border-primary-foreground/10">
+      <header className="bg-primary text-primary-foreground p-4 flex items-center justify-between shadow-lg border-b border-border">
         <div className="flex items-center space-x-3">
           <WiseGoLogo size="sm" />
           <span className="text-xl font-bold font-title tracking-wide">WiseGO!</span>
@@ -82,9 +82,9 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
       </header>
 
       {/* Search Bar */}
-      <div className="p-4 bg-white/10 backdrop-blur-sm border-b border-white/20">
+      <div className="p-4 bg-muted/30 border-b border-border">
         <div className="relative max-w-4xl mx-auto">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 h-4 w-4" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
             type="text"
             placeholder={t.dashboard.searchPlaceholder}
@@ -94,7 +94,7 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
               setShowSearchResults(e.target.value.length > 0);
             }}
             onFocus={() => setShowSearchResults(searchQuery.length > 0)}
-            className="pl-10 pr-44 bg-white/20 border-white/30 rounded-full text-white placeholder:text-white/70 focus:bg-white/30 focus:border-white/50 transition-all duration-300"
+            className="pl-10 pr-44 bg-background border-border rounded-full text-foreground placeholder:text-muted-foreground focus:bg-background focus:border-primary transition-all duration-300"
           />
           
           {/* Search Results Dropdown */}
@@ -130,7 +130,7 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
                 setSearchQuery("");
                 setShowSearchResults(false);
               }}
-              className="absolute right-48 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 text-white/70 hover:text-white hover:bg-white/20"
+              className="absolute right-48 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 text-muted-foreground hover:text-foreground hover:bg-muted/50"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -155,7 +155,7 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
                     onLogout();
                   }
                 }}
-                className="rounded-full px-3 text-white/70 hover:text-white hover:bg-white/20 border border-white/30"
+                className="rounded-full px-3 text-muted-foreground hover:text-foreground hover:bg-muted border border-border"
               >
                 <LogOut className="h-4 w-4" />
               </Button>
@@ -166,7 +166,7 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
                 size="sm"
                 variant="ghost"
                 onClick={() => onNavigate("login")}
-                 className="rounded-full px-3 text-white/70 hover:text-white hover:bg-white/20 border border-white/30"
+                 className="rounded-full px-3 text-muted-foreground hover:text-foreground hover:bg-muted border border-border"
                >
                  {t.nav.login}
                </Button>
@@ -185,13 +185,13 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
       {/* Main Content */}
       <main className="p-4 space-y-6">
         {/* Hero Section */}
-        <div className="bg-white/20 backdrop-blur-sm text-white rounded-2xl p-8 text-center relative overflow-hidden border border-white/30 shadow-2xl">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-accent/20"></div>
-          <div className="absolute inset-0 opacity-30">
+        <div className="bg-card text-card-foreground rounded-2xl p-8 text-center relative overflow-hidden border border-border shadow-lg">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5"></div>
+          <div className="absolute inset-0 opacity-10">
             <svg width="100%" height="100%" viewBox="0 0 400 200" className="h-full">
               <defs>
                 <pattern id="heroPattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <circle cx="20" cy="20" r="2" fill="white" opacity="0.3"/>
+                  <circle cx="20" cy="20" r="2" fill="currentColor" opacity="0.3"/>
                 </pattern>
               </defs>
               <rect width="100%" height="100%" fill="url(#heroPattern)" />
@@ -200,7 +200,7 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
           <div className="relative z-10">
             <WiseGoLogo size="lg" className="mx-auto mb-6" />
             <h1 className="text-4xl sm:text-5xl font-bold font-title mb-4 tracking-wide">{t.dashboard.title}</h1>
-            <p className="text-lg sm:text-xl font-subtitle text-white/90 max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl font-subtitle text-muted-foreground max-w-2xl mx-auto">
               {t.dashboard.subtitle}
             </p>
           </div>
@@ -208,20 +208,20 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
 
         {/* Guest Welcome Banner */}
         {isGuest && (
-          <div className="bg-white/30 backdrop-blur-sm border border-white/40 rounded-2xl p-6 shadow-xl">
+          <div className="bg-card border border-border rounded-2xl p-6 shadow-lg">
             <div className="flex items-start space-x-4">
-              <div className="bg-accent/90 p-3 rounded-xl shadow-lg">
-                <Crown className="h-6 w-6 text-white" />
+              <div className="bg-accent p-3 rounded-xl shadow-lg">
+                <Crown className="h-6 w-6 text-accent-foreground" />
               </div>
               <div className="flex-1">
                 <div className="flex items-center space-x-3 mb-3">
-                  <h3 className="font-semibold font-title text-white text-lg">{t.dashboard.welcomeDemo}</h3>
-                  <Badge className="bg-accent text-white shadow-lg border border-accent/50">
+                  <h3 className="font-semibold font-title text-card-foreground text-lg">{t.dashboard.welcomeDemo}</h3>
+                  <Badge className="bg-accent text-accent-foreground shadow-lg border border-accent/50">
                     <Crown className="h-3 w-3 mr-1" />
                     {t.dashboard.fullAccess}
                   </Badge>
                 </div>
-                <p className="text-sm font-subtitle text-white/90 leading-relaxed">
+                <p className="text-sm font-subtitle text-muted-foreground leading-relaxed">
                   {t.dashboard.demoDescription}
                 </p>
               </div>
@@ -230,20 +230,20 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
         )}
 
         {/* Announcement */}
-        <div className="bg-white/25 backdrop-blur-sm border border-white/30 rounded-2xl p-6 shadow-xl">
+        <div className="bg-card border border-border rounded-2xl p-6 shadow-lg">
           <div className="flex items-start space-x-4">
-            <div className="bg-accent/90 p-3 rounded-xl shadow-lg">
-              <Info className="h-6 w-6 text-white" />
+            <div className="bg-accent p-3 rounded-xl shadow-lg">
+              <Info className="h-6 w-6 text-accent-foreground" />
             </div>
             <div className="flex-1">
-              <p className="text-base font-medium font-title text-white mb-4">
+              <p className="text-base font-medium font-title text-card-foreground mb-4">
                 {t.dashboard.announcement}
               </p>
               <div className="flex flex-wrap gap-3">
                 <Button 
                   size="sm" 
                   onClick={() => window.open("https://www.ulima.edu.pe", "_blank")}
-                  className="bg-accent text-white hover:bg-accent/90 rounded-full shadow-lg border border-accent/50 font-subtitle"
+                  className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full shadow-lg border border-accent/50 font-subtitle"
                 >
                   {t.dashboard.announcementButton}
                 </Button>
@@ -251,7 +251,7 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
                   variant="ghost" 
                   size="sm" 
                   onClick={() => onNavigate("about")}
-                  className="rounded-full text-white hover:bg-white/20 border border-white/30 font-subtitle"
+                  className="rounded-full text-muted-foreground hover:bg-muted border border-border font-subtitle"
                 >
                   {t.dashboard.moreInfo}
                 </Button>
@@ -261,18 +261,18 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl p-6 shadow-xl">
-          <h2 className="text-2xl sm:text-3xl font-bold font-title mb-8 text-center text-white">{t.dashboard.quickActions}</h2>
+        <div className="bg-card border border-border rounded-2xl p-6 shadow-lg">
+          <h2 className="text-2xl sm:text-3xl font-bold font-title mb-8 text-center text-card-foreground">{t.dashboard.quickActions}</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {menuItems.map((item, index) => (
               <Button
                 key={index}
                 variant="ghost"
-                className="h-24 sm:h-28 flex flex-col items-center justify-center space-y-3 bg-white/10 border border-white/20 rounded-xl hover:bg-white/20 hover:scale-105 transition-all duration-300 backdrop-blur-sm group"
+                className="h-24 sm:h-28 flex flex-col items-center justify-center space-y-3 bg-muted/30 border border-border rounded-xl hover:bg-muted hover:scale-105 transition-all duration-300 group"
                 onClick={item.action}
               >
-                <item.icon className="h-6 w-6 sm:h-8 sm:w-8 text-white group-hover:text-accent transition-colors" />
-                <span className="text-xs sm:text-sm font-medium font-subtitle text-white/90 group-hover:text-white text-center leading-tight">{item.label}</span>
+                <item.icon className="h-6 w-6 sm:h-8 sm:w-8 text-foreground group-hover:text-accent transition-colors" />
+                <span className="text-xs sm:text-sm font-medium font-subtitle text-muted-foreground group-hover:text-foreground text-center leading-tight">{item.label}</span>
               </Button>
             ))}
           </div>
