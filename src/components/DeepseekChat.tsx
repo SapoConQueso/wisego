@@ -31,15 +31,9 @@ export function DeepseekChat({ onNavigate, title, systemPrompt = "Eres un asiste
   const [error, setError] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Función para obtener la API key según el tipo de chat
+  // Función para obtener la API key (siempre del usuario ahora)
   const getApiKey = () => {
-    if (title === "Test Vocacional IA") {
-      return "sk-6c6b73b29e854804b16c32eb32153dd0";
-    } else if (title === "Chat IA General") {
-      return "sk-f7645a1fdbe245bb816f9d304951062b";
-    } else {
-      return apiKey;
-    }
+    return apiKey;
   };
 
   // Verificar si tenemos una API key válida
@@ -226,14 +220,53 @@ export function DeepseekChat({ onNavigate, title, systemPrompt = "Eres un asiste
       {/* Chat Area */}
       <div className="flex-1 overflow-y-auto p-4">
         {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
+          <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
             <Bot className="h-16 w-16 text-muted-foreground" />
-            <div>
-              <h3 className="text-xl font-semibold mb-2">{title}</h3>
-              <p className="text-muted-foreground">
-                {hasValidApiKey() ? "¡Hola! ¿En qué puedo ayudarte hoy?" : "Por favor, configura tu API Key de Deepseek para comenzar."}
+            <div className="space-y-2">
+              <h3 className="text-xl font-semibold">{title}</h3>
+              <p className="text-muted-foreground max-w-md">
+                {hasValidApiKey() ? "¡Hola! ¿En qué puedo ayudarte hoy?" : "Para comenzar, configura tu API Key de Deepseek"}
               </p>
             </div>
+            
+            {!hasValidApiKey() && (
+              <div className="space-y-4 max-w-md">
+                <Alert>
+                  <AlertDescription>
+                    💡 <strong>¿Cómo obtener una API Key?</strong><br/>
+                    1. Ve a <a href="https://platform.deepseek.com" target="_blank" className="text-primary hover:underline">platform.deepseek.com</a><br/>
+                    2. Regístrate o inicia sesión<br/>
+                    3. Ve a "API Keys" y crea una nueva<br/>
+                    4. Copia la key y pégala arriba
+                  </AlertDescription>
+                </Alert>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="quick-api-key">API Key de Deepseek</Label>
+                  <div className="flex space-x-2">
+                    <Input
+                      id="quick-api-key"
+                      type="password"
+                      placeholder="sk-..."
+                      value={apiKey}
+                      onChange={(e) => setApiKey(e.target.value)}
+                      className="font-mono"
+                    />
+                    <Button 
+                      size="sm"
+                      onClick={() => {
+                        if (hasValidApiKey()) {
+                          setError("");
+                        }
+                      }}
+                      disabled={!hasValidApiKey()}
+                    >
+                      Conectar
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         ) : (
           <div className="space-y-4 max-w-4xl mx-auto">
