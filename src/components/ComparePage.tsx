@@ -260,136 +260,157 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
         {/* Comparison Panel */}
         {selectedCareers.length > 0 && (
           <div className="max-w-7xl mx-auto animate-scale-in">
-            <Card className="hover-lift">
-              <CardHeader className="bg-gradient-to-r from-primary/5 to-accent/5">
+            <Card className="hover-lift shadow-xl border-2 border-primary/20">
+              <CardHeader className="bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 border-b">
                 <CardTitle className="flex items-center space-x-2 font-title">
                   <BarChart3 className="h-6 w-6 text-primary" />
-                  <span className="gradient-text text-2xl">Análisis Comparativo ({selectedCareers.length}/5)</span>
+                  <span className="gradient-text text-xl sm:text-2xl">Análisis Comparativo ({selectedCareers.length}/5)</span>
                 </CardTitle>
                 <CardDescription className="font-subtitle">
                   Visualización avanzada de métricas clave para tomar la mejor decisión
                 </CardDescription>
               </CardHeader>
-              <CardContent className="p-6">
+              <CardContent className="p-4 sm:p-6">
+                {/* Chart Section - Full Width */}
                 {selectedCareers.length >= 2 && (
-                  <div className="mb-10">
-                    <h4 className="text-xl font-title font-semibold mb-6 text-center gradient-text">Gráfico Radial Comparativo</h4>
-                    <div className="h-[500px] w-full bg-gradient-to-br from-muted/20 to-background p-6 rounded-xl">
-                      <ChartContainer config={chartConfig}>
-                        <ResponsiveContainer width="100%" height="100%">
-                          <RadarChart 
-                            data={getRadarData()}
-                            margin={{ top: 40, right: 80, bottom: 40, left: 80 }}
-                          >
-                            <PolarGrid 
-                              className="stroke-muted" 
-                              gridType="polygon"
-                              radialLines={true}
-                            />
-                            <PolarAngleAxis 
-                              dataKey="attribute" 
-                              className="fill-muted-foreground text-xs font-subtitle"
-                              tick={{ fontSize: 11, fontWeight: 500 }}
-                            />
-                            <PolarRadiusAxis 
-                              angle={90} 
-                              domain={[0, 10]} 
-                              className="fill-muted-foreground"
-                              tick={{ fontSize: 10 }}
-                              tickCount={6}
-                            />
-                            {selectedCareers.map((_, index) => (
-                              <Radar
-                                key={index}
-                                name={selectedCareers[index]?.name}
-                                dataKey={`career${index}`}
-                                stroke={chartConfig[`career${index}` as keyof typeof chartConfig]?.color}
-                                fill={chartConfig[`career${index}` as keyof typeof chartConfig]?.color}
-                                fillOpacity={0.15}
-                                strokeWidth={3}
-                                dot={{ r: 4, strokeWidth: 2 }}
+                  <div className="mb-8">
+                    <h4 className="text-lg sm:text-xl font-title font-semibold mb-6 text-center gradient-text">
+                      Gráfico Radial Comparativo
+                    </h4>
+                    <div className="w-full bg-gradient-to-br from-muted/20 to-background p-4 sm:p-6 rounded-xl border">
+                      <div className="h-[300px] sm:h-[400px] lg:h-[500px] w-full">
+                        <ChartContainer config={chartConfig}>
+                          <ResponsiveContainer width="100%" height="100%">
+                            <RadarChart 
+                              data={getRadarData()}
+                              margin={{ 
+                                top: 20, 
+                                right: window.innerWidth < 640 ? 20 : 60, 
+                                bottom: 20, 
+                                left: window.innerWidth < 640 ? 20 : 60 
+                              }}
+                            >
+                              <PolarGrid 
+                                className="stroke-muted" 
+                                gridType="polygon"
+                                radialLines={true}
                               />
-                            ))}
-                            <ChartTooltip content={<ChartTooltipContent />} />
-                          </RadarChart>
-                        </ResponsiveContainer>
-                      </ChartContainer>
+                              <PolarAngleAxis 
+                                dataKey="attribute" 
+                                className="fill-muted-foreground font-subtitle"
+                                tick={{ 
+                                  fontSize: window.innerWidth < 640 ? 9 : 11, 
+                                  fontWeight: 500 
+                                }}
+                              />
+                              <PolarRadiusAxis 
+                                angle={90} 
+                                domain={[0, 10]} 
+                                className="fill-muted-foreground"
+                                tick={{ fontSize: window.innerWidth < 640 ? 8 : 10 }}
+                                tickCount={6}
+                              />
+                              {selectedCareers.map((_, index) => (
+                                <Radar
+                                  key={index}
+                                  name={selectedCareers[index]?.name}
+                                  dataKey={`career${index}`}
+                                  stroke={chartConfig[`career${index}` as keyof typeof chartConfig]?.color}
+                                  fill={chartConfig[`career${index}` as keyof typeof chartConfig]?.color}
+                                  fillOpacity={0.15}
+                                  strokeWidth={window.innerWidth < 640 ? 2 : 3}
+                                  dot={{ r: window.innerWidth < 640 ? 3 : 4, strokeWidth: 2 }}
+                                />
+                              ))}
+                              <ChartTooltip content={<ChartTooltipContent />} />
+                            </RadarChart>
+                          </ResponsiveContainer>
+                        </ChartContainer>
+                      </div>
                     </div>
                   </div>
                 )}
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-                  {selectedCareers.map((career, index) => (
-                    <div 
-                      key={career.id} 
-                      className="border-2 rounded-xl p-6 relative bg-gradient-to-br from-card to-muted/20 hover-lift"
-                      style={{ 
-                        borderColor: chartConfig[`career${index}` as keyof typeof chartConfig]?.color,
-                        animationDelay: `${index * 0.2}s`
-                      }}
-                    >
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeFromComparison(career.id)}
-                        className="absolute top-3 right-3 h-8 w-8 p-0 hover:bg-destructive hover:text-destructive-foreground transition-all duration-200 hover:scale-110"
+                {/* Career Cards Section - Separate from Chart */}
+                <div className="space-y-4">
+                  <h4 className="text-lg sm:text-xl font-title font-semibold text-center gradient-text">
+                    Carreras Seleccionadas
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+                    {selectedCareers.map((career, index) => (
+                      <div 
+                        key={career.id} 
+                        className="border-2 rounded-xl p-4 relative bg-gradient-to-br from-card to-muted/20 hover-lift transition-all duration-300"
+                        style={{ 
+                          borderColor: chartConfig[`career${index}` as keyof typeof chartConfig]?.color,
+                          animationDelay: `${index * 0.2}s`
+                        }}
                       >
-                        <X className="h-4 w-4" />
-                      </Button>
-                      
-                      <h3 className="font-title font-bold text-lg mb-3 pr-12 text-primary">{career.name}</h3>
-                      <div className="space-y-3 text-sm font-body">
-                        <div className="flex items-center space-x-2">
-                          <Users className="h-4 w-4 text-accent" />
-                          <span className="font-subtitle">{career.university}</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <MapPin className="h-4 w-4 text-accent" />
-                          <span>{career.location}</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <DollarSign className="h-4 w-4 text-accent" />
-                          <span className="font-medium">{career.avgSalary}</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Clock className="h-4 w-4 text-accent" />
-                          <span>{career.duration}</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Award className="h-4 w-4 text-accent" />
-                          <Badge className={getDemandColor(career.demand)}>
-                            {career.demand}
-                          </Badge>
-                        </div>
-
-                        {/* Metrics */}
-                        <div className="pt-3 border-t space-y-2">
-                          <div className="flex justify-between items-center">
-                            <span className="font-subtitle text-xs">Dificultad:</span>
-                            <div className="flex">
-                              {[...Array(10)].map((_, i) => (
-                                <Star 
-                                  key={i} 
-                                  className={`h-3 w-3 ${i < career.difficulty ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
-                                />
-                              ))}
-                            </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeFromComparison(career.id)}
+                          className="absolute top-2 right-2 h-7 w-7 p-0 hover:bg-destructive hover:text-destructive-foreground transition-all duration-200 hover:scale-110 z-10"
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                        
+                        <h3 className="font-title font-bold text-sm sm:text-base mb-3 pr-8 text-primary leading-tight">
+                          {career.name}
+                        </h3>
+                        <div className="space-y-2 text-xs sm:text-sm font-body">
+                          <div className="flex items-center space-x-2">
+                            <Users className="h-3 w-3 text-accent flex-shrink-0" />
+                            <span className="font-subtitle text-muted-foreground truncate">{career.university}</span>
                           </div>
-                          <div className="flex justify-between items-center">
-                            <span className="font-subtitle text-xs">Oportunidades:</span>
-                            <div className="flex">
-                              {[...Array(10)].map((_, i) => (
-                                <Star 
-                                  key={i} 
-                                  className={`h-3 w-3 ${i < career.jobOpportunities ? 'text-green-400 fill-current' : 'text-gray-300'}`} 
-                                />
-                              ))}
+                          <div className="flex items-center space-x-2">
+                            <MapPin className="h-3 w-3 text-accent flex-shrink-0" />
+                            <span>{career.location}</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <DollarSign className="h-3 w-3 text-accent flex-shrink-0" />
+                            <span className="font-medium text-xs">{career.avgSalary}</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Clock className="h-3 w-3 text-accent flex-shrink-0" />
+                            <span>{career.duration}</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Award className="h-3 w-3 text-accent flex-shrink-0" />
+                            <Badge className={`${getDemandColor(career.demand)} text-xs px-2 py-1`}>
+                              {career.demand}
+                            </Badge>
+                          </div>
+
+                          {/* Compact Metrics */}
+                          <div className="pt-2 border-t space-y-1">
+                            <div className="flex justify-between items-center">
+                              <span className="font-subtitle text-xs text-muted-foreground">Dificultad:</span>
+                              <div className="flex">
+                                {[...Array(5)].map((_, i) => (
+                                  <Star 
+                                    key={i} 
+                                    className={`h-2 w-2 ${i < Math.ceil(career.difficulty/2) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="font-subtitle text-xs text-muted-foreground">Oportunidades:</span>
+                              <div className="flex">
+                                {[...Array(5)].map((_, i) => (
+                                  <Star 
+                                    key={i} 
+                                    className={`h-2 w-2 ${i < Math.ceil(career.jobOpportunities/2) ? 'text-green-400 fill-current' : 'text-gray-300'}`} 
+                                  />
+                                ))}
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </CardContent>
             </Card>

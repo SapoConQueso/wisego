@@ -128,4 +128,22 @@ All colors MUST be HSL.
   .gradient-text {
     @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
   }
+
+  .hero-pattern {
+    background-image: 
+      radial-gradient(circle at 25% 25%, hsl(var(--accent)) 0%, transparent 25%),
+      radial-gradient(circle at 75% 75%, hsl(var(--primary)) 0%, transparent 25%);
+  }
+
+  .card-glassmorphism {
+    @apply backdrop-blur-md bg-white/10 border border-white/20 shadow-xl;
+  }
+
+  .mobile-responsive-text {
+    @apply text-sm sm:text-base lg:text-lg;
+  }
+
+  .primary-gradient {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)) 50%, hsl(var(--accent)) 100%);
+  }
 }
