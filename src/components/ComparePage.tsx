@@ -27,6 +27,11 @@ interface Career {
   salaryRange: number; // 1-10
   workLifeBalance: number; // 1-10
   prestige: number; // 1-10
+  innovation: number; // 1-10
+  stability: number; // 1-10
+  socialImpact: number; // 1-10
+  growth: number; // 1-10
+  flexibility: number; // 1-10
 }
 
 const careers: Career[] = [
@@ -43,7 +48,12 @@ const careers: Career[] = [
     jobOpportunities: 9,
     salaryRange: 8,
     workLifeBalance: 7,
-    prestige: 7
+    prestige: 7,
+    innovation: 9,
+    stability: 8,
+    socialImpact: 7,
+    growth: 9,
+    flexibility: 8
   },
   {
     id: "2",
@@ -58,7 +68,12 @@ const careers: Career[] = [
     jobOpportunities: 8,
     salaryRange: 9,
     workLifeBalance: 4,
-    prestige: 10
+    prestige: 10,
+    innovation: 6,
+    stability: 9,
+    socialImpact: 10,
+    growth: 7,
+    flexibility: 5
   },
   {
     id: "3",
@@ -73,7 +88,12 @@ const careers: Career[] = [
     jobOpportunities: 7,
     salaryRange: 6,
     workLifeBalance: 8,
-    prestige: 6
+    prestige: 6,
+    innovation: 7,
+    stability: 7,
+    socialImpact: 6,
+    growth: 8,
+    flexibility: 9
   },
   {
     id: "4",
@@ -88,7 +108,12 @@ const careers: Career[] = [
     jobOpportunities: 6,
     salaryRange: 5,
     workLifeBalance: 9,
-    prestige: 6
+    prestige: 6,
+    innovation: 6,
+    stability: 7,
+    socialImpact: 9,
+    growth: 6,
+    flexibility: 8
   },
   {
     id: "5",
@@ -103,7 +128,12 @@ const careers: Career[] = [
     jobOpportunities: 7,
     salaryRange: 7,
     workLifeBalance: 6,
-    prestige: 8
+    prestige: 8,
+    innovation: 5,
+    stability: 8,
+    socialImpact: 8,
+    growth: 6,
+    flexibility: 6
   },
   {
     id: "6",
@@ -118,7 +148,12 @@ const careers: Career[] = [
     jobOpportunities: 6,
     salaryRange: 6,
     workLifeBalance: 7,
-    prestige: 7
+    prestige: 7,
+    innovation: 8,
+    stability: 6,
+    socialImpact: 7,
+    growth: 7,
+    flexibility: 7
   }
 ];
 
@@ -156,7 +191,12 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
       { attribute: 'Oportunidades', key: 'jobOpportunities' },
       { attribute: 'Salario', key: 'salaryRange' },
       { attribute: 'Balance Vida', key: 'workLifeBalance' },
-      { attribute: 'Prestigio', key: 'prestige' }
+      { attribute: 'Prestigio', key: 'prestige' },
+      { attribute: 'Innovación', key: 'innovation' },
+      { attribute: 'Estabilidad', key: 'stability' },
+      { attribute: 'Impacto Social', key: 'socialImpact' },
+      { attribute: 'Crecimiento', key: 'growth' },
+      { attribute: 'Flexibilidad', key: 'flexibility' }
     ];
 
     return criteria.map(criterion => {
@@ -232,21 +272,31 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
               </CardHeader>
               <CardContent className="p-6">
                 {selectedCareers.length >= 2 && (
-                  <div className="mb-8">
-                    <h4 className="text-lg font-title font-semibold mb-4 text-center">Gráfico Radial Comparativo</h4>
-                    <div className="h-96 w-full">
+                  <div className="mb-10">
+                    <h4 className="text-xl font-title font-semibold mb-6 text-center gradient-text">Gráfico Radial Comparativo</h4>
+                    <div className="h-[500px] w-full bg-gradient-to-br from-muted/20 to-background p-6 rounded-xl">
                       <ChartContainer config={chartConfig}>
                         <ResponsiveContainer width="100%" height="100%">
-                          <RadarChart data={getRadarData()}>
-                            <PolarGrid className="stroke-muted" />
+                          <RadarChart 
+                            data={getRadarData()}
+                            margin={{ top: 40, right: 80, bottom: 40, left: 80 }}
+                          >
+                            <PolarGrid 
+                              className="stroke-muted" 
+                              gridType="polygon"
+                              radialLines={true}
+                            />
                             <PolarAngleAxis 
                               dataKey="attribute" 
-                              className="fill-muted-foreground text-sm font-subtitle"
+                              className="fill-muted-foreground text-xs font-subtitle"
+                              tick={{ fontSize: 11, fontWeight: 500 }}
                             />
                             <PolarRadiusAxis 
                               angle={90} 
                               domain={[0, 10]} 
                               className="fill-muted-foreground"
+                              tick={{ fontSize: 10 }}
+                              tickCount={6}
                             />
                             {selectedCareers.map((_, index) => (
                               <Radar
@@ -255,8 +305,9 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
                                 dataKey={`career${index}`}
                                 stroke={chartConfig[`career${index}` as keyof typeof chartConfig]?.color}
                                 fill={chartConfig[`career${index}` as keyof typeof chartConfig]?.color}
-                                fillOpacity={0.2}
-                                strokeWidth={2}
+                                fillOpacity={0.15}
+                                strokeWidth={3}
+                                dot={{ r: 4, strokeWidth: 2 }}
                               />
                             ))}
                             <ChartTooltip content={<ChartTooltipContent />} />
