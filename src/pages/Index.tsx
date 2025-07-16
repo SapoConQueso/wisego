@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BackgroundPattern } from "@/components/BackgroundPattern";
 import { LoginForm } from "@/components/LoginForm";
 import { RegisterForm } from "@/components/RegisterForm";
@@ -9,27 +9,23 @@ import { ChatbotsPage } from "@/components/ChatbotsPage";
 import { VocationalTestPage } from "@/components/VocationalTestPage";
 import { AiChatPage } from "@/components/AiChatPage";
 import { ComparePage } from "@/components/ComparePage";
-import { MapPage } from "@/components/MapPage";
+import { MapPage } from "@/components/MapPageSimple";
 import { ProfilePage } from "@/components/ProfilePage";
 import { CommunityPage } from "@/components/CommunityPage";
+import { useSession } from "@/hooks/useSession";
 
 type ViewType = "login" | "register" | "birthdate" | "dashboard" | "about" | "chatbots" | "vocational-test" | "ai-chat" | "compare" | "map" | "profile" | "community";
 
-export interface UserSession {
-  isLoggedIn: boolean;
-  isGuest: boolean;
-  username: string;
-  email?: string;
-}
-
 const Index = () => {
-  const [currentView, setCurrentView] = useState<ViewType>("login");
-  const [userSession, setUserSession] = useState<UserSession>({
-    isLoggedIn: false,
-    isGuest: false,
-    username: "",
-    email: ""
-  });
+  const [currentView, setCurrentView] = useState<ViewType>("dashboard");
+  const { userSession, login, loginAsGuest, logout } = useSession();
+
+  // Check if user is already logged in on mount
+  useEffect(() => {
+    if (!userSession.isLoggedIn && !userSession.isGuest) {
+      setCurrentView("login");
+    }
+  }, [userSession.isLoggedIn, userSession.isGuest]);
 
   const renderCurrentView = () => {
     switch (currentView) {
@@ -39,21 +35,11 @@ const Index = () => {
             <LoginForm 
               onSwitchToRegister={() => setCurrentView("register")}
               onLogin={() => {
-                setUserSession({
-                  isLoggedIn: true,
-                  isGuest: false,
-                  username: "usuario",
-                  email: "usuario@example.com"
-                });
+                login("usuario", "usuario@example.com");
                 setCurrentView("dashboard");
               }}
               onGuestAccess={() => {
-                setUserSession({
-                  isLoggedIn: true,
-                  isGuest: true,
-                  username: "Invitado",
-                  email: ""
-                });
+                loginAsGuest();
                 setCurrentView("dashboard");
               }}
             />
@@ -85,12 +71,7 @@ const Index = () => {
           onNavigate={(view) => setCurrentView(view as ViewType)} 
           userSession={userSession}
           onLogout={() => {
-            setUserSession({
-              isLoggedIn: false,
-              isGuest: false,
-              username: "",
-              email: ""
-            });
+            logout();
             setCurrentView("login");
           }}
         />;

@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
-import { UserSession } from "@/pages/Index";
+import { UserSession } from "@/hooks/useSession";
 
 interface CommunityPageProps {
   onNavigate: (view: string) => void;

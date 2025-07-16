@@ -3,9 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
-import { Menu, Search, ChevronRight, Info, BarChart3, MapPin, MessageSquare, User, LogOut, Users } from "lucide-react";
+import { Menu, Search, ChevronRight, Info, BarChart3, MapPin, MessageSquare, User, LogOut, Users, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { UserSession } from "@/pages/Index";
+import { UserSession } from "@/hooks/useSession";
+import { useSearch } from "@/hooks/useSearch";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface MainDashboardProps {
   onNavigate: (view: string) => void;
@@ -14,7 +16,8 @@ interface MainDashboardProps {
 }
 
 export function MainDashboard({ onNavigate, userSession, onLogout }: MainDashboardProps) {
-  const [searchQuery, setSearchQuery] = useState("");
+  const { searchQuery, setSearchQuery, searchResults, hasResults } = useSearch(onNavigate);
+  const [showSearchResults, setShowSearchResults] = useState(false);
 
   const menuItems = [
     { icon: Info, label: "Conócenos", action: () => onNavigate("about") },
@@ -69,11 +72,55 @@ export function MainDashboard({ onNavigate, userSession, onLogout }: MainDashboa
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
             type="text"
-            placeholder="Buscar..."
+            placeholder="Buscar carreras, universidades, funciones..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setShowSearchResults(e.target.value.length > 0);
+            }}
+            onFocus={() => setShowSearchResults(searchQuery.length > 0)}
             className="pl-10 pr-44 bg-background border-0 rounded-full"
           />
+          
+          {/* Search Results Dropdown */}
+          {showSearchResults && hasResults && (
+            <Card className="absolute top-full left-0 right-44 mt-2 z-50 max-h-64 overflow-y-auto">
+              <CardContent className="p-2">
+                {searchResults.map((result) => (
+                  <Button
+                    key={result.id}
+                    variant="ghost"
+                    className="w-full justify-start text-left h-auto p-3 hover:bg-muted"
+                    onClick={() => {
+                      result.action();
+                      setSearchQuery("");
+                      setShowSearchResults(false);
+                    }}
+                  >
+                    <div>
+                      <div className="font-medium">{result.title}</div>
+                      <div className="text-sm text-muted-foreground">{result.description}</div>
+                    </div>
+                  </Button>
+                ))}
+              </CardContent>
+            </Card>
+          )}
+
+          {showSearchResults && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setSearchQuery("");
+                setShowSearchResults(false);
+              }}
+              className="absolute right-48 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
+
           {userSession.isLoggedIn ? (
             <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
               <Button 
@@ -160,23 +207,21 @@ export function MainDashboard({ onNavigate, userSession, onLogout }: MainDashboa
           </div>
         </div>
 
-        {/* Event Card */}
-        <div className="bg-card text-card-foreground rounded-xl border overflow-hidden">
-          <div className="bg-gradient-to-r from-orange-400 to-red-500 p-6 text-white">
-            <div className="text-4xl font-bold mb-2">
-              <span className="border-2 border-white rounded px-2 py-1">OPEN</span>
-            </div>
-            <div className="text-6xl font-bold text-orange-200">
-              ULIMA
-            </div>
-            <div className="text-2xl font-bold mt-2">15.06</div>
-          </div>
-          <div className="p-4">
-            <img 
-              src="/lovable-uploads/cb593173-f798-4d72-8b4b-735221a57754.png" 
-              alt="Open ULima Event" 
-              className="w-full h-32 object-cover rounded-lg"
-            />
+        {/* Quick Actions */}
+        <div className="bg-card text-card-foreground rounded-xl border p-6">
+          <h2 className="text-2xl font-bold mb-6 text-center gradient-text">Accesos Rápidos</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {menuItems.map((item, index) => (
+              <Button
+                key={index}
+                variant="outline"
+                className="h-20 flex flex-col items-center justify-center space-y-2 hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+                onClick={item.action}
+              >
+                <item.icon className="h-6 w-6" />
+                <span className="text-sm font-medium">{item.label}</span>
+              </Button>
+            ))}
           </div>
         </div>
       </main>

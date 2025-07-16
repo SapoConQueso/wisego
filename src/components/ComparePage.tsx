@@ -132,7 +132,7 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
   );
 
   const addToComparison = (career: Career) => {
-    if (selectedCareers.length < 3 && !selectedCareers.find(c => c.id === career.id)) {
+    if (selectedCareers.length < 5 && !selectedCareers.find(c => c.id === career.id)) {
       setSelectedCareers([...selectedCareers, career]);
     }
   };
@@ -224,7 +224,7 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
               <CardHeader className="bg-gradient-to-r from-primary/5 to-accent/5">
                 <CardTitle className="flex items-center space-x-2 font-title">
                   <BarChart3 className="h-6 w-6 text-primary" />
-                  <span className="gradient-text text-2xl">Análisis Comparativo ({selectedCareers.length}/3)</span>
+                  <span className="gradient-text text-2xl">Análisis Comparativo ({selectedCareers.length}/5)</span>
                 </CardTitle>
                 <CardDescription className="font-subtitle">
                   Visualización avanzada de métricas clave para tomar la mejor decisión
@@ -267,7 +267,7 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
                   </div>
                 )}
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
                   {selectedCareers.map((career, index) => (
                     <div 
                       key={career.id} 
@@ -411,7 +411,7 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
 
                   <Button
                     onClick={() => addToComparison(career)}
-                    disabled={selectedCareers.length >= 3 || selectedCareers.some(c => c.id === career.id)}
+                    disabled={selectedCareers.length >= 5 || selectedCareers.some(c => c.id === career.id)}
                     className="w-full transition-all duration-300 hover:shadow-lg"
                     variant={selectedCareers.some(c => c.id === career.id) ? "secondary" : "default"}
                   >

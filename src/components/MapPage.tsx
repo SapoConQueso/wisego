@@ -2,12 +2,13 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
-import { ArrowLeft, MapPin, Search, Filter, Navigation, Crown, Lock, Eye, Building, Users, Calendar, Route } from "lucide-react";
+import { ArrowLeft, Search, Filter, MapPin, Clock, DollarSign, Star, Crown, Lock, Navigation, Building, Eye, Route } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { MapComponent } from "./MapComponent";
 
 interface MapPageProps {
   onNavigate: (view: string) => void;
@@ -209,35 +210,10 @@ export function MapPage({ onNavigate }: MapPageProps) {
           </div>
         </div>
 
-        {/* Map Placeholder */}
-        <div className="max-w-4xl mx-auto animate-scale-in">
-          <Card className="hover-lift">
-            <CardContent className="p-0">
-              <div className="h-80 bg-gradient-to-br from-primary/10 to-accent/10 rounded-lg flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 animate-pulse"></div>
-                <div className="text-center z-10">
-                  <MapPin className="h-16 w-16 text-primary mx-auto mb-4 animate-float" />
-                  <h3 className="text-2xl font-title font-bold gradient-text mb-2">Mapa Interactivo</h3>
-                  <p className="text-sm font-subtitle text-muted-foreground">Explora universidades en Lima y sus alrededores</p>
-                </div>
-                
-                {/* Animated map markers */}
-                {filteredUniversities.slice(0, 5).map((_, index) => (
-                  <div 
-                    key={index}
-                    className={`absolute w-4 h-4 rounded-full animate-pulse ${
-                      index % 2 === 0 ? 'bg-primary' : 'bg-accent'
-                    }`}
-                    style={{
-                      top: `${20 + (index * 15)}%`,
-                      left: `${15 + (index * 18)}%`,
-                      animationDelay: `${index * 0.5}s`
-                    }}
-                  />
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+        {/* Interactive Map */}
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-2xl font-bold mb-4 text-center">Mapa Interactivo de Universidades</h2>
+          <MapComponent />
         </div>
 
         {/* Universities List */}
