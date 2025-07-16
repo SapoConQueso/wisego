@@ -272,7 +272,7 @@ export const translations: Record<Language, Translations> = {
     },
     dashboard: {
       title: 'WiseGO!',
-      subtitle: 'Tu compañero inteligente para elegir la carrera perfecta',
+      subtitle: 'Hazlo claro. Hazlo sabio. Hazlo Wise.',
       searchPlaceholder: 'Buscar carreras, universidades, funciones...',
       quickActions: 'Accesos Rápidos',
       announcement: '¡Ya están abiertas las inscripciones para el Open ULima!',
@@ -504,7 +504,7 @@ export const translations: Record<Language, Translations> = {
     },
     dashboard: {
       title: 'WiseGO!',
-      subtitle: 'Your smart companion to choose the perfect career',
+      subtitle: 'Make it clear. Make it Wise. Make it go.',
       searchPlaceholder: 'Search careers, universities, features...',
       quickActions: 'Quick Actions',
       announcement: 'ULima Open registrations are now open!',
@@ -736,7 +736,7 @@ export const translations: Record<Language, Translations> = {
     },
     dashboard: {
       title: 'WiseGO!',
-      subtitle: 'Yachana puriyta akllanapaq yanapaykuq',
+      subtitle: 'Sutita ruray. Yuyaysapa ruray. Wise ruray.',
       searchPlaceholder: 'Maskay llamkaykuna, yachaywasikuna...',
       quickActions: 'Utqay Ruway',
       announcement: '¡Kunan ULima kichay qillqakuy kichakun!',

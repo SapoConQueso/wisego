@@ -197,7 +197,7 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
             <WiseGoLogo size="lg" className="mx-auto mb-6" />
             <h1 className="text-4xl sm:text-5xl font-bold font-title mb-4 tracking-wide">{t.dashboard.title}</h1>
             <p className="text-lg sm:text-xl font-subtitle text-muted-foreground max-w-2xl mx-auto">
-              Hazlo claro. Hazlo sabio. Hazlo Wise.
+              {t.dashboard.subtitle}
             </p>
           </div>
         </div>
