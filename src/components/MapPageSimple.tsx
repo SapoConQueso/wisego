@@ -311,6 +311,42 @@ export function MapPage({ onNavigate }: MapPageProps) {
                       <Route className="h-4 w-4" />
                       Cómo Llegar
                     </Button>
+
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (isPremium) {
+                          onNavigate("university-tour");
+                        } else {
+                          handlePremiumAction("Ver por dentro");
+                        }
+                      }}
+                      className={`flex items-center gap-1 ${isPremium ? 'bg-blue-100 text-blue-800 border-blue-300' : 'bg-wisego-orange/10 text-wisego-orange border-wisego-orange'} hover:bg-blue-200 transition-all duration-200`}
+                    >
+                      <Eye className="h-4 w-4" />
+                      Ver por dentro
+                      {!isPremium && <Lock className="h-3 w-3" />}
+                    </Button>
+
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (isPremium) {
+                          onNavigate("university-tour");
+                        } else {
+                          handlePremiumAction("Tour virtual");
+                        }
+                      }}
+                      className={`flex items-center gap-1 ${isPremium ? 'bg-green-100 text-green-800 border-green-300' : 'bg-wisego-orange/10 text-wisego-orange border-wisego-orange'} hover:bg-green-200 transition-all duration-200`}
+                    >
+                      <Eye className="h-4 w-4" />
+                      Tour virtual
+                      {!isPremium && <Lock className="h-3 w-3" />}
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
