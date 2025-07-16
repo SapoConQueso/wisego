@@ -211,14 +211,14 @@ export function MapPage({ onNavigate }: MapPageProps) {
         </div>
 
         {/* Interactive Map */}
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl font-bold mb-4 text-center">Mapa Interactivo de Universidades</h2>
+        <div className="max-w-6xl mx-auto mb-12">
+          <h2 className="text-3xl font-bold mb-8 text-center font-title gradient-text">Mapa Interactivo de Universidades</h2>
           <MapComponent />
         </div>
 
         {/* Universities List */}
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-8">
             <h2 className="text-3xl font-title font-bold gradient-text">Universidades Encontradas</h2>
             <span className="text-sm font-subtitle text-muted-foreground bg-muted px-3 py-1 rounded-full">
               {filteredUniversities.length} resultados

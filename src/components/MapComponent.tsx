@@ -57,54 +57,54 @@ const openGoogleMaps = (university: University) => {
 
 export function MapComponent() {
   return (
-    <div className="relative h-96 w-full space-y-6">
+    <div className="relative w-full space-y-8">
       {/* Animated Location Header */}
-      <div className="relative bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg p-6 overflow-hidden">
+      <div className="relative bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg p-8 overflow-hidden mb-6">
         {/* Animated Background Elements */}
         <div className="absolute inset-0">
-          <div className="absolute top-4 left-8 w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-          <div className="absolute top-8 right-12 w-3 h-3 bg-accent rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-          <div className="absolute bottom-6 left-16 w-1.5 h-1.5 bg-primary/60 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
-          <div className="absolute bottom-4 right-8 w-2.5 h-2.5 bg-accent/60 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+          <div className="absolute top-6 left-10 w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+          <div className="absolute top-10 right-14 w-3 h-3 bg-accent rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+          <div className="absolute bottom-8 left-20 w-1.5 h-1.5 bg-primary/60 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute bottom-6 right-10 w-2.5 h-2.5 bg-accent/60 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
           
           {/* Moving Location Icon */}
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             <div className="relative">
-              <MapPin className="h-8 w-8 text-primary animate-bounce" />
-              <div className="absolute -inset-2 bg-primary/20 rounded-full animate-ping"></div>
+              <MapPin className="h-10 w-10 text-primary animate-bounce" />
+              <div className="absolute -inset-3 bg-primary/20 rounded-full animate-ping"></div>
             </div>
           </div>
         </div>
         
         {/* Content */}
-        <div className="relative z-10 text-center">
-          <h3 className="text-xl font-title font-bold text-primary mb-2">
+        <div className="relative z-10 text-center py-4">
+          <h3 className="text-2xl font-title font-bold text-primary mb-3">
             Explora Universidades Cerca de Ti
           </h3>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-muted-foreground text-base">
             Descubre las mejores opciones académicas en tu zona
           </p>
         </div>
       </div>
 
-      <Card className="h-full">
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <MapPin className="h-5 w-5" />
+      <Card className="min-h-[400px]">
+        <CardHeader className="pb-6">
+          <CardTitle className="flex items-center space-x-3 text-xl">
+            <MapPin className="h-6 w-6" />
             <span>Ubicaciones de Universidades</span>
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-muted-foreground text-sm">
+        <CardContent className="space-y-6">
+          <p className="text-muted-foreground text-base mb-6">
             Encuentra la ubicación exacta de cada universidad en Google Maps
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {universities.map(university => (
               <Button
                 key={university.id}
                 variant="outline"
-                className="justify-between h-auto p-4 hover:bg-accent"
+                className="justify-between h-auto p-5 hover:bg-accent transition-all duration-200 hover:shadow-md"
                 onClick={() => openGoogleMaps(university)}
               >
                 <div className="text-left">
@@ -121,7 +121,7 @@ export function MapComponent() {
             ))}
           </div>
           
-          <div className="flex items-center justify-center space-x-4 text-sm text-muted-foreground pt-4 border-t">
+          <div className="flex items-center justify-center space-x-6 text-sm text-muted-foreground pt-6 border-t mt-6">
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
               <span>Privadas</span>
