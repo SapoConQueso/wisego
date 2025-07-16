@@ -2,12 +2,16 @@ import { Button } from "@/components/ui/button";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
 import { ArrowLeft } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { getTranslation } from "@/lib/translations";
 
 interface AboutPageProps {
   onBack: () => void;
 }
 
 export function AboutPage({ onBack }: AboutPageProps) {
+  const { currentLanguage } = useLanguage();
+  const t = getTranslation(currentLanguage);
   const partners = [
     { name: "Ramírez", image: "/api/placeholder/60/60" },
     { name: "SMMUN", image: "/api/placeholder/60/60" },
@@ -58,15 +62,10 @@ export function AboutPage({ onBack }: AboutPageProps) {
         {/* ¿Por qué elegir WiseGo? */}
         <section>
           <h2 className="text-lg font-bold mb-3">
-            ¿Por qué elegir <span className="text-accent">WiseGo</span>?
+            {t.about.whyChoose} <span className="text-accent">WiseGo</span>?
           </h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            WiseGo te ayuda a encontrar tu carrera y universidad ideal utilizando inteligencia artificial 
-            de manera responsable. Nuestra plataforma es práctica, confiable y personalizable, diseñada 
-            para adaptarse a tus necesidades específicas. Con herramientas avanzadas de análisis y 
-            recomendaciones personalizadas, te guiamos en cada paso hacia el logro de tus metas académicas 
-            y profesionales. Creemos en el poder de la tecnología para transformar la educación y hacer 
-            que las decisiones importantes de tu futuro sean más informadas y acertadas.
+            {t.about.whyChooseText}
           </p>
         </section>
 

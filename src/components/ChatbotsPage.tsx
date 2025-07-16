@@ -7,6 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/components/AuthProvider";
 import { toast } from "sonner";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { getTranslation } from "@/lib/translations";
 
 interface ChatbotsPageProps {
   onNavigate: (view: string) => void;
@@ -14,6 +16,8 @@ interface ChatbotsPageProps {
 
 export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
   const { isSubscribed, createCheckout, isGuest } = useAuth();
+  const { currentLanguage } = useLanguage();
+  const t = getTranslation(currentLanguage);
 
   const handlePremiumAction = (chatbotName: string) => {
     toast.error(`${chatbotName} está disponible solo para usuarios Premium. ¡Suscríbete!`);
@@ -48,7 +52,7 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <WiseGoLogo size="sm" />
-          <span className="text-xl font-bold">Chatbots IA</span>
+          <span className="text-xl font-bold">{t.chatbots.title}</span>
         </div>
         <ThemeToggle />
       </header>
