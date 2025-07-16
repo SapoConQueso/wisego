@@ -31,6 +31,23 @@ export function DeepseekChat({ onNavigate, title, systemPrompt = "Eres un asiste
   const [error, setError] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Función para obtener la API key según el tipo de chat
+  const getApiKey = () => {
+    if (title === "Test Vocacional IA") {
+      return "sk-6c6b73b29e854804b16c32eb32153dd0";
+    } else if (title === "Chat IA General") {
+      return "sk-f7645a1fdbe245bb816f9d304951062b";
+    } else {
+      return apiKey;
+    }
+  };
+
+  // Verificar si tenemos una API key válida
+  const hasValidApiKey = () => {
+    const key = getApiKey();
+    return key && key.trim().length > 0;
+  };
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -38,17 +55,10 @@ export function DeepseekChat({ onNavigate, title, systemPrompt = "Eres un asiste
   useEffect(scrollToBottom, [messages]);
 
   const callDeepseekAPI = async (userMessage: string): Promise<string> => {
-    // Usar las API keys específicas según el tipo de chat
-    let finalApiKey = "";
-    if (title === "Test Vocacional IA") {
-      finalApiKey = "sk-6c6b73b29e854804b16c32eb32153dd0";
-    } else if (title === "Chat IA General") {
-      finalApiKey = "sk-f7645a1fdbe245bb816f9d304951062b";
-    } else {
-      finalApiKey = apiKey;
-      if (!finalApiKey.trim()) {
-        throw new Error("Por favor, configura tu API Key de Deepseek primero.");
-      }
+    const finalApiKey = getApiKey();
+    
+    if (!finalApiKey.trim()) {
+      throw new Error("Por favor, configura tu API Key de Deepseek primero.");
     }
 
     try {
@@ -221,7 +231,7 @@ export function DeepseekChat({ onNavigate, title, systemPrompt = "Eres un asiste
             <div>
               <h3 className="text-xl font-semibold mb-2">{title}</h3>
               <p className="text-muted-foreground">
-                {apiKey ? "¡Hola! ¿En qué puedo ayudarte hoy?" : "Por favor, configura tu API Key de Deepseek para comenzar."}
+                {hasValidApiKey() ? "¡Hola! ¿En qué puedo ayudarte hoy?" : "Por favor, configura tu API Key de Deepseek para comenzar."}
               </p>
             </div>
           </div>
@@ -272,13 +282,13 @@ export function DeepseekChat({ onNavigate, title, systemPrompt = "Eres un asiste
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder={apiKey ? "Escribe tu mensaje..." : "Configura tu API Key primero..."}
-            disabled={!apiKey || isLoading}
+            placeholder={hasValidApiKey() ? "Escribe tu mensaje..." : "Configura tu API Key primero..."}
+            disabled={!hasValidApiKey() || isLoading}
             className="flex-1"
           />
           <Button 
             onClick={sendMessage} 
-            disabled={!inputValue.trim() || !apiKey || isLoading}
+            disabled={!inputValue.trim() || !hasValidApiKey() || isLoading}
             size="sm"
           >
             <Send className="h-4 w-4" />
