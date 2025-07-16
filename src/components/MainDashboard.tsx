@@ -226,7 +226,11 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
         )}
 
         {/* Announcement */}
-        <div className="bg-card border border-border rounded-2xl p-6 shadow-lg">
+        <div className="bg-card border border-border rounded-2xl p-6 shadow-lg relative">
+          {/* AD Badge */}
+          <div className="absolute top-3 right-3 bg-muted/80 text-muted-foreground text-xs font-bold px-2 py-1 rounded border border-border/50">
+            AD
+          </div>
           <div className="flex items-start space-x-4">
             <div className="bg-accent p-3 rounded-xl shadow-lg">
               <Info className="h-6 w-6 text-accent-foreground" />
