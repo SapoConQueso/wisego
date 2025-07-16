@@ -5,28 +5,26 @@ import { ThemeToggle } from "./ThemeToggle";
 import { ArrowLeft, Bot, MessageCircle, GraduationCap, Users, Crown, Lock, Building2, BookOpen, BrainCircuit } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/components/AuthProvider";
+import { toast } from "sonner";
 
 interface ChatbotsPageProps {
   onNavigate: (view: string) => void;
-  userSession?: {
-    isLoggedIn: boolean;
-    isGuest: boolean;
-    username: string;
-    email?: string;
-  };
 }
 
-export function ChatbotsPage({ onNavigate, userSession }: ChatbotsPageProps) {
-  const [isPremium, setIsPremium] = useState(false); // Simular estado premium
-  const { toast } = useToast();
+export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
+  const { isSubscribed, createCheckout } = useAuth();
 
   const handlePremiumAction = (chatbotName: string) => {
-    toast({
-      title: "Chatbot Premium",
-      description: `${chatbotName} está disponible solo para usuarios Premium. ¡Suscríbete por S/25 al mes!`,
-      variant: "destructive",
-    });
+    toast.error(`${chatbotName} está disponible solo para usuarios Premium. ¡Suscríbete!`);
+  };
+
+  const handleSubscribe = async () => {
+    try {
+      await createCheckout();
+    } catch (error) {
+      toast.error("Error al crear la suscripción");
+    }
   };
 
   return (
@@ -51,7 +49,7 @@ export function ChatbotsPage({ onNavigate, userSession }: ChatbotsPageProps) {
       {/* Main Content */}
       <main className="p-4 space-y-6">
         {/* Premium Banner */}
-        {!isPremium && (
+        {!isSubscribed && (
           <div className="max-w-4xl mx-auto animate-fade-in">
             <Card className="border-wisego-orange bg-gradient-to-r from-wisego-orange/5 to-primary/5">
               <CardContent className="p-6">
@@ -65,7 +63,7 @@ export function ChatbotsPage({ onNavigate, userSession }: ChatbotsPageProps) {
                   </div>
                   <Button 
                     className="bg-wisego-orange hover:bg-wisego-orange/90 text-white"
-                    onClick={() => onNavigate("profile")}
+                    onClick={handleSubscribe}
                   >
                     <Crown className="h-4 w-4 mr-2" />
                     Suscribirse
@@ -83,10 +81,10 @@ export function ChatbotsPage({ onNavigate, userSession }: ChatbotsPageProps) {
 
         <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           {/* Test Vocacional Bot */}
-          <Card className={`border-2 transition-colors ${isPremium ? 'hover:border-primary cursor-pointer' : 'opacity-60 cursor-not-allowed'}`}
-                onClick={() => isPremium ? onNavigate("vocational-test") : handlePremiumAction("Test Vocacional IA")}>
+          <Card className={`border-2 transition-colors ${isSubscribed ? 'hover:border-primary cursor-pointer' : 'opacity-60 cursor-not-allowed'}`}
+                onClick={() => isSubscribed ? onNavigate("vocational-test") : handlePremiumAction("Test Vocacional IA")}>
             <CardHeader className="text-center relative">
-              {!isPremium && (
+              {!isSubscribed && (
                 <Badge className="absolute top-2 right-2 bg-wisego-orange text-white">
                   <Crown className="h-3 w-3 mr-1" />
                   Premium
@@ -97,7 +95,7 @@ export function ChatbotsPage({ onNavigate, userSession }: ChatbotsPageProps) {
               </div>
               <CardTitle className="text-xl flex items-center justify-center space-x-2">
                 <span>Test Vocacional IA</span>
-                {!isPremium && <Lock className="h-4 w-4 text-muted-foreground" />}
+                {!isSubscribed && <Lock className="h-4 w-4 text-muted-foreground" />}
               </CardTitle>
               <CardDescription>
                 Descubre tu carrera ideal con nuestro asistente especializado
@@ -119,10 +117,10 @@ export function ChatbotsPage({ onNavigate, userSession }: ChatbotsPageProps) {
                 </div>
               </div>
               <Button 
-                className={`w-full ${isPremium ? 'bg-primary hover:bg-primary/90' : 'bg-muted cursor-not-allowed'}`}
-                disabled={!isPremium}
+                className={`w-full ${isSubscribed ? 'bg-primary hover:bg-primary/90' : 'bg-muted cursor-not-allowed'}`}
+                disabled={!isSubscribed}
               >
-                {isPremium ? 'Iniciar Test Vocacional' : (
+                {isSubscribed ? 'Iniciar Test Vocacional' : (
                   <div className="flex items-center space-x-2">
                     <Lock className="h-4 w-4" />
                     <span>Requiere Premium</span>
@@ -133,10 +131,10 @@ export function ChatbotsPage({ onNavigate, userSession }: ChatbotsPageProps) {
           </Card>
 
           {/* Chat General */}
-          <Card className={`border-2 transition-colors ${isPremium ? 'hover:border-accent cursor-pointer' : 'opacity-60 cursor-not-allowed'}`}
-                onClick={() => isPremium ? onNavigate("ai-chat") : handlePremiumAction("Chat IA General")}>
+          <Card className={`border-2 transition-colors ${isSubscribed ? 'hover:border-accent cursor-pointer' : 'opacity-60 cursor-not-allowed'}`}
+                onClick={() => isSubscribed ? onNavigate("ai-chat") : handlePremiumAction("Chat IA General")}>
             <CardHeader className="text-center relative">
-              {!isPremium && (
+              {!isSubscribed && (
                 <Badge className="absolute top-2 right-2 bg-wisego-orange text-white">
                   <Crown className="h-3 w-3 mr-1" />
                   Premium
@@ -147,7 +145,7 @@ export function ChatbotsPage({ onNavigate, userSession }: ChatbotsPageProps) {
               </div>
               <CardTitle className="text-xl flex items-center justify-center space-x-2">
                 <span>Chat IA General</span>
-                {!isPremium && <Lock className="h-4 w-4 text-muted-foreground" />}
+                {!isSubscribed && <Lock className="h-4 w-4 text-muted-foreground" />}
               </CardTitle>
               <CardDescription>
                 Conversa con nuestro asistente sobre cualquier tema educativo
@@ -169,10 +167,10 @@ export function ChatbotsPage({ onNavigate, userSession }: ChatbotsPageProps) {
                 </div>
               </div>
               <Button 
-                className={`w-full ${isPremium ? 'bg-accent hover:bg-accent/90' : 'bg-muted cursor-not-allowed'}`}
-                disabled={!isPremium}
+                className={`w-full ${isSubscribed ? 'bg-accent hover:bg-accent/90' : 'bg-muted cursor-not-allowed'}`}
+                disabled={!isSubscribed}
               >
-                {isPremium ? 'Iniciar Conversación' : (
+                {isSubscribed ? 'Iniciar Conversación' : (
                   <div className="flex items-center space-x-2">
                     <Lock className="h-4 w-4" />
                     <span>Requiere Premium</span>

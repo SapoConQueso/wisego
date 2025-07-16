@@ -3,21 +3,37 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Lock, Mail, User, UserCircle } from "lucide-react";
 import { WiseGoLogo } from "./WiseGoLogo";
+import { useAuth } from "@/components/AuthProvider";
+import { toast } from "sonner";
 
 interface RegisterFormProps {
   onSwitchToLogin: () => void;
-  onSwitchToBirthdate: () => void;
 }
 
-export function RegisterForm({ onSwitchToLogin, onSwitchToBirthdate }: RegisterFormProps) {
+export function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { signUp } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSwitchToBirthdate();
+    setIsLoading(true);
+    
+    try {
+      const { error } = await signUp(email, password, fullName, username);
+      if (error) {
+        toast.error(error);
+      } else {
+        toast.success("¡Cuenta creada! Revisa tu email para confirmar tu cuenta.");
+      }
+    } catch (error) {
+      toast.error("Error al crear la cuenta");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -79,9 +95,10 @@ export function RegisterForm({ onSwitchToLogin, onSwitchToBirthdate }: RegisterF
           
           <Button 
             type="submit"
+            disabled={isLoading}
             className="w-full bg-accent text-accent-foreground hover:bg-accent/90 rounded-full font-semibold"
           >
-            Registrarse ▶
+            {isLoading ? "Creando cuenta..." : "Registrarse ▶"}
           </Button>
         </form>
         

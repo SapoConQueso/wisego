@@ -11,15 +11,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/hooks/useUser";
+import { UserSession } from "@/hooks/useSession";
 
 interface ProfilePageProps {
   onNavigate: (view: string) => void;
-  userSession: {
-    isLoggedIn: boolean;
-    isGuest: boolean;
-    username: string;
-    email?: string;
-  };
+  userSession: UserSession;
 }
 
 export function ProfilePage({ onNavigate, userSession }: ProfilePageProps) {

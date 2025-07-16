@@ -4,21 +4,36 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Lock, Mail } from "lucide-react";
 import { WiseGoLogo } from "./WiseGoLogo";
+import { useAuth } from "@/components/AuthProvider";
+import { toast } from "sonner";
 
 interface LoginFormProps {
   onSwitchToRegister: () => void;
-  onLogin: () => void;
-  onGuestAccess: () => void;
 }
 
-export function LoginForm({ onSwitchToRegister, onLogin, onGuestAccess }: LoginFormProps) {
+export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { signIn } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onLogin();
+    setIsLoading(true);
+    
+    try {
+      const { error } = await signIn(email, password);
+      if (error) {
+        toast.error(error);
+      } else {
+        toast.success("¡Bienvenido de vuelta!");
+      }
+    } catch (error) {
+      toast.error("Error al iniciar sesión");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -56,9 +71,10 @@ export function LoginForm({ onSwitchToRegister, onLogin, onGuestAccess }: LoginF
           
           <Button 
             type="submit"
+            disabled={isLoading}
             className="w-full bg-accent text-accent-foreground hover:bg-accent/90 rounded-full font-semibold"
           >
-            Iniciar Sesión ▶
+            {isLoading ? "Iniciando..." : "Iniciar Sesión ▶"}
           </Button>
         </form>
         
@@ -94,13 +110,6 @@ export function LoginForm({ onSwitchToRegister, onLogin, onGuestAccess }: LoginF
             Registrarse
           </Button>
           
-          <Button
-            variant="outline" 
-            onClick={onGuestAccess}
-            className="w-full bg-white/10 text-white border-white/30 hover:bg-white/20 rounded-full"
-          >
-            Acceder como Invitado
-          </Button>
         </div>
       </div>
     </div>

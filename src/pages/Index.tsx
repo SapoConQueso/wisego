@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { BackgroundPattern } from "@/components/BackgroundPattern";
 import { LoginForm } from "@/components/LoginForm";
 import { RegisterForm } from "@/components/RegisterForm";
-import { BirthdateForm } from "@/components/BirthdateForm";
 import { MainDashboard } from "@/components/MainDashboard";
 import { AboutPage } from "@/components/AboutPage";
 import { ChatbotsPage } from "@/components/ChatbotsPage";
@@ -13,20 +12,34 @@ import { MapPage } from "@/components/MapPageSimple";
 import { ProfilePage } from "@/components/ProfilePage";
 import { CommunityPage } from "@/components/CommunityPage";
 import { UniversityTourPage } from "@/components/UniversityTourPage";
-import { useSession } from "@/hooks/useSession";
+import { AuthProvider, useAuth } from "@/components/AuthProvider";
+import { Toaster } from "@/components/ui/sonner";
 
-type ViewType = "login" | "register" | "birthdate" | "dashboard" | "about" | "chatbots" | "vocational-test" | "ai-chat" | "compare" | "map" | "profile" | "community" | "university-tour";
+type ViewType = "login" | "register" | "dashboard" | "about" | "chatbots" | "vocational-test" | "ai-chat" | "compare" | "map" | "profile" | "community" | "university-tour";
 
-const Index = () => {
+function AppContent() {
   const [currentView, setCurrentView] = useState<ViewType>("dashboard");
-  const { userSession, login, loginAsGuest, logout } = useSession();
+  const { user, isLoading, signOut, isSubscribed } = useAuth();
 
-  // Check if user is already logged in on mount
+  // Check if user is logged in and redirect to login if not
   useEffect(() => {
-    if (!userSession.isLoggedIn && !userSession.isGuest) {
+    if (!isLoading && !user) {
       setCurrentView("login");
+    } else if (!isLoading && user) {
+      setCurrentView("dashboard");
     }
-  }, [userSession.isLoggedIn, userSession.isGuest]);
+  }, [user, isLoading]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Cargando...</p>
+        </div>
+      </div>
+    );
+  }
 
   const renderCurrentView = () => {
     switch (currentView) {
@@ -35,14 +48,6 @@ const Index = () => {
           <BackgroundPattern className="flex items-center justify-center p-4">
             <LoginForm 
               onSwitchToRegister={() => setCurrentView("register")}
-              onLogin={() => {
-                login("usuario", "usuario@example.com");
-                setCurrentView("dashboard");
-              }}
-              onGuestAccess={() => {
-                loginAsGuest();
-                setCurrentView("dashboard");
-              }}
             />
           </BackgroundPattern>
         );
@@ -52,27 +57,23 @@ const Index = () => {
           <BackgroundPattern className="flex items-center justify-center p-4">
             <RegisterForm 
               onSwitchToLogin={() => setCurrentView("login")}
-              onSwitchToBirthdate={() => setCurrentView("birthdate")}
-            />
-          </BackgroundPattern>
-        );
-      
-      case "birthdate":
-        return (
-          <BackgroundPattern className="flex items-center justify-center p-4">
-            <BirthdateForm 
-              onComplete={() => setCurrentView("dashboard")}
-              onBack={() => setCurrentView("login")}
             />
           </BackgroundPattern>
         );
       
       case "dashboard":
         return <MainDashboard 
-          onNavigate={(view) => setCurrentView(view as ViewType)} 
-          userSession={userSession}
-          onLogout={() => {
-            logout();
+          onNavigate={(view) => setCurrentView(view as ViewType)}
+          userSession={{
+            isLoggedIn: !!user,
+            isGuest: false,
+            username: user?.user_metadata?.username || user?.email?.split('@')[0] || 'Usuario',
+            email: user?.email,
+            isPremium: isSubscribed,
+            apiKeys: {}
+          }}
+          onLogout={async () => {
+            await signOut();
             setCurrentView("login");
           }}
         />;
@@ -81,7 +82,7 @@ const Index = () => {
         return <AboutPage onBack={() => setCurrentView("dashboard")} />;
       
       case "chatbots":
-        return <ChatbotsPage onNavigate={(view) => setCurrentView(view as ViewType)} userSession={userSession} />;
+        return <ChatbotsPage onNavigate={(view) => setCurrentView(view as ViewType)} />;
       
       case "vocational-test":
         return <VocationalTestPage onNavigate={(view) => setCurrentView(view as ViewType)} />;
@@ -96,10 +97,30 @@ const Index = () => {
         return <MapPage onNavigate={(view) => setCurrentView(view as ViewType)} />;
       
       case "profile":
-        return <ProfilePage onNavigate={(view) => setCurrentView(view as ViewType)} userSession={userSession} />;
+        return <ProfilePage 
+          onNavigate={(view) => setCurrentView(view as ViewType)}
+          userSession={{
+            isLoggedIn: !!user,
+            isGuest: false,
+            username: user?.user_metadata?.username || user?.email?.split('@')[0] || 'Usuario',
+            email: user?.email,
+            isPremium: isSubscribed,
+            apiKeys: {}
+          }}
+        />;
       
       case "community":
-        return <CommunityPage onNavigate={(view) => setCurrentView(view as ViewType)} userSession={userSession} />;
+        return <CommunityPage 
+          onNavigate={(view) => setCurrentView(view as ViewType)}
+          userSession={{
+            isLoggedIn: !!user,
+            isGuest: false,
+            username: user?.user_metadata?.username || user?.email?.split('@')[0] || 'Usuario',
+            email: user?.email,
+            isPremium: isSubscribed,
+            apiKeys: {}
+          }}
+        />;
       
       case "university-tour":
         return <UniversityTourPage onNavigate={(view) => setCurrentView(view as ViewType)} />;
@@ -110,6 +131,15 @@ const Index = () => {
   };
 
   return renderCurrentView();
+}
+
+const Index = () => {
+  return (
+    <AuthProvider>
+      <AppContent />
+      <Toaster />
+    </AuthProvider>
+  );
 };
 
 export default Index;
