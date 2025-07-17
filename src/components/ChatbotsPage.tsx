@@ -22,6 +22,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/components/AuthProvider";
 import { toast } from "sonner";
+import { API_CONFIG } from "@/config/api";
 
 interface ChatbotsPageProps {
   onNavigate: (view: string) => void;
@@ -31,6 +32,8 @@ const PERSONALITIES: Record<string,string> = {
   general: "Eres un asistente amigable y educativo. Responde con claridad y ejemplos cuando sea posible.",
   vocational: "Eres un orientador vocacional profesional y empático. Guía al usuario a descubrir sus fortalezas y opciones de carrera."
 };
+
+// Configuración importada desde /src/config/api.ts
 
 // Mapeo de status SSE a texto legible
 const STATUS_TEXT: Record<string,(msg?:string)=>string> = {
@@ -94,6 +97,41 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
       return;
     }
     setSelectedBot(bot);
+    // Probar conectividad al iniciar el chat
+    testAPIConnectivity();
+  };
+
+  const testAPIConnectivity = async () => {
+    console.log("Probando conectividad de APIs...");
+    for (const endpoint of [API_CONFIG.primary, ...API_CONFIG.fallbacks]) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 segundos para test
+        
+        const resp = await fetch(endpoint, {
+          method: "POST",
+          headers: API_CONFIG.headers,
+          body: JSON.stringify({ prompt: "test" }),
+          signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
+        console.log(`✅ ${endpoint}: ${resp.status} ${resp.statusText}`);
+        
+        if (resp.ok) {
+          toast.success(`Conectado a API: ${endpoint}`);
+          return;
+        }
+      } catch (error) {
+        console.log(`❌ ${endpoint}: ${error}`);
+      }
+    }
+    
+    if (API_CONFIG.useSimulationOnFailure) {
+      toast.warning("APIs no disponibles. Usando modo simulación.");
+    } else {
+      toast.error("No se pudo conectar a ninguna API.");
+    }
   };
 
   const sendMessage = async () => {
@@ -115,21 +153,55 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
 
       console.log("Enviando prompt a la API:", fullPrompt);
 
-      // conectar SSE
-      const resp = await fetch("http://zaylar.com:12506/agent", {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          "Accept": "text/event-stream"
-        },
-        body: JSON.stringify({ prompt: fullPrompt })
-      });
+      // Lista de APIs para probar
+      const apiEndpoints = [API_CONFIG.primary, ...API_CONFIG.fallbacks];
+
+      let resp: Response | null = null;
+      let lastError: Error | null = null;
+
+      // Intentar cada endpoint
+      for (const endpoint of apiEndpoints) {
+        try {
+          console.log(`Intentando conectar a: ${endpoint}`);
+          
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), API_CONFIG.timeout);
+
+          resp = await fetch(endpoint, {
+            method: "POST",
+            headers: API_CONFIG.headers,
+            body: JSON.stringify({ prompt: fullPrompt }),
+            signal: controller.signal
+          });
+
+          clearTimeout(timeoutId);
+
+          if (resp.ok) {
+            console.log(`Conexión exitosa a: ${endpoint}`);
+            break;
+          } else {
+            console.log(`Error en ${endpoint}: ${resp.status} - ${resp.statusText}`);
+            lastError = new Error(`HTTP error! status: ${resp.status} - ${resp.statusText}`);
+          }
+        } catch (error) {
+          console.log(`Error conectando a ${endpoint}:`, error);
+          lastError = error as Error;
+          resp = null;
+        }
+      }
+
+      if (!resp || !resp.ok) {
+        if (API_CONFIG.useSimulationOnFailure) {
+          // Si todas las APIs fallan, usar respuesta simulada
+          console.log("Todas las APIs fallaron, usando respuesta simulada");
+          await simulateAIResponse(newHistory, text);
+          return;
+        } else {
+          throw lastError || new Error("No se pudo conectar a ninguna API");
+        }
+      }
 
       console.log("Respuesta de la API:", resp.status, resp.statusText);
-
-      if (!resp.ok) {
-        throw new Error(`HTTP error! status: ${resp.status} - ${resp.statusText}`);
-      }
 
       const reader = resp.body!.getReader();
       const decoder = new TextDecoder();
@@ -207,6 +279,74 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
     const key = `chat_history_${selectedBot}`;
     Cookies.remove(key);
     toast.success("Historial limpiado");
+  };
+
+  // Función de fallback para simular respuesta de IA
+  const simulateAIResponse = async (newHistory: typeof chatHistory, userMessage: string) => {
+    setStatusText("Generando respuesta...");
+    
+    // Respuestas base según el tipo de bot
+    const responses = {
+      general: [
+        "Entiendo tu pregunta. Basándome en mi conocimiento, puedo decirte que...",
+        "Es una excelente pregunta. Déjame explicarte de manera clara...",
+        "Según mi análisis, la respuesta a tu consulta es...",
+        "Te ayudo con esa información. Lo que necesitas saber es...",
+        "Perfecto, puedo ayudarte con eso. La explicación es la siguiente..."
+      ],
+      vocational: [
+        "Como orientador vocacional, puedo ayudarte a explorar tus intereses y aptitudes...",
+        "Es importante que reflexiones sobre tus fortalezas y pasiones. Te sugiero considerar...",
+        "Para una buena orientación vocacional, necesitamos analizar varios aspectos...",
+        "Basándome en tu consulta, puedo recomendarte que explores las siguientes áreas...",
+        "La elección vocacional es un proceso importante. Te ayudo a analizar..."
+      ]
+    };
+
+    const botResponses = responses[selectedBot] || responses.general;
+    const baseResponse = botResponses[Math.floor(Math.random() * botResponses.length)];
+    
+    // Generar respuesta contextual
+    let contextualResponse = baseResponse;
+    
+    if (userMessage.toLowerCase().includes("carrera")) {
+      contextualResponse += " Las carreras profesionales requieren considerar tus intereses, habilidades y el mercado laboral actual.";
+    } else if (userMessage.toLowerCase().includes("estudio")) {
+      contextualResponse += " Los estudios son fundamentales para tu desarrollo profesional. Te recomiendo evaluar diferentes opciones educativas.";
+    } else if (userMessage.toLowerCase().includes("trabajo")) {
+      contextualResponse += " El mundo laboral está en constante evolución. Es importante desarrollar habilidades adaptables y relevantes.";
+    } else {
+      contextualResponse += " Si tienes más preguntas específicas, estaré aquí para ayudarte con información detallada.";
+    }
+
+    // Simular typing effect
+    const words = contextualResponse.split(' ');
+    let currentText = "";
+    
+    for (let i = 0; i < words.length; i++) {
+      await new Promise(resolve => setTimeout(resolve, 100 + Math.random() * 100));
+      currentText += (i > 0 ? ' ' : '') + words[i];
+      
+      if (i === 0) {
+        // Agregar el primer mensaje
+        const updated = [...newHistory, { role: "assistant", text: currentText }];
+        setChatHistory(updated);
+      } else {
+        // Actualizar el mensaje existente
+        setChatHistory(prev => {
+          const updated = [...prev];
+          updated[updated.length - 1] = { role: "assistant", text: currentText };
+          return updated;
+        });
+      }
+    }
+
+    // Guardar historial final
+    const finalHistory = [...newHistory, { role: "assistant", text: contextualResponse }];
+    saveHistory(finalHistory);
+    setStatusText("");
+    
+    toast.info("Usando respuesta simulada (API no disponible)");
   };
 
   // pantalla de selección
