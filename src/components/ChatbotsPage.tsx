@@ -1,219 +1,303 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import Cookies from "js-cookie";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
 import { LanguageSelector } from "./LanguageSelector";
-import { ArrowLeft, Bot, MessageCircle, GraduationCap, Users, Crown, Lock, Building2, BookOpen, BrainCircuit } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { useAuth } from "@/components/AuthProvider";
-import { toast } from "sonner";
+import { ArrowLeft, Send, Bot, User } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslation } from "@/lib/translations";
 
-interface ChatbotsPageProps {
-  onNavigate: (view: string) => void;
+interface Message {
+  role: "user" | "assistant";
+  text: string;
+  timestamp: Date;
 }
 
-export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
-  const { isSubscribed, createCheckout, isGuest } = useAuth();
+interface SSEChatProps {
+  onNavigate: (view: string) => void;
+  title: string;
+  botType: "general" | "vocational";
+}
+
+const PERSONALITIES: Record<string, string> = {
+  general: "Eres un asistente amigable y educativo. Responde con claridad y ejemplos cuando sea posible.",
+  vocational: "Eres un orientador vocacional profesional y empático. Guía al usuario a descubrir sus fortalezas y opciones de carrera."
+};
+
+// Mapeo de status SSE a texto legible
+const STATUS_TEXT: Record<string, (msg?: string) => string> = {
+  start: () => "Iniciando agente...",
+  llm_call: () => "Procesando...",
+  scrape: (msg) => {
+    const match = msg?.match(/en (\S+)/);
+    return match ? `Buscando en ${match[1]}...` : "Buscando en página...";
+  },
+  search: () => "Buscando resultados...",
+  error: (msg) => `Error: ${msg}`,
+  done: () => ""
+};
+
+export function SSEChat({ onNavigate, title, botType }: SSEChatProps) {
+  const [chatHistory, setChatHistory] = useState<Message[]>([]);
+  const [statusText, setStatusText] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const { currentLanguage } = useLanguage();
   const t = getTranslation(currentLanguage);
 
-  const handlePremiumAction = (chatbotName: string) => {
-    toast.error(`${chatbotName} ${t.chatbots.requiresPremium}`);
+  // Carga historial desde cookie al montar el componente
+  useEffect(() => {
+    const key = `chat_history_${botType}`;
+    const saved = Cookies.get(key);
+    if (saved) {
+      try {
+        const parsedHistory = JSON.parse(saved).map((msg: any) => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp)
+        }));
+        setChatHistory(parsedHistory);
+      } catch (error) {
+        console.error("Error parsing chat history:", error);
+      }
+    }
+  }, [botType]);
+
+  // Auto-scroll al final de los mensajes
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatHistory, statusText]);
+
+  // Guarda historial en cookie
+  const saveHistory = (history: Message[]) => {
+    const key = `chat_history_${botType}`;
+    Cookies.set(key, JSON.stringify(history), { expires: 7 });
   };
 
-  const handleSubscribe = async () => {
+  const sendMessage = async () => {
+    const text = inputValue.trim();
+    if (!text || isLoading) return;
+
+    // Añadir mensaje del usuario
+    const userMessage: Message = {
+      role: "user",
+      text,
+      timestamp: new Date()
+    };
+
+    const newHistory = [...chatHistory, userMessage];
+    setChatHistory(newHistory);
+    saveHistory(newHistory);
+    setInputValue("");
+    setIsLoading(true);
+
     try {
-      if (isGuest) {
-        toast.error("Los invitados no pueden realizar compras. Regístrate para acceder a suscripciones.");
-        return;
+      // Formatear prompt con personalidad + chat previo
+      const fullPrompt =
+        PERSONALITIES[botType] + "\n" +
+        newHistory.map(m => `${m.role === "user" ? "Usuario" : "Asistente"}: ${m.text}`).join("\n");
+
+      // Conectar SSE
+      const response = await fetch("http://zaylar.com:12506/agent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: fullPrompt })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      await createCheckout();
+
+      const reader = response.body!.getReader();
+      const decoder = new TextDecoder();
+      let assistantText = "";
+
+      // Leer stream
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        
+        // Cada evento separado por doble salto
+        chunk.split("\n\n").forEach(line => {
+          if (!line.startsWith("data:")) return;
+          
+          try {
+            const evt = JSON.parse(line.replace("data:", "").trim());
+            
+            // Actualizar estado legible
+            const txt = STATUS_TEXT[evt.status]?.(evt.message) ?? "";
+            setStatusText(txt);
+
+            if (evt.status === "done") {
+              assistantText += evt.response;
+              const assistantMessage: Message = {
+                role: "assistant",
+                text: assistantText,
+                timestamp: new Date()
+              };
+              
+              const updatedHistory = [...newHistory, assistantMessage];
+              setChatHistory(updatedHistory);
+              saveHistory(updatedHistory);
+              setStatusText("");
+            }
+          } catch (error) {
+            console.error("Error parsing SSE event:", error);
+          }
+        });
+      }
     } catch (error) {
-      toast.error("Error al crear la suscripción");
+      console.error("Error sending message:", error);
+      
+      // Agregar mensaje de error
+      const errorMessage: Message = {
+        role: "assistant",
+        text: `Error: No se pudo conectar con el servicio. ${error instanceof Error ? error.message : "Inténtalo de nuevo."}`,
+        timestamp: new Date()
+      };
+      
+      const updatedHistory = [...newHistory, errorMessage];
+      setChatHistory(updatedHistory);
+      saveHistory(updatedHistory);
+      setStatusText("");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // En modo invitado, consideramos que tiene acceso completo
-  const hasAccess = isSubscribed || isGuest;
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  const clearChat = () => {
+    setChatHistory([]);
+    const key = `chat_history_${botType}`;
+    Cookies.remove(key);
+  };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <header className="bg-primary text-primary-foreground p-4 flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <Button 
             variant="ghost" 
             size="sm" 
-            onClick={() => onNavigate("dashboard")}
+            onClick={() => onNavigate("chatbots")}
             className="text-primary-foreground hover:bg-primary-foreground/10"
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <WiseGoLogo size="sm" />
-          <span className="text-xl font-bold">{t.chatbots.title}</span>
+          <span className="text-xl font-bold">{title}</span>
         </div>
+        
         <div className="flex items-center space-x-2">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={clearChat}
+            className="text-primary-foreground hover:bg-primary-foreground/10"
+          >
+            Limpiar Chat
+          </Button>
           <LanguageSelector />
           <ThemeToggle />
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="p-4 space-y-6">
-      {/* Premium Banner */}
-        {!hasAccess && (
-          <div className="max-w-4xl mx-auto animate-fade-in">
-            <Card className="border-wisego-orange bg-gradient-to-r from-wisego-orange/5 to-primary/5">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <Crown className="h-6 w-6 text-wisego-orange" />
-                    <div>
-                      <h3 className="font-title font-bold text-primary">{t.chatbots.unlockSpecializedBots}</h3>
-                      <p className="text-sm text-muted-foreground">{t.chatbots.specializedUniversityBots}</p>
+      {/* Chat Area */}
+      <div className="flex-1 overflow-y-auto p-4">
+        {chatHistory.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
+            <Bot className="h-16 w-16 text-muted-foreground" />
+            <div className="space-y-2">
+              <h3 className="text-xl font-semibold">{title}</h3>
+              <p className="text-muted-foreground max-w-md">
+                {t.chat?.startConversation || "¡Comienza la conversación escribiendo un mensaje!"}
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-4 max-w-4xl mx-auto">
+            {chatHistory.map((message, index) => (
+              <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <Card className={`max-w-[80%] ${message.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
+                  <CardContent className="p-3">
+                    <div className="flex items-start space-x-2">
+                      {message.role === 'assistant' ? (
+                        <Bot className="h-5 w-5 mt-1 flex-shrink-0" />
+                      ) : (
+                        <User className="h-5 w-5 mt-1 flex-shrink-0" />
+                      )}
+                      <div className="flex-1">
+                        <p className="text-sm whitespace-pre-wrap">{message.text}</p>
+                        <p className={`text-xs mt-1 ${message.role === 'user' ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
+                          {message.timestamp.toLocaleTimeString()}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <Button 
-                    className="bg-wisego-orange hover:bg-wisego-orange/90 text-white"
-                    onClick={handleSubscribe}
-                  >
-                    <Crown className="h-4 w-4 mr-2" />
-                    {t.chatbots.subscribe}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
+              </div>
+            ))}
+            
+            {/* Status text */}
+            {statusText && (
+              <div className="text-center text-sm italic text-muted-foreground">
+                {statusText}
+              </div>
+            )}
+            
+            {/* Loading indicator */}
+            {isLoading && !statusText && (
+              <div className="flex justify-start">
+                <Card className="bg-muted">
+                  <CardContent className="p-3">
+                    <div className="flex items-center space-x-2">
+                      <Bot className="h-5 w-5 animate-pulse" />
+                      <p className="text-sm">{t.chat?.typing || "Escribiendo..."}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+            
+            <div ref={messagesEndRef} />
           </div>
         )}
+      </div>
 
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">{t.chatbots.intelligentAssistants}</h1>
-          <p className="text-muted-foreground">{t.chatbots.chooseBot}</p>
+      {/* Input Area */}
+      <div className="p-4 border-t bg-card">
+        <div className="flex space-x-2 max-w-4xl mx-auto">
+          <Input
+            ref={inputRef}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder={t.chat?.placeholder || "Escribe tu mensaje..."}
+            disabled={isLoading}
+            className="flex-1"
+          />
+          <Button 
+            onClick={sendMessage} 
+            disabled={!inputValue.trim() || isLoading}
+            size="sm"
+          >
+            <Send className="h-4 w-4" />
+          </Button>
         </div>
-
-        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-          {/* Test Vocacional Bot */}
-          <Card className={`border-2 transition-colors ${hasAccess ? 'hover:border-primary cursor-pointer' : 'opacity-60 cursor-not-allowed'}`}
-                onClick={() => hasAccess ? onNavigate("vocational-test") : handlePremiumAction("Test Vocacional IA")}>
-            <CardHeader className="text-center relative">
-              {!hasAccess && (
-                <Badge className="absolute top-2 right-2 bg-wisego-orange text-white">
-                  <Crown className="h-3 w-3 mr-1" />
-                  Premium
-                </Badge>
-              )}
-              <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                <GraduationCap className="h-8 w-8 text-primary" />
-              </div>
-              <CardTitle className="text-xl flex items-center justify-center space-x-2">
-                <span>{t.chatbots.vocationalTest}</span>
-                {!hasAccess && <Lock className="h-4 w-4 text-muted-foreground" />}
-              </CardTitle>
-              <CardDescription>
-                {t.chatbots.discoverCareer}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2 text-sm text-muted-foreground">
-                <div className="flex items-center space-x-2">
-                  <Bot className="h-4 w-4" />
-                  <span>{t.chatbots.personalizedAnalysis}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <MessageCircle className="h-4 w-4" />
-                  <span>{t.chatbots.naturalConversation}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Users className="h-4 w-4" />
-                  <span>{t.chatbots.profileRecommendations}</span>
-                </div>
-              </div>
-              <Button 
-                className={`w-full ${hasAccess ? 'bg-primary hover:bg-primary/90' : 'bg-muted cursor-not-allowed'}`}
-                disabled={!hasAccess}
-              >
-                {hasAccess ? t.chatbots.startVocationalTest : (
-                  <div className="flex items-center space-x-2">
-                    <Lock className="h-4 w-4" />
-                    <span>{t.chatbots.requiresPremium}</span>
-                  </div>
-                )}
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* Chat General */}
-          <Card className={`border-2 transition-colors ${hasAccess ? 'hover:border-accent cursor-pointer' : 'opacity-60 cursor-not-allowed'}`}
-                onClick={() => hasAccess ? onNavigate("ai-chat") : handlePremiumAction("Chat IA General")}>
-            <CardHeader className="text-center relative">
-              {!hasAccess && (
-                <Badge className="absolute top-2 right-2 bg-wisego-orange text-white">
-                  <Crown className="h-3 w-3 mr-1" />
-                  Premium
-                </Badge>
-              )}
-              <div className="mx-auto w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mb-4">
-                <MessageCircle className="h-8 w-8 text-accent" />
-              </div>
-              <CardTitle className="text-xl flex items-center justify-center space-x-2">
-                <span>{t.chatbots.generalChat}</span>
-                {!hasAccess && <Lock className="h-4 w-4 text-muted-foreground" />}
-              </CardTitle>
-              <CardDescription>
-                {t.chatbots.conversationDescription}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2 text-sm text-muted-foreground">
-                <div className="flex items-center space-x-2">
-                  <Bot className="h-4 w-4" />
-                  <span>{t.chatbots.instantResponses}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <MessageCircle className="h-4 w-4" />
-                  <span>{t.chatbots.homeworkHelp}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Users className="h-4 w-4" />
-                  <span>{t.chatbots.academicOrientation}</span>
-                </div>
-              </div>
-              <Button 
-                className={`w-full ${hasAccess ? 'bg-accent hover:bg-accent/90' : 'bg-muted cursor-not-allowed'}`}
-                disabled={!hasAccess}
-              >
-                {hasAccess ? t.chatbots.startConversation : (
-                  <div className="flex items-center space-x-2">
-                    <Lock className="h-4 w-4" />
-                    <span>{t.chatbots.requiresPremium}</span>
-                  </div>
-                )}
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-
-
-        {/* Tips Section */}
-        <div className="max-w-2xl mx-auto mt-12">
-          <Card className="bg-muted/50">
-            <CardHeader>
-              <CardTitle className="text-lg text-center">{t.chatbots.tipsTitle}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>• {t.chatbots.tip1}</li>
-                <li>• {t.chatbots.tip2}</li>
-                <li>• {t.chatbots.tip3}</li>
-                <li>• {t.chatbots.tip4}</li>
-              </ul>
-            </CardContent>
-          </Card>
-        </div>
-      </main>
+      </div>
     </div>
   );
 }
