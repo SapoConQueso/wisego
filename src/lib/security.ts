@@ -1,5 +1,14 @@
 import { toast } from "sonner";
 
+// Environment security checks
+export const isProduction = () => {
+  return process.env.NODE_ENV === 'production';
+};
+
+export const isDevelopment = () => {
+  return process.env.NODE_ENV === 'development';
+};
+
 // Content Security Policy helpers
 export const sanitizeHtml = (input: string): string => {
   // Basic HTML sanitization - remove dangerous characters

@@ -13,6 +13,7 @@ import { ProfilePage } from "@/components/ProfilePage";
 import { CommunityPage } from "@/components/CommunityPage";
 import { UniversityTourPage } from "@/components/UniversityTourPage";
 import { AuthProvider, useAuth } from "@/components/AuthProvider";
+import { SecurityProvider } from "@/components/SecurityProvider";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -123,8 +124,10 @@ const Index = () => {
   return (
     <LanguageProvider>
       <AuthProvider>
-        <AppContent />
-        <Toaster />
+        <SecurityProvider>
+          <AppContent />
+          <Toaster />
+        </SecurityProvider>
       </AuthProvider>
     </LanguageProvider>
   );
