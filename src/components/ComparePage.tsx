@@ -191,25 +191,21 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
   };
 
   const getRadarData = () => {
-    // Etiquetas optimizadas para móvil - más legibles que letras sueltas
     const criteria = [
-      { attribute: 'Dificultad', shortLabel: 'Dific.', key: 'difficulty' },
-      { attribute: 'Oportunidades', shortLabel: 'Empleo', key: 'jobOpportunities' },
-      { attribute: 'Salario', shortLabel: 'Salario', key: 'salaryRange' },
-      { attribute: 'Balance', shortLabel: 'Balance', key: 'workLifeBalance' },
-      { attribute: 'Prestigio', shortLabel: 'Prestig.', key: 'prestige' },
-      { attribute: 'Innovación', shortLabel: 'Innov.', key: 'innovation' },
-      { attribute: 'Estabilidad', shortLabel: 'Estab.', key: 'stability' },
-      { attribute: 'Impacto', shortLabel: 'Impacto', key: 'socialImpact' },
-      { attribute: 'Crecimiento', shortLabel: 'Crec.', key: 'growth' },
-      { attribute: 'Flexibilidad', shortLabel: 'Flex.', key: 'flexibility' }
+      { attribute: 'Dificultad', key: 'difficulty' },
+      { attribute: 'Oportunidades', key: 'jobOpportunities' },
+      { attribute: 'Salario', key: 'salaryRange' },
+      { attribute: 'Balance Vida', key: 'workLifeBalance' },
+      { attribute: 'Prestigio', key: 'prestige' },
+      { attribute: 'Innovación', key: 'innovation' },
+      { attribute: 'Estabilidad', key: 'stability' },
+      { attribute: 'Impacto Social', key: 'socialImpact' },
+      { attribute: 'Crecimiento', key: 'growth' },
+      { attribute: 'Flexibilidad', key: 'flexibility' }
     ];
-    
+
     return criteria.map(criterion => {
-      const dataPoint: any = { 
-        attribute: criterion.shortLabel,
-        fullName: criterion.attribute 
-      };
+      const dataPoint: any = { attribute: criterion.attribute };
       selectedCareers.forEach((career, index) => {
         dataPoint[`career${index}`] = career[criterion.key as keyof Career];
       });
@@ -220,23 +216,15 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
   const chartConfig = {
     career0: {
       label: selectedCareers[0]?.name || "Carrera 1",
-      color: "hsl(220 70% 50%)",
+      color: "hsl(var(--primary))",
     },
     career1: {
       label: selectedCareers[1]?.name || "Carrera 2", 
-      color: "hsl(340 70% 50%)",
+      color: "hsl(var(--accent))",
     },
     career2: {
       label: selectedCareers[2]?.name || "Carrera 3",
-      color: "hsl(160 70% 50%)",
-    },
-    career3: {
-      label: selectedCareers[3]?.name || "Carrera 4",
-      color: "hsl(45 70% 50%)",
-    },
-    career4: {
-      label: selectedCareers[4]?.name || "Carrera 5",
-      color: "hsl(280 70% 50%)",
+      color: "hsl(var(--muted-foreground))",
     },
   };
 
@@ -294,64 +282,41 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
                 {/* Chart Section - Full Width */}
                 {selectedCareers.length >= 2 && (
                   <div className="mb-8">
-                    <h4 className="text-lg sm:text-xl font-title font-semibold mb-4 text-center gradient-text">
+                    <h4 className="text-lg sm:text-xl font-title font-semibold mb-6 text-center gradient-text">
                       Gráfico Radial Comparativo
                     </h4>
-                    <div className="w-full bg-gradient-to-br from-muted/20 to-background p-2 sm:p-4 lg:p-6 rounded-xl border">
-                      {/* Legend - Responsive Stack */}
-                      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:justify-center gap-1 sm:gap-4 mb-4 p-2">
-                        {selectedCareers.map((career, index) => (
-                          <div key={career.id} className="flex items-center space-x-2 text-xs sm:text-sm bg-muted/30 rounded px-2 py-1">
-                            <div 
-                              className="w-3 h-3 rounded-full border-2 flex-shrink-0" 
-                              style={{ 
-                                backgroundColor: chartConfig[`career${index}` as keyof typeof chartConfig]?.color,
-                                borderColor: chartConfig[`career${index}` as keyof typeof chartConfig]?.color
-                              }}
-                            />
-                            <span className="font-medium truncate max-w-[200px]">{career.name}</span>
-                          </div>
-                        ))}
-                      </div>
-                      
-                      {/* Mobile-Optimized Chart Container */}
-                      <div className="h-[600px] sm:h-[500px] lg:h-[550px] w-full">
+                    <div className="w-full bg-gradient-to-br from-muted/20 to-background p-4 sm:p-6 rounded-xl border">
+                      <div className="h-[300px] sm:h-[400px] lg:h-[500px] w-full">
                         <ChartContainer config={chartConfig}>
                           <ResponsiveContainer width="100%" height="100%">
                             <RadarChart 
                               data={getRadarData()}
                               margin={{ 
-                                top: window.innerWidth < 640 ? 120 : 80, 
-                                right: window.innerWidth < 640 ? 140 : 110, 
-                                bottom: window.innerWidth < 640 ? 120 : 80, 
-                                left: window.innerWidth < 640 ? 140 : 110 
+                                top: 20, 
+                                right: window.innerWidth < 640 ? 20 : 60, 
+                                bottom: 20, 
+                                left: window.innerWidth < 640 ? 20 : 60 
                               }}
                             >
                               <PolarGrid 
-                                stroke="hsl(var(--border))" 
-                                strokeOpacity={0.3}
+                                className="stroke-muted" 
                                 gridType="polygon"
                                 radialLines={true}
                               />
                               <PolarAngleAxis 
                                 dataKey="attribute" 
+                                className="fill-muted-foreground font-subtitle"
                                 tick={{ 
-                                  fill: "hsl(var(--foreground))",
-                                  fontSize: window.innerWidth < 640 ? 14 : 12, 
-                                  fontWeight: 600,
-                                  textAnchor: "middle"
+                                  fontSize: window.innerWidth < 640 ? 9 : 11, 
+                                  fontWeight: 500 
                                 }}
-                                tickFormatter={(value) => value}
                               />
                               <PolarRadiusAxis 
                                 angle={90} 
                                 domain={[0, 10]} 
-                                tick={{ 
-                                  fill: "hsl(var(--muted-foreground))",
-                                  fontSize: window.innerWidth < 640 ? 11 : 9
-                                }}
+                                className="fill-muted-foreground"
+                                tick={{ fontSize: window.innerWidth < 640 ? 8 : 10 }}
                                 tickCount={6}
-                                axisLine={false}
                               />
                               {selectedCareers.map((_, index) => (
                                 <Radar
@@ -360,35 +325,15 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
                                   dataKey={`career${index}`}
                                   stroke={chartConfig[`career${index}` as keyof typeof chartConfig]?.color}
                                   fill={chartConfig[`career${index}` as keyof typeof chartConfig]?.color}
-                                  fillOpacity={0.08}
-                                  strokeWidth={window.innerWidth < 640 ? 4 : 3}
-                                  dot={{ 
-                                    r: window.innerWidth < 640 ? 6 : 5, 
-                                    strokeWidth: 2,
-                                    fill: chartConfig[`career${index}` as keyof typeof chartConfig]?.color,
-                                    stroke: "hsl(var(--background))"
-                                  }}
+                                  fillOpacity={0.15}
+                                  strokeWidth={window.innerWidth < 640 ? 2 : 3}
+                                  dot={{ r: window.innerWidth < 640 ? 3 : 4, strokeWidth: 2 }}
                                 />
                               ))}
-                              <ChartTooltip 
-                                content={<ChartTooltipContent 
-                                  labelClassName="font-semibold"
-                                  formatter={(value, name) => [
-                                    `${value}/10`,
-                                    name
-                                  ]}
-                                />} 
-                              />
+                              <ChartTooltip content={<ChartTooltipContent />} />
                             </RadarChart>
                           </ResponsiveContainer>
                         </ChartContainer>
-                      </div>
-                      
-                      {/* Chart Instructions */}
-                      <div className="text-center text-xs sm:text-sm text-muted-foreground mt-3 p-2 bg-muted/30 rounded">
-                        <p className="font-medium">
-                          💡 Tip: Valores más altos hacia el exterior indican mejor puntuación
-                        </p>
                       </div>
                     </div>
                   </div>
