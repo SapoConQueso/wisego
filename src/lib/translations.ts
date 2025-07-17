@@ -59,6 +59,19 @@ export interface Translations {
     findLocation: string;
     typeLabel: string;
     districtLabel: string;
+    // Carreras
+    engineering: string;
+    administration: string;
+    communications: string;
+    psychology: string;
+    medicine: string;
+    law: string;
+    sciences: string;
+    economics: string;
+    art: string;
+    industrialEngineering: string;
+    veterinary: string;
+    nursing: string;
   };
 
   // About Page
@@ -326,7 +339,20 @@ export const translations: Record<Language, Translations> = {
       universityLocations: 'Ubicaciones de Universidades',
       findLocation: 'Encuentra la ubicación exacta de cada universidad en Google Maps',
       typeLabel: 'Tipo',
-      districtLabel: 'Distrito'
+      districtLabel: 'Distrito',
+      // Carreras
+      engineering: 'Ingeniería',
+      administration: 'Administración',
+      communications: 'Comunicaciones',
+      psychology: 'Psicología',
+      medicine: 'Medicina',
+      law: 'Derecho',
+      sciences: 'Ciencias',
+      economics: 'Economía',
+      art: 'Arte',
+      industrialEngineering: 'Ingeniería Industrial',
+      veterinary: 'Veterinaria',
+      nursing: 'Enfermería'
     },
     about: {
       title: 'Conócenos',
@@ -574,7 +600,20 @@ export const translations: Record<Language, Translations> = {
       universityLocations: 'University Locations',
       findLocation: 'Find the exact location of each university on Google Maps',
       typeLabel: 'Type',
-      districtLabel: 'District'
+      districtLabel: 'District',
+      // Carreras
+      engineering: 'Engineering',
+      administration: 'Administration',
+      communications: 'Communications',
+      psychology: 'Psychology',
+      medicine: 'Medicine',
+      law: 'Law',
+      sciences: 'Sciences',
+      economics: 'Economics',
+      art: 'Art',
+      industrialEngineering: 'Industrial Engineering',
+      veterinary: 'Veterinary',
+      nursing: 'Nursing'
     },
     about: {
       title: 'About Us',
@@ -822,7 +861,20 @@ export const translations: Record<Language, Translations> = {
       universityLocations: 'Yachaywasikunap Maypi Kanana',
       findLocation: 'Sapa yachaywasikunaq chiqaq maypi kasqanta Google Maps nisqapi tarinayki',
       typeLabel: 'Rikch\'ay',
-      districtLabel: 'Distrito'
+      districtLabel: 'Distrito',
+      // Carreras
+      engineering: 'Ingeniería',
+      administration: 'Kamachikuy',
+      communications: 'Willakuykuna',
+      psychology: 'Yuyay yachay',
+      medicine: 'Hampiy yachay',
+      law: 'Kamachiy',
+      sciences: 'Yachaykunata',
+      economics: 'Qullqi yachay',
+      art: 'Ruraskaq',
+      industrialEngineering: 'Ruray Ingeniería',
+      veterinary: 'Uywa hampikuy',
+      nursing: 'Cuiday'
     },
     about: {
       title: 'Ñuqayku',
@@ -1070,7 +1122,20 @@ export const translations: Record<Language, Translations> = {
       universityLocations: 'Yatiñ Utanakan Kuna Chiqani',
       findLocation: 'Sapa yatiñ utanakan chiqapa kuna chiqansa Google Maps uka tuqina jikxataña',
       typeLabel: 'Kuna laya',
-      districtLabel: 'Distrito'
+      districtLabel: 'Distrito',
+      // Carreras
+      engineering: 'Ingeniería',
+      administration: 'Administración',
+      communications: 'Aruskipawi',
+      psychology: 'Psicología',
+      medicine: 'Medicina',
+      law: 'Kamachi',
+      sciences: 'Yatiqañanaka',
+      economics: 'Economía',
+      art: 'Arte',
+      industrialEngineering: 'Industrial Ingeniería',
+      veterinary: 'Uywaña usunaka',
+      nursing: 'Cuidaña'
     },
     about: {
       title: 'Jiwasanaka',

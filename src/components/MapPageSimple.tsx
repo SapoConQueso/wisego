@@ -19,79 +19,84 @@ interface MapPageProps {
 
 interface University {
   id: string;
-  name: string;
+  nameKey: string;
   district: string;
-  type: "Pública" | "Privada";
-  careers: string[];
+  typeKey: 'public' | 'private';
+  careerKeys: string[];
   rating: number;
   distance: string;
   phone: string;
   website: string;
-  description: string;
+  descriptionKey: string;
 }
 
-const universities: University[] = [
-  {
-    id: "1",
-    name: "Universidad de Lima",
-    district: "Surco",
-    type: "Privada",
-    careers: ["Ingeniería", "Administración", "Comunicaciones", "Psicología"],
-    rating: 4.5,
-    distance: "5.2 km",
-    phone: "(01) 437-6767",
-    website: "www.ulima.edu.pe",
-    description: "Universidad privada con excelencia académica y moderna infraestructura."
-  },
-  {
-    id: "2",
-    name: "Universidad Nacional Mayor de San Marcos",
-    district: "Lima",
-    type: "Pública",
-    careers: ["Medicina", "Ingeniería", "Derecho", "Ciencias"],
-    rating: 4.7,
-    distance: "8.1 km",
-    phone: "(01) 619-7000",
-    website: "www.unmsm.edu.pe",
-    description: "La universidad más antigua de América, con tradición y prestigio académico."
-  },
-  {
-    id: "3",
-    name: "Pontificia Universidad Católica del Perú",
-    district: "San Miguel",
-    type: "Privada",
-    careers: ["Derecho", "Economía", "Ingeniería", "Arte"],
-    rating: 4.8,
-    distance: "12.5 km",
-    phone: "(01) 626-2000",
-    website: "www.pucp.edu.pe",
-    description: "Universidad católica reconocida por su calidad académica y formación integral."
-  },
-  {
-    id: "4",
-    name: "Universidad del Pacífico",
-    district: "Jesús María",
-    type: "Privada",
-    careers: ["Administración", "Economía", "Ingeniería Industrial"],
-    rating: 4.6,
-    distance: "7.8 km",
-    phone: "(01) 219-0100",
-    website: "www.up.edu.pe",
-    description: "Especializada en ciencias empresariales con alto nivel académico."
-  },
-  {
-    id: "5",
-    name: "Universidad Peruana Cayetano Heredia",
-    district: "San Martín de Porres",
-    type: "Privada",
-    careers: ["Medicina", "Veterinaria", "Psicología", "Enfermería"],
-    rating: 4.4,
-    distance: "15.3 km",
-    phone: "(01) 319-0000",
-    website: "www.upch.edu.pe",
-    description: "Universidad líder en ciencias de la salud con investigación de vanguardia."
-  }
-];
+// Definir las universidades con datos multiidioma
+const getUniversities = (t: any) => {
+  const universities: University[] = [
+    {
+      id: "1",
+      nameKey: "Universidad de Lima",
+      district: "Surco",
+      typeKey: "private",
+      careerKeys: ["engineering", "administration", "communications", "psychology"],
+      rating: 4.5,
+      distance: "5.2 km",
+      phone: "(01) 437-6767",
+      website: "www.ulima.edu.pe",
+      descriptionKey: "Universidad privada con excelencia académica y moderna infraestructura."
+    },
+    {
+      id: "2",
+      nameKey: "Universidad Nacional Mayor de San Marcos",
+      district: "Lima",
+      typeKey: "public",
+      careerKeys: ["medicine", "engineering", "law", "sciences"],
+      rating: 4.7,
+      distance: "8.1 km",
+      phone: "(01) 619-7000",
+      website: "www.unmsm.edu.pe",
+      descriptionKey: "La universidad más antigua de América, con tradición y prestigio académico."
+    },
+    {
+      id: "3",
+      nameKey: "Pontificia Universidad Católica del Perú",
+      district: "San Miguel",
+      typeKey: "private",
+      careerKeys: ["law", "economics", "engineering", "art"],
+      rating: 4.8,
+      distance: "12.5 km",
+      phone: "(01) 626-2000",
+      website: "www.pucp.edu.pe",
+      descriptionKey: "Universidad católica reconocida por su calidad académica y formación integral."
+    },
+    {
+      id: "4",
+      nameKey: "Universidad del Pacífico",
+      district: "Jesús María",
+      typeKey: "private",
+      careerKeys: ["administration", "economics", "industrialEngineering"],
+      rating: 4.6,
+      distance: "7.8 km",
+      phone: "(01) 219-0100",
+      website: "www.up.edu.pe",
+      descriptionKey: "Especializada en ciencias empresariales con alto nivel académico."
+    },
+    {
+      id: "5",
+      nameKey: "Universidad Peruana Cayetano Heredia",
+      district: "San Martín de Porres",
+      typeKey: "private",
+      careerKeys: ["medicine", "veterinary", "psychology", "nursing"],
+      rating: 4.4,
+      distance: "15.3 km",
+      phone: "(01) 319-0000",
+      website: "www.upch.edu.pe",
+      descriptionKey: "Universidad líder en ciencias de la salud con investigación de vanguardia."
+    }
+  ];
+
+  return universities;
+};
 
 export function MapPage({ onNavigate }: MapPageProps) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -103,6 +108,8 @@ export function MapPage({ onNavigate }: MapPageProps) {
   const { currentLanguage } = useLanguage();
   const t = getTranslation(currentLanguage);
 
+  const universities = getUniversities(t);
+
   const handlePremiumAction = (action: string) => {
     toast({
       title: t.map.premiumFeature,
@@ -112,19 +119,25 @@ export function MapPage({ onNavigate }: MapPageProps) {
   };
 
   const filteredUniversities = universities.filter(university => {
-    const matchesSearch = university.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         university.district.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         university.careers.some(career => career.toLowerCase().includes(searchQuery.toLowerCase()));
+    const nameTranslated = university.nameKey;
+    const careersTranslated = university.careerKeys.map(key => t.map[key as keyof typeof t.map] || key);
+    const typeTranslated = university.typeKey === 'public' ? t.map.public : t.map.private;
     
-    const matchesType = typeFilter === "all" || university.type === typeFilter;
+    const matchesSearch = nameTranslated.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         university.district.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         careersTranslated.some(career => career.toLowerCase().includes(searchQuery.toLowerCase()));
+    
+    const matchesType = typeFilter === "all" || 
+                       (typeFilter === "Pública" && university.typeKey === 'public') ||
+                       (typeFilter === "Privada" && university.typeKey === 'private');
     const matchesDistrict = districtFilter === "all" || university.district === districtFilter;
     
     return matchesSearch && matchesType && matchesDistrict;
   });
 
-  const getTypeColor = (type: string) => {
-    return type === "Pública" ? "bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-900 dark:text-emerald-200" 
-                              : "bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900 dark:text-blue-200";
+  const getTypeColor = (typeKey: 'public' | 'private') => {
+    return typeKey === 'public' ? "bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-900 dark:text-emerald-200" 
+                                : "bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900 dark:text-blue-200";
   };
 
   return (
@@ -270,9 +283,9 @@ export function MapPage({ onNavigate }: MapPageProps) {
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <CardTitle className="text-xl font-bold text-primary flex items-center gap-2">
-                        {university.name}
-                        <Badge className={getTypeColor(university.type)}>
-                          {university.type}
+                        {university.nameKey}
+                        <Badge className={getTypeColor(university.typeKey)}>
+                          {university.typeKey === 'public' ? t.map.public : t.map.private}
                         </Badge>
                       </CardTitle>
                       <CardDescription className="mt-2 flex items-center gap-4">
@@ -294,7 +307,7 @@ export function MapPage({ onNavigate }: MapPageProps) {
                 </CardHeader>
                 
                 <CardContent>
-                  <p className="text-muted-foreground mb-4">{university.description}</p>
+                  <p className="text-muted-foreground mb-4">{university.descriptionKey}</p>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div className="space-y-2">
@@ -303,9 +316,9 @@ export function MapPage({ onNavigate }: MapPageProps) {
                         {t.map.careers}
                       </h4>
                       <div className="flex flex-wrap gap-1">
-                        {university.careers.map((career, i) => (
+                        {university.careerKeys.map((careerKey, i) => (
                           <Badge key={i} variant="secondary" className="text-xs">
-                            {career}
+                            {t.map[careerKey as keyof typeof t.map] || careerKey}
                           </Badge>
                         ))}
                       </div>
@@ -339,7 +352,7 @@ export function MapPage({ onNavigate }: MapPageProps) {
                       onClick={(e) => {
                         e.stopPropagation();
                         // Mostrar ruta - función libre
-                        window.open(`https://maps.google.com/maps?q=${university.name}`, '_blank');
+                        window.open(`https://maps.google.com/maps?q=${university.nameKey}`, '_blank');
                       }}
                       className="flex items-center gap-1 hover:bg-accent hover:text-accent-foreground"
                     >
