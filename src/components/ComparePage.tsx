@@ -191,23 +191,25 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
   };
 
   const getRadarData = () => {
-    // Optimized criteria with shorter, clearer labels
+    // Etiquetas ultra-cortas para móvil
     const criteria = [
-      { attribute: 'Dificultad', shortLabel: 'Dificultad', key: 'difficulty' },
-      { attribute: 'Oportunidades', shortLabel: 'Empleos', key: 'jobOpportunities' },
-      { attribute: 'Salario', shortLabel: 'Salario', key: 'salaryRange' },
-      { attribute: 'Balance', shortLabel: 'Balance', key: 'workLifeBalance' },
-      { attribute: 'Prestigio', shortLabel: 'Prestigio', key: 'prestige' },
-      { attribute: 'Innovación', shortLabel: 'Innovación', key: 'innovation' },
-      { attribute: 'Estabilidad', shortLabel: 'Estabilidad', key: 'stability' },
-      { attribute: 'Impacto', shortLabel: 'Impacto', key: 'socialImpact' },
-      { attribute: 'Crecimiento', shortLabel: 'Crecimiento', key: 'growth' },
-      { attribute: 'Flexibilidad', shortLabel: 'Flexibilidad', key: 'flexibility' }
+      { attribute: 'Dificultad', shortLabel: 'Dific.', mobileLabel: 'D', key: 'difficulty' },
+      { attribute: 'Oportunidades', shortLabel: 'Empleo', mobileLabel: 'E', key: 'jobOpportunities' },
+      { attribute: 'Salario', shortLabel: 'Salario', mobileLabel: 'S', key: 'salaryRange' },
+      { attribute: 'Balance', shortLabel: 'Balance', mobileLabel: 'B', key: 'workLifeBalance' },
+      { attribute: 'Prestigio', shortLabel: 'Prestig.', mobileLabel: 'P', key: 'prestige' },
+      { attribute: 'Innovación', shortLabel: 'Innov.', mobileLabel: 'I', key: 'innovation' },
+      { attribute: 'Estabilidad', shortLabel: 'Estab.', mobileLabel: 'Es', key: 'stability' },
+      { attribute: 'Impacto', shortLabel: 'Impacto', mobileLabel: 'Im', key: 'socialImpact' },
+      { attribute: 'Crecimiento', shortLabel: 'Crec.', mobileLabel: 'C', key: 'growth' },
+      { attribute: 'Flexibilidad', shortLabel: 'Flex.', mobileLabel: 'F', key: 'flexibility' }
     ];
 
+    const isMobile = window.innerWidth < 640;
+    
     return criteria.map(criterion => {
       const dataPoint: any = { 
-        attribute: criterion.shortLabel,
+        attribute: isMobile ? criterion.mobileLabel : criterion.shortLabel,
         fullName: criterion.attribute 
       };
       selectedCareers.forEach((career, index) => {
@@ -294,37 +296,37 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
                 {/* Chart Section - Full Width */}
                 {selectedCareers.length >= 2 && (
                   <div className="mb-8">
-                    <h4 className="text-lg sm:text-xl font-title font-semibold mb-6 text-center gradient-text">
+                    <h4 className="text-lg sm:text-xl font-title font-semibold mb-4 text-center gradient-text">
                       Gráfico Radial Comparativo
                     </h4>
                     <div className="w-full bg-gradient-to-br from-muted/20 to-background p-2 sm:p-4 lg:p-6 rounded-xl border">
-                      {/* Legend */}
-                      <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-4 p-2">
+                      {/* Legend - Responsive Stack */}
+                      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:justify-center gap-1 sm:gap-4 mb-4 p-2">
                         {selectedCareers.map((career, index) => (
-                          <div key={career.id} className="flex items-center space-x-2 text-xs sm:text-sm">
+                          <div key={career.id} className="flex items-center space-x-2 text-xs sm:text-sm bg-muted/30 rounded px-2 py-1">
                             <div 
-                              className="w-3 h-3 rounded-full border-2" 
+                              className="w-3 h-3 rounded-full border-2 flex-shrink-0" 
                               style={{ 
                                 backgroundColor: chartConfig[`career${index}` as keyof typeof chartConfig]?.color,
                                 borderColor: chartConfig[`career${index}` as keyof typeof chartConfig]?.color
                               }}
                             />
-                            <span className="font-medium truncate max-w-[120px] sm:max-w-none">{career.name}</span>
+                            <span className="font-medium truncate max-w-[200px]">{career.name}</span>
                           </div>
                         ))}
                       </div>
                       
-                      {/* Responsive Chart Container */}
-                      <div className="h-[350px] sm:h-[450px] lg:h-[550px] w-full">
+                      {/* Mobile-Optimized Chart Container */}
+                      <div className="h-[400px] sm:h-[450px] lg:h-[550px] w-full">
                         <ChartContainer config={chartConfig}>
                           <ResponsiveContainer width="100%" height="100%">
                             <RadarChart 
                               data={getRadarData()}
                               margin={{ 
-                                top: 40, 
-                                right: 80, 
-                                bottom: 40, 
-                                left: 80 
+                                top: 60, 
+                                right: 100, 
+                                bottom: 60, 
+                                left: 100 
                               }}
                             >
                               <PolarGrid 
@@ -337,18 +339,18 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
                                 dataKey="attribute" 
                                 tick={{ 
                                   fill: "hsl(var(--foreground))",
-                                  fontSize: 11, 
+                                  fontSize: window.innerWidth < 640 ? 10 : 12, 
                                   fontWeight: 600,
                                   textAnchor: "middle"
                                 }}
-                                className="text-xs sm:text-sm"
+                                tickFormatter={(value) => value}
                               />
                               <PolarRadiusAxis 
                                 angle={90} 
                                 domain={[0, 10]} 
                                 tick={{ 
                                   fill: "hsl(var(--muted-foreground))",
-                                  fontSize: 10 
+                                  fontSize: 9 
                                 }}
                                 tickCount={6}
                                 axisLine={false}
@@ -360,10 +362,10 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
                                   dataKey={`career${index}`}
                                   stroke={chartConfig[`career${index}` as keyof typeof chartConfig]?.color}
                                   fill={chartConfig[`career${index}` as keyof typeof chartConfig]?.color}
-                                  fillOpacity={0.1}
-                                  strokeWidth={2.5}
+                                  fillOpacity={0.08}
+                                  strokeWidth={3}
                                   dot={{ 
-                                    r: 4, 
+                                    r: 5, 
                                     strokeWidth: 2,
                                     fill: chartConfig[`career${index}` as keyof typeof chartConfig]?.color,
                                     stroke: "hsl(var(--background))"
@@ -384,10 +386,26 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
                         </ChartContainer>
                       </div>
                       
+                      {/* Mobile Legend - Show full names below chart */}
+                      <div className="block sm:hidden mt-4 p-3 bg-muted/30 rounded text-xs">
+                        <div className="grid grid-cols-2 gap-2 text-center font-medium">
+                          <div>D = Dificultad</div>
+                          <div>E = Empleo</div>
+                          <div>S = Salario</div>
+                          <div>B = Balance</div>
+                          <div>P = Prestigio</div>
+                          <div>I = Innovación</div>
+                          <div>Es = Estabilidad</div>
+                          <div>Im = Impacto</div>
+                          <div>C = Crecimiento</div>
+                          <div>F = Flexibilidad</div>
+                        </div>
+                      </div>
+                      
                       {/* Chart Instructions */}
-                      <div className="text-center text-xs sm:text-sm text-muted-foreground mt-2 p-2 bg-muted/30 rounded">
+                      <div className="text-center text-xs sm:text-sm text-muted-foreground mt-3 p-2 bg-muted/30 rounded">
                         <p className="font-medium">
-                          💡 Tip: Valores más altos hacia el exterior indican mejor puntuación en cada criterio
+                          💡 Tip: Valores más altos hacia el exterior indican mejor puntuación
                         </p>
                       </div>
                     </div>
