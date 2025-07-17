@@ -19,9 +19,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
       setThemeState(savedTheme);
     } else {
-      // Check system preference if no saved theme
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setThemeState(prefersDark ? 'dark' : 'light');
+      // Default to light mode on first launch
+      setThemeState('light');
     }
   }, []);
 

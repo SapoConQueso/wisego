@@ -11,6 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/components/AuthProvider";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { getTranslation } from "@/lib/translations";
 
 interface ProfilePageProps {
   onNavigate: (view: string) => void;
@@ -18,9 +20,9 @@ interface ProfilePageProps {
 
 export function ProfilePage({ onNavigate }: ProfilePageProps) {
   const { user, session, isSubscribed, createCheckout, signOut, openCustomerPortal, isGuest } = useAuth();
+  const { currentLanguage, changeLanguage, supportedLanguages } = useLanguage();
   const [isVerified, setIsVerified] = useState(false);
   const [dniValue, setDniValue] = useState("");
-  const [selectedLanguage, setSelectedLanguage] = useState("es");
   const [notifications, setNotifications] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
@@ -28,6 +30,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
   const [fontSize, setFontSize] = useState("normal");
   const [contrast, setContrast] = useState("normal");
   const { toast } = useToast();
+  const t = getTranslation(currentLanguage);
 
   // Apply theme changes based on settings
   useEffect(() => {
@@ -125,12 +128,6 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
     }
   };
 
-  const languages = [
-    { code: "es", name: "Español" },
-    { code: "en", name: "English" },
-    { code: "qu", name: "Quechua" },
-    { code: "ay", name: "Aymara" }
-  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -277,14 +274,17 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
             <div className="space-y-4">
               <div>
                 <Label htmlFor="language">Idioma de la interfaz</Label>
-                <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
+                <Select value={currentLanguage} onValueChange={changeLanguage}>
                   <SelectTrigger className="mt-1">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {languages.map((lang) => (
+                    {supportedLanguages.map((lang) => (
                       <SelectItem key={lang.code} value={lang.code}>
-                        {lang.name}
+                        <span className="flex items-center gap-2">
+                          <span>{lang.flag}</span>
+                          <span>{lang.nativeName}</span>
+                        </span>
                       </SelectItem>
                     ))}
                   </SelectContent>
