@@ -1,10 +1,20 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import { createClient, User, Session } from "@supabase/supabase-js";
+import { supabase } from "@/integrations/supabase/client";
 
-const supabaseUrl = "https://zasqtknfduuxtywtsdnz.supabase.co";
-const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inphc3F0a25mZHV1eHR5d3RzZG56Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI2Mzc3MjEsImV4cCI6MjA2ODIxMzcyMX0.lefj-e8cTLNG766nIuede7n-PgPGbdkv-mkIVVgetSE";
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Security logging function
+const logSecurityEvent = async (action: string, details: any = {}) => {
+  try {
+    // Log security events for monitoring
+    console.log(`Security Event: ${action}`, { 
+      timestamp: new Date().toISOString(),
+      userAgent: navigator.userAgent,
+      ...details 
+    });
+  } catch (error) {
+    console.error('Failed to log security event:', error);
+  }
+};
 
 export interface UserSession {
   user: User | null;
@@ -38,36 +48,64 @@ export function useSupabaseAuth(): AuthContextType {
   const [isGuest, setIsGuest] = useState(false);
 
   useEffect(() => {
-    // Get initial session
+    let mounted = true;
+
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (!mounted) return;
+
+        // Log authentication events for security monitoring
+        await logSecurityEvent('auth_state_change', { event });
+
+        setSession(session);
+        setUser(session?.user ?? null);
+        setIsLoading(false);
+        
+        if (event === 'SIGNED_IN' && session?.user) {
+          await logSecurityEvent('user_signed_in', { 
+            userId: session.user.id,
+            email: session.user.email 
+          });
+          
+          // Use setTimeout to prevent deadlock
+          setTimeout(() => {
+            if (mounted) checkSubscription();
+          }, 0);
+        } else if (event === 'SIGNED_OUT') {
+          await logSecurityEvent('user_signed_out');
+          setIsSubscribed(false);
+          setSubscriptionTier(null);
+          setSubscriptionEnd(null);
+          setIsGuest(false);
+        } else if (event === 'TOKEN_REFRESHED') {
+          await logSecurityEvent('token_refreshed', { 
+            userId: session?.user?.id 
+          });
+        }
+      }
+    );
+
+    // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!mounted) return;
+      
       setSession(session);
       setUser(session?.user ?? null);
       setIsLoading(false);
       
       // Check subscription if user is logged in
       if (session?.user) {
-        checkSubscription();
+        setTimeout(() => {
+          if (mounted) checkSubscription();
+        }, 0);
       }
     });
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setIsLoading(false);
-        
-        if (event === 'SIGNED_IN' && session?.user) {
-          await checkSubscription();
-        } else if (event === 'SIGNED_OUT') {
-          setIsSubscribed(false);
-          setSubscriptionTier(null);
-          setSubscriptionEnd(null);
-        }
-      }
-    );
-
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signUp = async (email: string, password: string, fullName: string, username: string) => {
@@ -157,11 +195,13 @@ export function useSupabaseAuth(): AuthContextType {
   };
 
   const signOut = async () => {
+    await logSecurityEvent('sign_out_initiated', { userId: user?.id });
     setIsGuest(false);
     await supabase.auth.signOut();
   };
 
   const signInAsGuest = () => {
+    logSecurityEvent('guest_sign_in_initiated');
     setIsGuest(true);
     setUser(null);
     setSession(null);
