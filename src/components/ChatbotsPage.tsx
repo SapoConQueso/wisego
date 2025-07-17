@@ -1,15 +1,19 @@
+// src/components/ChatbotsPage.tsx - Versión mejorada con IA real
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
 import { LanguageSelector } from "./LanguageSelector";
-import { ArrowLeft, Bot, MessageCircle, GraduationCap, Users, Crown, Lock, Building2, BookOpen, BrainCircuit } from "lucide-react";
+import { ArrowLeft, Bot, MessageCircle, GraduationCap, Users, Crown, Lock } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/components/AuthProvider";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslation } from "@/lib/translations";
+
+// Importar el componente de chat con IA real
+import { RealAiChat } from "./RealAiChat";
 
 interface ChatbotsPageProps {
   onNavigate: (view: string) => void;
@@ -19,6 +23,9 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
   const { isSubscribed, createCheckout, isGuest } = useAuth();
   const { currentLanguage } = useLanguage();
   const t = getTranslation(currentLanguage);
+  
+  // Estado para manejar qué bot está seleccionado
+  const [selectedBot, setSelectedBot] = useState<"general" | "vocational" | null>(null);
 
   const handlePremiumAction = (chatbotName: string) => {
     toast.error(`${chatbotName} ${t.chatbots.requiresPremium}`);
@@ -36,8 +43,26 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
     }
   };
 
-  // En modo invitado, consideramos que tiene acceso completo
   const hasAccess = isSubscribed || isGuest;
+
+  const startChat = (botType: "general" | "vocational") => {
+    if (!hasAccess) {
+      handlePremiumAction(botType === "general" ? "Chat IA General" : "Test Vocacional IA");
+      return;
+    }
+    setSelectedBot(botType);
+  };
+
+  // Si hay un bot seleccionado, mostrar el chat
+  if (selectedBot) {
+    return (
+      <RealAiChat
+        onNavigate={() => setSelectedBot(null)}
+        botType={selectedBot}
+        title={selectedBot === "general" ? "Chat IA General" : "Test Vocacional IA"}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -63,7 +88,7 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
 
       {/* Main Content */}
       <main className="p-4 space-y-6">
-      {/* Premium Banner */}
+        {/* Premium Banner */}
         {!hasAccess && (
           <div className="max-w-4xl mx-auto animate-fade-in">
             <Card className="border-wisego-orange bg-gradient-to-r from-wisego-orange/5 to-primary/5">
@@ -97,7 +122,7 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
         <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           {/* Test Vocacional Bot */}
           <Card className={`border-2 transition-colors ${hasAccess ? 'hover:border-primary cursor-pointer' : 'opacity-60 cursor-not-allowed'}`}
-                onClick={() => hasAccess ? onNavigate("vocational-test") : handlePremiumAction("Test Vocacional IA")}>
+                onClick={() => startChat("vocational")}>
             <CardHeader className="text-center relative">
               {!hasAccess && (
                 <Badge className="absolute top-2 right-2 bg-wisego-orange text-white">
@@ -147,7 +172,7 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
 
           {/* Chat General */}
           <Card className={`border-2 transition-colors ${hasAccess ? 'hover:border-accent cursor-pointer' : 'opacity-60 cursor-not-allowed'}`}
-                onClick={() => hasAccess ? onNavigate("ai-chat") : handlePremiumAction("Chat IA General")}>
+                onClick={() => startChat("general")}>
             <CardHeader className="text-center relative">
               {!hasAccess && (
                 <Badge className="absolute top-2 right-2 bg-wisego-orange text-white">
@@ -195,7 +220,6 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
             </CardContent>
           </Card>
         </div>
-
 
         {/* Tips Section */}
         <div className="max-w-2xl mx-auto mt-12">
