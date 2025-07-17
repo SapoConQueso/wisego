@@ -71,13 +71,13 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
     if (dniValue.length === 8 && /^\d+$/.test(dniValue)) {
       setIsVerified(true);
       toast({
-        title: "Verificación exitosa",
-        description: "Tu cuenta ha sido verificada correctamente.",
+        title: t.profile.verificationSuccess,
+        description: t.profile.verificationSuccess,
       });
     } else {
       toast({
-        title: "DNI inválido",
-        description: "Por favor ingresa un DNI peruano válido de 8 dígitos.",
+        title: t.common.error,
+        description: t.profile.invalidDNI,
         variant: "destructive",
       });
     }
@@ -87,8 +87,8 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
     if (tempName.trim()) {
       setIsEditingName(false);
       toast({
-        title: "Nombre actualizado",
-        description: "Tu nombre ha sido actualizado correctamente.",
+        title: t.profile.nameUpdated,
+        description: t.profile.nameUpdatedDesc,
       });
     }
   };
@@ -143,7 +143,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <WiseGoLogo size="sm" />
-          <span className="text-xl font-bold">Mi Perfil</span>
+          <span className="text-xl font-bold">{t.profile.myProfile}</span>
         </div>
         <ThemeToggle />
       </header>
@@ -173,7 +173,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                    ) : (
                       <>
                         <CardTitle className="text-2xl">
-                          {isGuest ? "Usuario Invitado (Demo)" : (user?.user_metadata?.full_name || user?.email || "Usuario")}
+                          {isGuest ? t.profile.guestUser : (user?.user_metadata?.full_name || user?.email || t.profile.user)}
                         </CardTitle>
                         {!isGuest && (
                           <Button 
@@ -188,21 +188,21 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                     )}
                  </div>
                   <CardDescription>
-                    {isGuest ? "Acceso completo de demostración • Todas las funciones disponibles" : `Estudiante • Registro: ${user?.created_at ? new Date(user.created_at).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' }) : 'Reciente'}`}
+                    {isGuest ? t.profile.guestDescription : `${t.profile.student} • ${t.profile.registration}: ${user?.created_at ? new Date(user.created_at).toLocaleDateString(currentLanguage === 'es' ? 'es-ES' : 'en-US', { year: 'numeric', month: 'long' }) : t.profile.recent}`}
                   </CardDescription>
                 <div className="flex items-center space-x-2 mt-2">
                   {isGuest ? (
                     <Badge className="bg-wisego-orange text-white">
                       <Crown className="h-3 w-3 mr-1" />
-                      Demo Premium
+                      {t.profile.demoPremium}
                     </Badge>
                   ) : isVerified ? (
                     <Badge className="bg-green-100 text-green-800 border-green-300">
                       <Check className="h-3 w-3 mr-1" />
-                      Verificado
+                      {t.profile.verified}
                     </Badge>
                   ) : (
-                    <Badge variant="outline">Sin verificar</Badge>
+                    <Badge variant="outline">{t.profile.unverified}</Badge>
                   )}
                 </div>
               </div>
@@ -214,34 +214,34 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
         {user && !isGuest && (
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Shield className="h-5 w-5" />
-                <span>Verificación de Cuenta</span>
-              </CardTitle>
+                <CardTitle className="flex items-center space-x-2">
+                  <Shield className="h-5 w-5" />
+                  <span>{t.profile.accountVerification}</span>
+                </CardTitle>
               <CardDescription>
-                Verifica tu identidad con tu DNI peruano para acceder a todas las funciones
+                  {t.profile.verifyIdentity}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {!isVerified ? (
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="dni">Documento Nacional de Identidad (DNI)</Label>
+                    <Label htmlFor="dni">{t.profile.document}</Label>
                     <Input
                       id="dni"
                       type="text"
-                      placeholder="12345678"
+                      placeholder={t.profile.documentPlaceholder}
                       value={dniValue}
                       onChange={(e) => setDniValue(e.target.value.replace(/\D/g, '').slice(0, 8))}
                       className="mt-1"
                       maxLength={8}
                     />
                     <p className="text-xs text-muted-foreground mt-1">
-                      Ingresa tu DNI de 8 dígitos sin espacios ni guiones
+                      {t.profile.documentHelp}
                     </p>
                   </div>
                   <Button onClick={handleVerifyDNI} className="w-full">
-                    Verificar DNI
+                    {t.profile.verifyDNI}
                   </Button>
                 </div>
               ) : (
@@ -249,9 +249,9 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                   <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Check className="h-8 w-8 text-green-600" />
                   </div>
-                  <p className="text-green-600 font-medium">¡Cuenta verificada exitosamente!</p>
+                  <p className="text-green-600 font-medium">{t.profile.verificationSuccess}</p>
                   <p className="text-sm text-muted-foreground">
-                    Ahora tienes acceso completo a todas las funciones de WiseGO
+                    {t.profile.verificationSuccessDescription}
                   </p>
                 </div>
               )}
@@ -264,16 +264,16 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Globe className="h-5 w-5" />
-              <span>Idioma</span>
+              <span>{t.profile.language}</span>
             </CardTitle>
             <CardDescription>
-              Selecciona tu idioma preferido para la interfaz
+              {t.profile.selectLanguage}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div>
-                <Label htmlFor="language">Idioma de la interfaz</Label>
+                <Label htmlFor="language">{t.profile.interfaceLanguage}</Label>
                 <Select value={currentLanguage} onValueChange={changeLanguage}>
                   <SelectTrigger className="mt-1">
                     <SelectValue />
@@ -291,7 +291,7 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
                 </Select>
               </div>
               <p className="text-xs text-muted-foreground">
-                Los cambios se aplicarán automáticamente
+                {t.profile.languageChangeNote}
               </p>
             </div>
           </CardContent>
@@ -302,18 +302,18 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Settings className="h-5 w-5" />
-              <span>Accesibilidad</span>
+              <span>{t.profile.accessibility}</span>
             </CardTitle>
             <CardDescription>
-              Personaliza la experiencia según tus necesidades
+              {t.profile.customizeExperience}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <Label htmlFor="notifications">Notificaciones</Label>
+                <Label htmlFor="notifications">{t.profile.notifications}</Label>
                 <p className="text-sm text-muted-foreground">
-                  Recibe alertas sobre eventos y actualizaciones
+                  {t.profile.notificationsDesc}
                 </p>
               </div>
               <Switch 
@@ -325,9 +325,9 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
 
             <div className="flex items-center justify-between">
               <div>
-                <Label htmlFor="dark-mode">Modo oscuro</Label>
+                <Label htmlFor="dark-mode">{t.profile.darkMode}</Label>
                 <p className="text-sm text-muted-foreground">
-                  Interfaz con colores más suaves para los ojos
+                  {t.profile.darkModeDesc}
                 </p>
               </div>
               <Switch 
@@ -338,48 +338,48 @@ export function ProfilePage({ onNavigate }: ProfilePageProps) {
             </div>
 
             <div className="space-y-2">
-              <Label>Tamaño de texto</Label>
+              <Label>{t.profile.textSize}</Label>
               <div className="grid grid-cols-3 gap-2">
                 <Button 
                   variant={fontSize === "small" ? "default" : "outline"} 
                   size="sm"
                   onClick={() => setFontSize("small")}
                 >
-                  Pequeño
+                  {t.profile.small}
                 </Button>
                 <Button 
                   variant={fontSize === "normal" ? "default" : "outline"} 
                   size="sm"
                   onClick={() => setFontSize("normal")}
                 >
-                  Normal
+                  {t.profile.normal}
                 </Button>
                 <Button 
                   variant={fontSize === "large" ? "default" : "outline"} 
                   size="sm"
                   onClick={() => setFontSize("large")}
                 >
-                  Grande
+                  {t.profile.large}
                 </Button>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label>Contraste</Label>
+              <Label>{t.profile.contrast}</Label>
               <div className="grid grid-cols-2 gap-2">
                 <Button 
                   variant={contrast === "normal" ? "default" : "outline"} 
                   size="sm"
                   onClick={() => setContrast("normal")}
                 >
-                  Normal
+                  {t.profile.normal}
                 </Button>
                 <Button 
                   variant={contrast === "high" ? "default" : "outline"} 
                   size="sm"
                   onClick={() => setContrast("high")}
                 >
-                  Alto
+                  {t.profile.high}
                 </Button>
               </div>
             </div>

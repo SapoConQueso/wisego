@@ -164,6 +164,15 @@ export interface Translations {
     verified: string;
     unverified: string;
     demoPremium: string;
+    user: string;
+    guestDescription: string;
+    recent: string;
+    verificationSuccess: string;
+    verificationSuccessDescription: string;
+    languageChangeNote: string;
+    invalidDNI: string;
+    nameUpdated: string;
+    nameUpdatedDesc: string;
   };
 
   // Community Page
@@ -409,7 +418,16 @@ export const translations: Record<Language, Translations> = {
       registration: 'Registro:',
       verified: 'Verificado',
       unverified: 'Sin verificar',
-      demoPremium: 'Demo Premium'
+      demoPremium: 'Demo Premium',
+      user: 'Usuario',
+      guestDescription: 'Acceso completo de demostración • Todas las funciones disponibles',
+      recent: 'Reciente',
+      verificationSuccess: '¡Cuenta verificada exitosamente!',
+      verificationSuccessDescription: 'Ahora tienes acceso completo a todas las funciones de WiseGO',
+      languageChangeNote: 'Los cambios se aplicarán automáticamente',
+      invalidDNI: 'Por favor ingresa un DNI peruano válido de 8 dígitos',
+      nameUpdated: 'Nombre actualizado',
+      nameUpdatedDesc: 'Tu nombre ha sido actualizado correctamente'
     },
     community: {
       title: 'Comunidad',
@@ -641,7 +659,16 @@ export const translations: Record<Language, Translations> = {
       registration: 'Registration:',
       verified: 'Verified',
       unverified: 'Unverified',
-      demoPremium: 'Demo Premium'
+      demoPremium: 'Demo Premium',
+      user: 'User',
+      guestDescription: 'Full demo access • All features available',
+      recent: 'Recent',
+      verificationSuccess: 'Account verified successfully!',
+      verificationSuccessDescription: 'You now have full access to all WiseGO features',
+      languageChangeNote: 'Changes will be applied automatically',
+      invalidDNI: 'Please enter a valid 8-digit Peruvian ID',
+      nameUpdated: 'Name updated',
+      nameUpdatedDesc: 'Your name has been updated successfully'
     },
     community: {
       title: 'Community',
@@ -873,7 +900,16 @@ export const translations: Record<Language, Translations> = {
       registration: 'Qillqakuy:',
       verified: 'Takyachasqa',
       unverified: 'Mana takyachasqa',
-      demoPremium: 'Demo Premium'
+      demoPremium: 'Demo Premium',
+      user: 'Runa',
+      guestDescription: 'Llapan demo yaykuy • Llapa ruwaykunas kachkan',
+      recent: 'Ñaqha',
+      verificationSuccess: '¡Cuenta allinmanta takyachasqa!',
+      verificationSuccessDescription: 'Kunanqa llapa WiseGO ruwaykunaman hunt\'asqa yaykuyniyki kan',
+      languageChangeNote: 'Tikrakuykunas kikinmanta ruwakamunqa',
+      invalidDNI: 'Ama hina kay, allin 8 yupana Peru DNI-ta churay',
+      nameUpdated: 'Suti tikrakusqa',
+      nameUpdatedDesc: 'Sutiyki allinmanta tikrakusqa karqan'
     },
     community: {
       title: 'Ayllu',
@@ -1105,7 +1141,16 @@ export const translations: Record<Language, Translations> = {
       registration: 'Qillqantaña:',
       verified: 'Yaqhata',
       unverified: 'Jan yaqhata',
-      demoPremium: 'Demo Premium'
+      demoPremium: 'Demo Premium',
+      user: 'Jaqi',
+      guestDescription: 'Taqi demo mantañani • Taqi lurawinak utji',
+      recent: 'Jichhacha',
+      verificationSuccess: '¡Cuenta suma yaqhata!',
+      verificationSuccessDescription: 'Jichhax taqi WiseGO lurawinaruw hunt\'asaña mantañama',
+      languageChangeNote: 'Mayjt\'awinaks kikipa lurasiñani',
+      invalidDNI: 'Mä suma 8 jakhu Peru DNI uñacht\'ayañam',
+      nameUpdated: 'Suti mayjt\'ata',
+      nameUpdatedDesc: 'Sutimax suma mayjt\'atawa'
     },
     community: {
       title: 'Marka',
