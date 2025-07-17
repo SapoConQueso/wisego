@@ -18,20 +18,78 @@ export function LoginForm({ onSwitchToRegister, onGuestLogin }: LoginFormProps) 
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState<{[key: string]: string}>({});
+  const [loginAttempts, setLoginAttempts] = useState(0);
   const { signIn, signInAsGuest } = useAuth();
+
+  // Input sanitization and validation
+  const sanitizeInput = (input: string) => {
+    return input.trim().replace(/[<>\"'&]/g, '');
+  };
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    if (field === 'email') {
+      const sanitized = sanitizeInput(value).toLowerCase();
+      setEmail(sanitized);
+      if (errors.email && validateEmail(sanitized)) {
+        setErrors(prev => ({ ...prev, email: '' }));
+      }
+    } else if (field === 'password') {
+      setPassword(value); // Don't sanitize password
+      if (errors.password && value.length > 0) {
+        setErrors(prev => ({ ...prev, password: '' }));
+      }
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Rate limiting - basic client-side protection
+    if (loginAttempts >= 5) {
+      toast.error("Demasiados intentos fallidos. Inténtalo más tarde.");
+      return;
+    }
+    
+    // Client-side validation
+    const newErrors: {[key: string]: string} = {};
+    
+    if (!validateEmail(email)) {
+      newErrors.email = "Formato de email inválido";
+    }
+    
+    if (!password || password.length === 0) {
+      newErrors.password = "La contraseña es obligatoria";
+    }
+    
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    
+    setErrors({});
     setIsLoading(true);
     
     try {
       const { error } = await signIn(email, password);
       if (error) {
+        setLoginAttempts(prev => prev + 1);
         toast.error(error);
       } else {
+        setLoginAttempts(0); // Reset on successful login
         toast.success("¡Bienvenido de vuelta!");
+        // Clear form on success
+        setEmail("");
+        setPassword("");
       }
     } catch (error) {
+      console.error("Login error:", error);
+      setLoginAttempts(prev => prev + 1);
       toast.error("Error al iniciar sesión");
     } finally {
       setIsLoading(false);
@@ -74,10 +132,14 @@ export function LoginForm({ onSwitchToRegister, onGuestLogin }: LoginFormProps) 
               type="email"
               placeholder="Correo Electrónico"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="pl-10 bg-white border-0 rounded-full"
+              onChange={(e) => handleInputChange('email', e.target.value)}
+              className={`pl-10 bg-white border-0 rounded-full ${errors.email ? 'border-2 border-red-500' : ''}`}
               required
+              autoComplete="email"
             />
+            {errors.email && (
+              <p className="text-xs text-red-200 mt-1 ml-3">{errors.email}</p>
+            )}
           </div>
           
           <div className="relative">
@@ -86,19 +148,28 @@ export function LoginForm({ onSwitchToRegister, onGuestLogin }: LoginFormProps) 
               type="password"
               placeholder="Contraseña"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="pl-10 bg-white border-0 rounded-full"
+              onChange={(e) => handleInputChange('password', e.target.value)}
+              className={`pl-10 bg-white border-0 rounded-full ${errors.password ? 'border-2 border-red-500' : ''}`}
               required
+              autoComplete="current-password"
             />
+            {errors.password && (
+              <p className="text-xs text-red-200 mt-1 ml-3">{errors.password}</p>
+            )}
           </div>
           
           <Button 
             type="submit"
-            disabled={isLoading}
-            className="w-full bg-accent text-accent-foreground hover:bg-accent/90 rounded-full font-semibold"
+            disabled={isLoading || loginAttempts >= 5}
+            className="w-full bg-accent text-accent-foreground hover:bg-accent/90 rounded-full font-semibold disabled:opacity-50"
           >
-            {isLoading ? "Iniciando..." : "Iniciar Sesión ▶"}
+            {isLoading ? "Iniciando..." : loginAttempts >= 5 ? "Bloqueado" : "Iniciar Sesión ▶"}
           </Button>
+          {loginAttempts > 0 && loginAttempts < 5 && (
+            <p className="text-xs text-red-200 text-center">
+              Intentos fallidos: {loginAttempts}/5
+            </p>
+          )}
         </form>
         
         <div className="flex items-center space-x-2">

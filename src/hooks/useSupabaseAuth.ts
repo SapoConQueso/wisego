@@ -72,13 +72,43 @@ export function useSupabaseAuth(): AuthContextType {
 
   const signUp = async (email: string, password: string, fullName: string, username: string) => {
     try {
+      // Input validation and sanitization
+      const sanitizedEmail = email.trim().toLowerCase();
+      const sanitizedFullName = fullName.trim();
+      const sanitizedUsername = username.trim().toLowerCase();
+      
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(sanitizedEmail)) {
+        return { error: "Formato de email inválido" };
+      }
+      
+      // Validate password strength
+      if (password.length < 8) {
+        return { error: "La contraseña debe tener al menos 8 caracteres" };
+      }
+      
+      // Validate required fields
+      if (!sanitizedFullName || !sanitizedUsername) {
+        return { error: "Todos los campos son obligatorios" };
+      }
+      
+      // Validate username format (alphanumeric and underscores only)
+      const usernameRegex = /^[a-zA-Z0-9_]+$/;
+      if (!usernameRegex.test(sanitizedUsername)) {
+        return { error: "El nombre de usuario solo puede contener letras, números y guiones bajos" };
+      }
+      
+      const redirectUrl = `${window.location.origin}/`;
+      
       const { error } = await supabase.auth.signUp({
-        email,
+        email: sanitizedEmail,
         password,
         options: {
+          emailRedirectTo: redirectUrl,
           data: {
-            full_name: fullName,
-            username: username
+            full_name: sanitizedFullName,
+            username: sanitizedUsername
           }
         }
       });
@@ -86,20 +116,42 @@ export function useSupabaseAuth(): AuthContextType {
       if (error) return { error: error.message };
       return {};
     } catch (error) {
+      console.error('SignUp error:', error);
       return { error: "Error al registrarse" };
     }
   };
 
   const signIn = async (email: string, password: string) => {
     try {
+      // Input validation and sanitization
+      const sanitizedEmail = email.trim().toLowerCase();
+      
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(sanitizedEmail)) {
+        return { error: "Formato de email inválido" };
+      }
+      
+      // Validate password is not empty
+      if (!password || password.length === 0) {
+        return { error: "La contraseña es obligatoria" };
+      }
+      
       const { error } = await supabase.auth.signInWithPassword({
-        email,
+        email: sanitizedEmail,
         password
       });
       
-      if (error) return { error: error.message };
+      if (error) {
+        // Sanitize error messages to prevent information disclosure
+        if (error.message.includes('Invalid login credentials')) {
+          return { error: "Credenciales inválidas" };
+        }
+        return { error: error.message };
+      }
       return {};
     } catch (error) {
+      console.error('SignIn error:', error);
       return { error: "Error al iniciar sesión" };
     }
   };
@@ -120,7 +172,10 @@ export function useSupabaseAuth(): AuthContextType {
 
   const checkSubscription = async () => {
     try {
-      if (!session) return;
+      if (!session || !session.access_token) {
+        console.warn('No valid session for subscription check');
+        return;
+      }
       
       const { data, error } = await supabase.functions.invoke('check-subscription', {
         headers: {
@@ -128,13 +183,23 @@ export function useSupabaseAuth(): AuthContextType {
         },
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Subscription check error:', error);
+        return;
+      }
 
-      setIsSubscribed(data.subscribed || false);
-      setSubscriptionTier(data.subscription_tier || null);
-      setSubscriptionEnd(data.subscription_end || null);
+      // Validate response data structure
+      if (data && typeof data === 'object') {
+        setIsSubscribed(Boolean(data.subscribed));
+        setSubscriptionTier(data.subscription_tier || null);
+        setSubscriptionEnd(data.subscription_end || null);
+      }
     } catch (error) {
       console.error('Error checking subscription:', error);
+      // Reset subscription state on error for security
+      setIsSubscribed(false);
+      setSubscriptionTier(null);
+      setSubscriptionEnd(null);
     }
   };
 
@@ -143,7 +208,9 @@ export function useSupabaseAuth(): AuthContextType {
       if (isGuest) {
         throw new Error('Los invitados no pueden realizar compras. Regístrate para acceder a suscripciones.');
       }
-      if (!session) throw new Error('No hay sesión activa');
+      if (!session || !session.access_token) {
+        throw new Error('No hay sesión activa válida');
+      }
       
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         headers: {
@@ -151,10 +218,17 @@ export function useSupabaseAuth(): AuthContextType {
         },
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Checkout creation error:', error);
+        throw new Error('Error al crear sesión de pago');
+      }
 
-      // Open Stripe checkout in a new tab
-      window.open(data.url, '_blank');
+      // Validate URL before opening
+      if (data && data.url && data.url.startsWith('https://')) {
+        window.open(data.url, '_blank', 'noopener,noreferrer');
+      } else {
+        throw new Error('URL de pago inválida');
+      }
     } catch (error) {
       console.error('Error creating checkout:', error);
       throw error;
@@ -166,7 +240,9 @@ export function useSupabaseAuth(): AuthContextType {
       if (isGuest) {
         throw new Error('Los invitados no pueden acceder al portal. Regístrate para gestionar tu suscripción.');
       }
-      if (!session) throw new Error('No hay sesión activa');
+      if (!session || !session.access_token) {
+        throw new Error('No hay sesión activa válida');
+      }
       
       const { data, error } = await supabase.functions.invoke('customer-portal', {
         headers: {
@@ -174,10 +250,17 @@ export function useSupabaseAuth(): AuthContextType {
         },
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Customer portal error:', error);
+        throw new Error('Error al acceder al portal de cliente');
+      }
 
-      // Open customer portal in a new tab
-      window.open(data.url, '_blank');
+      // Validate URL before opening
+      if (data && data.url && data.url.startsWith('https://')) {
+        window.open(data.url, '_blank', 'noopener,noreferrer');
+      } else {
+        throw new Error('URL del portal inválida');
+      }
     } catch (error) {
       console.error('Error opening customer portal:', error);
       throw error;
