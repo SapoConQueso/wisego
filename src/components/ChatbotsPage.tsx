@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
 import {
+npm install js-cookie
+npm install --save-dev @types/js-cookie
   ArrowLeft,
   Bot,
   MessageCircle,
