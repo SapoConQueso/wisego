@@ -47,7 +47,7 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
     },
     { 
       name: "Score", 
-      image: "/lovable-uploads/40264dd2-1f59-4fcc-9a35-7a14fb8f1663.png"
+      image: "/lovable-uploads/ff3df5bc-6b2b-4556-9cee-f425bde2d45d.png"
     },
     { 
       name: "SMMUN", 
@@ -321,7 +321,7 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
         {/* ¿Por qué elegir WiseGo? */}
         <div className="bg-card border border-border rounded-2xl p-6 shadow-lg">
           <h2 className="text-2xl sm:text-3xl font-bold font-title mb-6 text-center text-card-foreground">
-            ¿Por qué elegir <span className="text-accent">WiseGO!</span>?
+            {t.about.whyChoose} <span className="text-accent">WiseGO!</span>?
           </h2>
           <p className="text-base text-muted-foreground leading-relaxed text-center max-w-4xl mx-auto">
             {t.about.whyChooseText}
@@ -330,46 +330,37 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
 
         {/* Nuestra Visión */}
         <div className="bg-primary text-primary-foreground rounded-2xl p-6 shadow-lg">
-          <h3 className="text-2xl sm:text-3xl font-bold font-title mb-6 text-center">NUESTRA VISIÓN</h3>
+          <h3 className="text-2xl sm:text-3xl font-bold font-title mb-6 text-center">{t.about.ourVision}</h3>
           <p className="text-base leading-relaxed text-center max-w-4xl mx-auto">
-            Ser la plataforma líder en orientación educativa impulsada por inteligencia artificial, 
-            revolucionando la forma en que los estudiantes descubren su potencial y toman decisiones 
-            sobre su futuro académico y profesional. Aspiramos a crear un mundo donde cada persona 
-            pueda encontrar su camino ideal hacia el éxito, eliminando las barreras de información 
-            y facilitando el acceso a oportunidades educativas de calidad.
+            {t.about.visionText}
           </p>
         </div>
 
         {/* Nuestra Misión */}
         <div className="bg-accent text-accent-foreground rounded-2xl p-6 shadow-lg">
-          <h3 className="text-2xl sm:text-3xl font-bold font-title mb-6 text-center">NUESTRA MISIÓN</h3>
+          <h3 className="text-2xl sm:text-3xl font-bold font-title mb-6 text-center">{t.about.ourMission}</h3>
           <p className="text-base leading-relaxed text-center max-w-4xl mx-auto">
-            Empoderar a los estudiantes con herramientas inteligentes y personalizadas que les 
-            permitan tomar decisiones informadas sobre su educación superior. Utilizamos la 
-            inteligencia artificial de manera ética y responsable para analizar aptitudes, 
-            intereses y objetivos, ofreciendo recomendaciones precisas y actualizadas sobre 
-            carreras y universidades que se alineen con el perfil único de cada usuario.
+            {t.about.missionText}
           </p>
         </div>
 
         {/* Nuestros Socios Clave */}
-        <div className="bg-card border border-border rounded-2xl p-6 shadow-lg">
-          <h3 className="text-2xl sm:text-3xl font-bold font-title mb-8 text-center text-card-foreground">
-            NUESTROS<br />
-            <span className="text-accent">SOCIOS CLAVE</span>
+        <div className="bg-card border border-border rounded-2xl p-8 shadow-lg">
+          <h3 className="text-2xl sm:text-3xl font-bold font-title mb-10 text-center text-card-foreground">
+            {t.about.keyPartners}
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl mx-auto">
             {partners.map((partner, index) => (
-              <div key={index} className="flex items-center space-x-4 bg-muted/30 rounded-xl p-4 border border-border hover:bg-muted/50 transition-all duration-300">
+              <div key={index} className="flex items-center space-x-6 bg-muted/30 rounded-2xl p-6 border border-border hover:bg-muted/50 hover:scale-105 transition-all duration-300 shadow-md">
                 <div className="flex-shrink-0">
                   <img 
                     src={partner.image} 
                     alt={partner.name}
-                    className="w-16 h-16 rounded-full object-cover border-2 border-border shadow-lg"
+                    className="w-20 h-20 rounded-full object-cover border-2 border-border shadow-lg"
                   />
                 </div>
                 <div className="flex-1">
-                  <p className="text-base font-medium font-subtitle text-card-foreground">{partner.name}</p>
+                  <p className="text-lg font-semibold font-subtitle text-card-foreground">{partner.name}</p>
                 </div>
               </div>
             ))}
