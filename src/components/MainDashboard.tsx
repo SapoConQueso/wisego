@@ -36,145 +36,171 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-primary text-primary-foreground p-4 flex items-center justify-between shadow-lg border-b border-border">
-        <div className="flex items-center space-x-3">
-          <WiseGoLogo size="sm" />
-          <span className="text-xl font-bold font-title tracking-wide">WiseGO!</span>
-        </div>
-        
-        <div className="flex items-center space-x-2">
-          <LanguageSelector />
-          <ThemeToggle />
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="sm" className="text-primary-foreground hover:bg-primary-foreground/20 transition-all duration-200 hover:scale-105">
-                <Menu className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-80 bg-card border-l border-border shadow-2xl">
-              <div className="py-6 space-y-4">
-                <div className="flex items-center space-x-3 pb-4 border-b border-border">
-                  <WiseGoLogo size="sm" />
-                  <span className="text-lg font-bold font-title text-primary">WiseGO!</span>
-                </div>
-                {menuItems.map((item, index) => (
-                  <Button
-                    key={index}
-                    variant="ghost"
-                    className="w-full justify-between text-left h-12 hover:bg-primary hover:text-primary-foreground transition-all duration-300 group"
-                    onClick={item.action}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <item.icon className="h-5 w-5 group-hover:scale-110 transition-transform" />
-                      <span className="font-subtitle">{item.label}</span>
+      <header className="bg-primary text-primary-foreground p-3 sm:p-4 shadow-lg border-b border-border">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2 min-w-0 flex-shrink">
+            <WiseGoLogo size="sm" />
+            <span className="text-lg sm:text-xl font-bold font-title tracking-wide hidden xs:block">WiseGO!</span>
+          </div>
+          
+          <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+            <div className="hidden sm:block">
+              <LanguageSelector />
+            </div>
+            <div className="hidden sm:block">
+              <ThemeToggle />
+            </div>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="sm" className="text-primary-foreground hover:bg-primary-foreground/20 transition-all duration-200 hover:scale-105 h-8 w-8 p-0 sm:h-auto sm:w-auto sm:p-2">
+                  <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-80 bg-card border-l border-border shadow-2xl">
+                <div className="py-6 space-y-4">
+                  <div className="flex items-center space-x-3 pb-4 border-b border-border">
+                    <WiseGoLogo size="sm" />
+                    <span className="text-lg font-bold font-title text-primary">WiseGO!</span>
+                  </div>
+                  
+                  {/* Mobile-only Language and Theme selectors */}
+                  <div className="sm:hidden space-y-2 pb-4 border-b border-border">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm font-medium text-muted-foreground">Idioma:</span>
+                      <LanguageSelector />
                     </div>
-                    <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                ))}
-              </div>
-            </SheetContent>
-          </Sheet>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm font-medium text-muted-foreground">Tema:</span>
+                      <ThemeToggle />
+                    </div>
+                  </div>
+
+                  {menuItems.map((item, index) => (
+                    <Button
+                      key={index}
+                      variant="ghost"
+                      className="w-full justify-between text-left h-12 hover:bg-primary hover:text-primary-foreground transition-all duration-300 group"
+                      onClick={item.action}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <item.icon className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                        <span className="font-subtitle">{item.label}</span>
+                      </div>
+                      <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  ))}
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </header>
 
       {/* Search Bar */}
-      <div className="p-4 bg-muted/30 border-b border-border">
-        <div className="relative max-w-4xl mx-auto">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-          <Input
-            type="text"
-            placeholder={t.dashboard.searchPlaceholder}
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setShowSearchResults(e.target.value.length > 0);
-            }}
-            onFocus={() => setShowSearchResults(searchQuery.length > 0)}
-            className="pl-10 pr-44 bg-background border-border rounded-full text-foreground placeholder:text-muted-foreground focus:bg-background focus:border-primary transition-all duration-300"
-          />
-          
-          {/* Search Results Dropdown */}
-          {showSearchResults && hasResults && (
-            <Card className="absolute top-full left-0 right-44 mt-2 z-50 max-h-64 overflow-y-auto shadow-2xl border border-border/50">
-              <CardContent className="p-2">
-                {searchResults.map((result) => (
-                  <Button
-                    key={result.id}
-                    variant="ghost"
-                    className="w-full justify-start text-left h-auto p-3 hover:bg-muted transition-all duration-200"
-                    onClick={() => {
-                      result.action();
-                      setSearchQuery("");
-                      setShowSearchResults(false);
-                    }}
-                  >
-                    <div>
-                      <div className="font-medium font-subtitle">{result.title}</div>
-                      <div className="text-sm text-muted-foreground">{result.description}</div>
-                    </div>
-                  </Button>
-                ))}
-              </CardContent>
-            </Card>
-          )}
-
-          {showSearchResults && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                setSearchQuery("");
-                setShowSearchResults(false);
+      <div className="p-3 sm:p-4 bg-muted/30 border-b border-border">
+        <div className="space-y-3">
+          {/* Search Input */}
+          <div className="relative max-w-4xl mx-auto">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input
+              type="text"
+              placeholder={t.dashboard.searchPlaceholder}
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setShowSearchResults(e.target.value.length > 0);
               }}
-              className="absolute right-48 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 text-muted-foreground hover:text-foreground hover:bg-muted/50"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          )}
+              onFocus={() => setShowSearchResults(searchQuery.length > 0)}
+              className="pl-10 pr-4 bg-background border-border rounded-full text-foreground placeholder:text-muted-foreground focus:bg-background focus:border-primary transition-all duration-300"
+            />
+            
+            {/* Search Results Dropdown */}
+            {showSearchResults && hasResults && (
+              <Card className="absolute top-full left-0 right-0 mt-2 z-50 max-h-64 overflow-y-auto shadow-2xl border border-border/50">
+                <CardContent className="p-2">
+                  {searchResults.map((result) => (
+                    <Button
+                      key={result.id}
+                      variant="ghost"
+                      className="w-full justify-start text-left h-auto p-3 hover:bg-muted transition-all duration-200"
+                      onClick={() => {
+                        result.action();
+                        setSearchQuery("");
+                        setShowSearchResults(false);
+                      }}
+                    >
+                      <div>
+                        <div className="font-medium font-subtitle">{result.title}</div>
+                        <div className="text-sm text-muted-foreground">{result.description}</div>
+                      </div>
+                    </Button>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
 
-          {(user || isGuest) ? (
-            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-              <Button 
-                size="sm"
-                onClick={() => onNavigate("profile")}
-                className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-4 shadow-lg"
-              >
-                {isGuest ? "👤 Invitado" : (user?.user_metadata?.username || user?.email?.split('@')[0] || 'Usuario')} 👤
-              </Button>
-              <Button 
-                size="sm"
+            {showSearchResults && (
+              <Button
                 variant="ghost"
+                size="sm"
                 onClick={() => {
-                  if (isGuest) {
-                    signOut();
-                  } else {
-                    onLogout();
-                  }
+                  setSearchQuery("");
+                  setShowSearchResults(false);
                 }}
-                className="rounded-full px-3 text-muted-foreground hover:text-foreground hover:bg-muted border border-border"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 text-muted-foreground hover:text-foreground hover:bg-muted/50"
               >
-                <LogOut className="h-4 w-4" />
+                <X className="h-4 w-4" />
               </Button>
-            </div>
-          ) : (
-            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-              <Button 
-                size="sm"
-                variant="ghost"
-                onClick={() => onNavigate("login")}
-                 className="rounded-full px-3 text-muted-foreground hover:text-foreground hover:bg-muted border border-border"
-               >
-                 {t.nav.login}
-               </Button>
-               <Button 
-                 size="sm"
-                 onClick={() => onNavigate("register")}
-                 className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-3 shadow-lg"
-               >
-                 {t.nav.register}
-              </Button>
-            </div>
-          )}
+            )}
+          </div>
+
+          {/* User Actions - Separate row on mobile */}
+          <div className="flex justify-center">
+            {(user || isGuest) ? (
+              <div className="flex items-center space-x-2">
+                <Button 
+                  size="sm"
+                  onClick={() => onNavigate("profile")}
+                  className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-3 sm:px-4 shadow-lg text-xs sm:text-sm"
+                >
+                  <span className="hidden sm:inline">{isGuest ? "👤 Invitado" : (user?.user_metadata?.username || user?.email?.split('@')[0] || 'Usuario')} 👤</span>
+                  <span className="sm:hidden">👤 {isGuest ? "Invitado" : "Perfil"}</span>
+                </Button>
+                <Button 
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => {
+                    if (isGuest) {
+                      signOut();
+                    } else {
+                      onLogout();
+                    }
+                  }}
+                  className="rounded-full px-3 text-muted-foreground hover:text-foreground hover:bg-muted border border-border"
+                >
+                  <LogOut className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Button 
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => onNavigate("login")}
+                  className="rounded-full px-3 text-muted-foreground hover:text-foreground hover:bg-muted border border-border text-xs sm:text-sm"
+                >
+                  {t.nav.login}
+                </Button>
+                <Button 
+                  size="sm"
+                  onClick={() => onNavigate("register")}
+                  className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-3 shadow-lg text-xs sm:text-sm"
+                >
+                  {t.nav.register}
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
