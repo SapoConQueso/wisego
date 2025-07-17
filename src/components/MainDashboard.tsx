@@ -26,11 +26,33 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
   const t = getTranslation(currentLanguage);
 
   const menuItems = [
-    { icon: Info, label: t.nav.about, action: () => onNavigate("about") },
     { icon: BarChart3, label: t.nav.compare, action: () => onNavigate("compare") },
     { icon: MapPin, label: t.nav.map, action: () => onNavigate("map") },
     { icon: MessageSquare, label: t.nav.chatbots, action: () => onNavigate("chatbots") },
     { icon: Users, label: t.nav.community, action: () => onNavigate("community") },
+  ];
+
+  const partners = [
+    { 
+      name: "Karina Candia", 
+      image: "/lovable-uploads/bd38207e-462a-47e9-9a78-9edb4bbc277c.png"
+    },
+    { 
+      name: "Ramírez Gastón", 
+      image: "/lovable-uploads/4ef0a75d-219a-4c1a-b2dd-73b8eec2f8dc.png"
+    },
+    { 
+      name: "Gonzalo Begazo", 
+      image: "/lovable-uploads/e476cfa8-0dd8-4e88-9c36-f83b1d5714cd.png"
+    },
+    { 
+      name: "Score", 
+      image: "/lovable-uploads/40264dd2-1f59-4fcc-9a35-7a14fb8f1663.png"
+    },
+    { 
+      name: "SMMUN", 
+      image: "/lovable-uploads/46f3aab4-23b7-435c-ae4c-6246823af9db.png"
+    }
   ];
 
   return (
@@ -273,14 +295,6 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
                 >
                   {t.dashboard.announcementButton}
                 </Button>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => onNavigate("about")}
-                  className="rounded-full text-muted-foreground hover:bg-muted border border-border font-subtitle"
-                >
-                  {t.dashboard.moreInfo}
-                </Button>
               </div>
             </div>
           </div>
@@ -300,6 +314,64 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
                 <item.icon className="h-6 w-6 sm:h-8 sm:w-8 text-foreground group-hover:text-accent transition-colors" />
                 <span className="text-xs sm:text-sm font-medium font-subtitle text-muted-foreground group-hover:text-foreground text-center leading-tight">{item.label}</span>
               </Button>
+            ))}
+          </div>
+        </div>
+
+        {/* ¿Por qué elegir WiseGo? */}
+        <div className="bg-card border border-border rounded-2xl p-6 shadow-lg">
+          <h2 className="text-2xl sm:text-3xl font-bold font-title mb-6 text-center text-card-foreground">
+            ¿Por qué elegir <span className="text-accent">WiseGO!</span>?
+          </h2>
+          <p className="text-base text-muted-foreground leading-relaxed text-center max-w-4xl mx-auto">
+            {t.about.whyChooseText}
+          </p>
+        </div>
+
+        {/* Nuestra Visión */}
+        <div className="bg-primary text-primary-foreground rounded-2xl p-6 shadow-lg">
+          <h3 className="text-2xl sm:text-3xl font-bold font-title mb-6 text-center">NUESTRA VISIÓN</h3>
+          <p className="text-base leading-relaxed text-center max-w-4xl mx-auto">
+            Ser la plataforma líder en orientación educativa impulsada por inteligencia artificial, 
+            revolucionando la forma en que los estudiantes descubren su potencial y toman decisiones 
+            sobre su futuro académico y profesional. Aspiramos a crear un mundo donde cada persona 
+            pueda encontrar su camino ideal hacia el éxito, eliminando las barreras de información 
+            y facilitando el acceso a oportunidades educativas de calidad.
+          </p>
+        </div>
+
+        {/* Nuestra Misión */}
+        <div className="bg-accent text-accent-foreground rounded-2xl p-6 shadow-lg">
+          <h3 className="text-2xl sm:text-3xl font-bold font-title mb-6 text-center">NUESTRA MISIÓN</h3>
+          <p className="text-base leading-relaxed text-center max-w-4xl mx-auto">
+            Empoderar a los estudiantes con herramientas inteligentes y personalizadas que les 
+            permitan tomar decisiones informadas sobre su educación superior. Utilizamos la 
+            inteligencia artificial de manera ética y responsable para analizar aptitudes, 
+            intereses y objetivos, ofreciendo recomendaciones precisas y actualizadas sobre 
+            carreras y universidades que se alineen con el perfil único de cada usuario.
+          </p>
+        </div>
+
+        {/* Nuestros Socios Clave */}
+        <div className="bg-card border border-border rounded-2xl p-6 shadow-lg">
+          <h3 className="text-2xl sm:text-3xl font-bold font-title mb-8 text-center text-card-foreground">
+            NUESTROS<br />
+            <span className="text-accent">SOCIOS CLAVE</span>
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            {partners.map((partner, index) => (
+              <div key={index} className="flex items-center space-x-4 bg-muted/30 rounded-xl p-4 border border-border hover:bg-muted/50 transition-all duration-300">
+                <div className="flex-shrink-0">
+                  <img 
+                    src={partner.image} 
+                    alt={partner.name}
+                    className="w-16 h-16 rounded-full object-cover border-2 border-border shadow-lg"
+                  />
+                </div>
+                <div className="flex-1">
+                  <p className="text-base font-medium font-subtitle text-card-foreground">{partner.name}</p>
+                </div>
+              </div>
             ))}
           </div>
         </div>

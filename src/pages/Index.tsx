@@ -3,7 +3,6 @@ import { BackgroundPattern } from "@/components/BackgroundPattern";
 import { LoginForm } from "@/components/LoginForm";
 import { RegisterForm } from "@/components/RegisterForm";
 import { MainDashboard } from "@/components/MainDashboard";
-import { AboutPage } from "@/components/AboutPage";
 import { ChatbotsPage } from "@/components/ChatbotsPage";
 import { VocationalTestPage } from "@/components/VocationalTestPage";
 import { AiChatPage } from "@/components/AiChatPage";
@@ -17,7 +16,7 @@ import { SecurityProvider } from "@/components/SecurityProvider";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Toaster } from "@/components/ui/sonner";
 
-type ViewType = "login" | "register" | "dashboard" | "about" | "chatbots" | "vocational-test" | "ai-chat" | "compare" | "map" | "profile" | "community" | "university-tour";
+type ViewType = "login" | "register" | "dashboard" | "chatbots" | "vocational-test" | "ai-chat" | "compare" | "map" | "profile" | "community" | "university-tour";
 
 function AppContent() {
   const [currentView, setCurrentView] = useState<ViewType>("dashboard");
@@ -73,8 +72,6 @@ function AppContent() {
           }}
         />;
       
-      case "about":
-        return <AboutPage onBack={() => setCurrentView("dashboard")} />;
       
       case "chatbots":
         return <ChatbotsPage onNavigate={(view) => setCurrentView(view as ViewType)} />;
