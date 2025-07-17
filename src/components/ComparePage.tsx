@@ -191,25 +191,23 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
   };
 
   const getRadarData = () => {
-    // Etiquetas ultra-cortas para móvil
+    // Etiquetas optimizadas para móvil - más legibles que letras sueltas
     const criteria = [
-      { attribute: 'Dificultad', shortLabel: 'Dific.', mobileLabel: 'D', key: 'difficulty' },
-      { attribute: 'Oportunidades', shortLabel: 'Empleo', mobileLabel: 'E', key: 'jobOpportunities' },
-      { attribute: 'Salario', shortLabel: 'Salario', mobileLabel: 'S', key: 'salaryRange' },
-      { attribute: 'Balance', shortLabel: 'Balance', mobileLabel: 'B', key: 'workLifeBalance' },
-      { attribute: 'Prestigio', shortLabel: 'Prestig.', mobileLabel: 'P', key: 'prestige' },
-      { attribute: 'Innovación', shortLabel: 'Innov.', mobileLabel: 'I', key: 'innovation' },
-      { attribute: 'Estabilidad', shortLabel: 'Estab.', mobileLabel: 'Es', key: 'stability' },
-      { attribute: 'Impacto', shortLabel: 'Impacto', mobileLabel: 'Im', key: 'socialImpact' },
-      { attribute: 'Crecimiento', shortLabel: 'Crec.', mobileLabel: 'C', key: 'growth' },
-      { attribute: 'Flexibilidad', shortLabel: 'Flex.', mobileLabel: 'F', key: 'flexibility' }
+      { attribute: 'Dificultad', shortLabel: 'Dific.', key: 'difficulty' },
+      { attribute: 'Oportunidades', shortLabel: 'Empleo', key: 'jobOpportunities' },
+      { attribute: 'Salario', shortLabel: 'Salario', key: 'salaryRange' },
+      { attribute: 'Balance', shortLabel: 'Balance', key: 'workLifeBalance' },
+      { attribute: 'Prestigio', shortLabel: 'Prestig.', key: 'prestige' },
+      { attribute: 'Innovación', shortLabel: 'Innov.', key: 'innovation' },
+      { attribute: 'Estabilidad', shortLabel: 'Estab.', key: 'stability' },
+      { attribute: 'Impacto', shortLabel: 'Impacto', key: 'socialImpact' },
+      { attribute: 'Crecimiento', shortLabel: 'Crec.', key: 'growth' },
+      { attribute: 'Flexibilidad', shortLabel: 'Flex.', key: 'flexibility' }
     ];
-
-    const isMobile = window.innerWidth < 640;
     
     return criteria.map(criterion => {
       const dataPoint: any = { 
-        attribute: isMobile ? criterion.mobileLabel : criterion.shortLabel,
+        attribute: criterion.shortLabel,
         fullName: criterion.attribute 
       };
       selectedCareers.forEach((career, index) => {
@@ -317,16 +315,16 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
                       </div>
                       
                       {/* Mobile-Optimized Chart Container */}
-                      <div className="h-[400px] sm:h-[450px] lg:h-[550px] w-full">
+                      <div className="h-[450px] sm:h-[500px] lg:h-[550px] w-full">
                         <ChartContainer config={chartConfig}>
                           <ResponsiveContainer width="100%" height="100%">
                             <RadarChart 
                               data={getRadarData()}
                               margin={{ 
-                                top: 60, 
-                                right: 100, 
-                                bottom: 60, 
-                                left: 100 
+                                top: 80, 
+                                right: 110, 
+                                bottom: 80, 
+                                left: 110 
                               }}
                             >
                               <PolarGrid 
@@ -339,7 +337,7 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
                                 dataKey="attribute" 
                                 tick={{ 
                                   fill: "hsl(var(--foreground))",
-                                  fontSize: window.innerWidth < 640 ? 10 : 12, 
+                                  fontSize: window.innerWidth < 640 ? 11 : 12, 
                                   fontWeight: 600,
                                   textAnchor: "middle"
                                 }}
@@ -384,22 +382,6 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
                             </RadarChart>
                           </ResponsiveContainer>
                         </ChartContainer>
-                      </div>
-                      
-                      {/* Mobile Legend - Show full names below chart */}
-                      <div className="block sm:hidden mt-4 p-3 bg-muted/30 rounded text-xs">
-                        <div className="grid grid-cols-2 gap-2 text-center font-medium">
-                          <div>D = Dificultad</div>
-                          <div>E = Empleo</div>
-                          <div>S = Salario</div>
-                          <div>B = Balance</div>
-                          <div>P = Prestigio</div>
-                          <div>I = Innovación</div>
-                          <div>Es = Estabilidad</div>
-                          <div>Im = Impacto</div>
-                          <div>C = Crecimiento</div>
-                          <div>F = Flexibilidad</div>
-                        </div>
                       </div>
                       
                       {/* Chart Instructions */}
