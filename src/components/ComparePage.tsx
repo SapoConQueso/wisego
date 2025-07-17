@@ -315,16 +315,16 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
                       </div>
                       
                       {/* Mobile-Optimized Chart Container */}
-                      <div className="h-[450px] sm:h-[500px] lg:h-[550px] w-full">
+                      <div className="h-[600px] sm:h-[500px] lg:h-[550px] w-full">
                         <ChartContainer config={chartConfig}>
                           <ResponsiveContainer width="100%" height="100%">
                             <RadarChart 
                               data={getRadarData()}
                               margin={{ 
-                                top: 80, 
-                                right: 110, 
-                                bottom: 80, 
-                                left: 110 
+                                top: window.innerWidth < 640 ? 120 : 80, 
+                                right: window.innerWidth < 640 ? 140 : 110, 
+                                bottom: window.innerWidth < 640 ? 120 : 80, 
+                                left: window.innerWidth < 640 ? 140 : 110 
                               }}
                             >
                               <PolarGrid 
@@ -337,7 +337,7 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
                                 dataKey="attribute" 
                                 tick={{ 
                                   fill: "hsl(var(--foreground))",
-                                  fontSize: window.innerWidth < 640 ? 11 : 12, 
+                                  fontSize: window.innerWidth < 640 ? 14 : 12, 
                                   fontWeight: 600,
                                   textAnchor: "middle"
                                 }}
@@ -348,7 +348,7 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
                                 domain={[0, 10]} 
                                 tick={{ 
                                   fill: "hsl(var(--muted-foreground))",
-                                  fontSize: 9 
+                                  fontSize: window.innerWidth < 640 ? 11 : 9
                                 }}
                                 tickCount={6}
                                 axisLine={false}
@@ -361,9 +361,9 @@ export function ComparePage({ onNavigate }: ComparePageProps) {
                                   stroke={chartConfig[`career${index}` as keyof typeof chartConfig]?.color}
                                   fill={chartConfig[`career${index}` as keyof typeof chartConfig]?.color}
                                   fillOpacity={0.08}
-                                  strokeWidth={3}
+                                  strokeWidth={window.innerWidth < 640 ? 4 : 3}
                                   dot={{ 
-                                    r: 5, 
+                                    r: window.innerWidth < 640 ? 6 : 5, 
                                     strokeWidth: 2,
                                     fill: chartConfig[`career${index}` as keyof typeof chartConfig]?.color,
                                     stroke: "hsl(var(--background))"
