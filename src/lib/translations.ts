@@ -49,9 +49,16 @@ export interface Translations {
     virtualTour: string;
     premiumTitle: string;
     premiumDescription: string;
+    premiumButton: string;
     subscribe: string;
     premiumFeature: string;
     premiumMessage: string;
+    mapTitle: string;
+    mapSubtitle: string;
+    universityLocations: string;
+    findLocation: string;
+    typeLabel: string;
+    districtLabel: string;
   };
 
   // About Page
@@ -308,11 +315,18 @@ export const translations: Record<Language, Translations> = {
       viewDetails: 'Ver detalles',
       viewInside: 'Ver por dentro',
       virtualTour: 'Tour virtual',
-      premiumTitle: '¡Desbloquea Funciones Premium!',
-      premiumDescription: 'Tours virtuales 3D y mapas interactivos por S/25/mes',
+      premiumTitle: '¡Desbloquea todas las funciones premium!',
+      premiumDescription: 'Accede a rutas optimizadas, comparaciones avanzadas y más información detallada',
+      premiumButton: 'Obtener Premium',
       subscribe: 'Suscribirse',
       premiumFeature: 'Funcionalidad Premium',
-      premiumMessage: 'está disponible solo para usuarios Premium. ¡Suscríbete por S/25 al mes!'
+      premiumMessage: 'está disponible solo para usuarios Premium. ¡Suscríbete por S/25 al mes!',
+      mapTitle: 'Explora Universidades Cerca de Ti',
+      mapSubtitle: 'Descubre las mejores opciones académicas en tu zona',
+      universityLocations: 'Ubicaciones de Universidades',
+      findLocation: 'Encuentra la ubicación exacta de cada universidad en Google Maps',
+      typeLabel: 'Tipo',
+      districtLabel: 'Distrito'
     },
     about: {
       title: 'Conócenos',
@@ -549,11 +563,18 @@ export const translations: Record<Language, Translations> = {
       viewDetails: 'View details',
       viewInside: 'View inside',
       virtualTour: 'Virtual tour',
-      premiumTitle: 'Unlock Premium Features!',
-      premiumDescription: '3D virtual tours and interactive maps for S/25/month',
+      premiumTitle: 'Unlock all premium features!',
+      premiumDescription: 'Access optimized routes, advanced comparisons and more detailed information',
+      premiumButton: 'Get Premium',
       subscribe: 'Subscribe',
       premiumFeature: 'Premium Feature',
-      premiumMessage: 'is available only for Premium users. Subscribe for S/25 per month!'
+      premiumMessage: 'is available only for Premium users. Subscribe for S/25 per month!',
+      mapTitle: 'Explore Universities Near You',
+      mapSubtitle: 'Discover the best academic options in your area',
+      universityLocations: 'University Locations',
+      findLocation: 'Find the exact location of each university on Google Maps',
+      typeLabel: 'Type',
+      districtLabel: 'District'
     },
     about: {
       title: 'About Us',
@@ -790,11 +811,18 @@ export const translations: Record<Language, Translations> = {
       viewDetails: 'Willaykunata qaway',
       viewInside: 'Ukhupi qaway',
       virtualTour: 'Virtual puriy',
-      premiumTitle: '¡Premium ruwaykunata kichay!',
-      premiumDescription: '3D virtual puriy hinaspa purichiy mapakuna S/25/killapi',
+      premiumTitle: '¡Tukuy allin ruwaykunata kicharinapaq!',
+      premiumDescription: 'Allin ñankunaman, ñawpaq tupachaykunaman hinaspa aswan willanaman haykuy',
+      premiumButton: 'Premium tarinapaq',
       subscribe: 'Qullqichay',
       premiumFeature: 'Premium Ruway',
-      premiumMessage: 'Premium ruwaqkunapaqlla kanqa. ¡S/25 killapi qullqichay!'
+      premiumMessage: 'Premium ruwaqkunapaqlla kanqa. ¡S/25 killapi qullqichay!',
+      mapTitle: 'Qayllaykipi Yachaywasikunata Maskay',
+      mapSubtitle: 'Llaqtaykipi aswan allin yachana akllaykunata tarinayki',
+      universityLocations: 'Yachaywasikunap Maypi Kanana',
+      findLocation: 'Sapa yachaywasikunaq chiqaq maypi kasqanta Google Maps nisqapi tarinayki',
+      typeLabel: 'Rikch\'ay',
+      districtLabel: 'Distrito'
     },
     about: {
       title: 'Ñuqayku',
@@ -1031,11 +1059,18 @@ export const translations: Record<Language, Translations> = {
       viewDetails: 'Yatiyawinaka uñjaña',
       viewInside: 'Manqhankiri uñjaña',
       virtualTour: 'Virtual sarnaqaña',
-      premiumTitle: '¡Premium lurawinaka jistantaña!',
-      premiumDescription: '3D virtual sarnaqañanaka ukhamarak uñtayiri mapanaka S/25/phaxsipi',
+      premiumTitle: '¡Taqi allin lurawinaka jist\'antaña!',
+      premiumDescription: 'Allin thakhinakaru, nayra uñtayirinakaru ukhamarak juk\'a yatiyawinakaru mantañäni',
+      premiumButton: 'Premium churaña',
       subscribe: 'Phusiri',
       premiumFeature: 'Premium Luraña',
-      premiumMessage: 'Premium apnaqirinakatakiw utji. ¡S/25 phaxsipi phusiri!'
+      premiumMessage: 'Premium apnaqirinakatakiw utji. ¡S/25 phaxsipi phusiri!',
+      mapTitle: 'Jakañ chiqanxi Yatiñ Utanakxa Thaqhaña',
+      mapSubtitle: 'Jak suma yatiña ajllayawinaka kunjamsa jikxataña',
+      universityLocations: 'Yatiñ Utanakan Kuna Chiqani',
+      findLocation: 'Sapa yatiñ utanakan chiqapa kuna chiqansa Google Maps uka tuqina jikxataña',
+      typeLabel: 'Kuna laya',
+      districtLabel: 'Distrito'
     },
     about: {
       title: 'Jiwasanaka',

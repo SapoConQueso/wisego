@@ -153,20 +153,20 @@ export function MapPage({ onNavigate }: MapPageProps) {
         {/* Premium Banner */}
         {!isPremium && (
           <div className="max-w-6xl mx-auto">
-            <Card className="bg-gradient-to-r from-accent/10 to-primary/10 border-accent/20">
-              <CardContent className="p-4">
+            <Card className="bg-gradient-to-r from-accent/10 to-primary/10 border-accent/20 shadow-lg">
+              <CardContent className="p-6">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <Crown className="h-6 w-6 text-accent" />
+                  <div className="flex items-center space-x-4">
+                    <Crown className="h-8 w-8 text-accent" />
                     <div>
-                      <h3 className="font-bold text-lg">¡Desbloquea todas las funciones premium!</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Accede a rutas optimizadas, comparaciones avanzadas y más información detallada
+                      <h3 className="font-bold text-xl text-card-foreground">{t.map.premiumTitle}</h3>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {t.map.premiumDescription}
                       </p>
                     </div>
                   </div>
-                  <Button className="bg-accent text-accent-foreground hover:bg-accent/90">
-                    Obtener Premium
+                  <Button className="bg-accent text-accent-foreground hover:bg-accent/90 px-6 py-3 text-lg font-semibold rounded-xl shadow-lg">
+                    {t.map.premiumButton}
                   </Button>
                 </div>
               </CardContent>
@@ -191,7 +191,7 @@ export function MapPage({ onNavigate }: MapPageProps) {
             <div className="flex gap-2">
               <Select value={typeFilter} onValueChange={setTypeFilter}>
                 <SelectTrigger className="w-40">
-                  <SelectValue placeholder="Tipo" />
+                  <SelectValue placeholder={t.map.typeLabel} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{t.map.allTypes}</SelectItem>
@@ -202,7 +202,7 @@ export function MapPage({ onNavigate }: MapPageProps) {
 
               <Select value={districtFilter} onValueChange={setDistrictFilter}>
                 <SelectTrigger className="w-40">
-                  <SelectValue placeholder="Distrito" />
+                  <SelectValue placeholder={t.map.districtLabel} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{t.map.allDistricts}</SelectItem>
@@ -217,10 +217,37 @@ export function MapPage({ onNavigate }: MapPageProps) {
           </div>
         </div>
 
+        {/* Hero Section for Map */}
+        <div className="max-w-6xl mx-auto text-center mb-8">
+          <div className="bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 rounded-2xl p-8 border border-border shadow-lg">
+            <h1 className="text-3xl sm:text-4xl font-bold font-title mb-4 text-card-foreground">
+              {t.map.mapTitle}
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              {t.map.mapSubtitle}
+            </p>
+          </div>
+        </div>
+
         {/* Interactive Map */}
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl font-bold mb-4 text-center">{t.map.interactiveMap}</h2>
-          <MapComponent />
+        <div className="max-w-6xl mx-auto mb-8">
+          <div className="bg-card border border-border rounded-2xl p-6 shadow-lg">
+            <h2 className="text-2xl font-bold mb-6 text-center text-card-foreground">{t.map.interactiveMap}</h2>
+            <MapComponent />
+          </div>
+        </div>
+
+        {/* University Locations Section */}
+        <div className="max-w-6xl mx-auto mb-8">
+          <div className="bg-card border border-border rounded-2xl p-6 shadow-lg">
+            <div className="flex items-center space-x-3 mb-4">
+              <MapPin className="h-6 w-6 text-primary" />
+              <h2 className="text-2xl font-bold text-card-foreground">{t.map.universityLocations}</h2>
+            </div>
+            <p className="text-muted-foreground">
+              {t.map.findLocation}
+            </p>
+          </div>
         </div>
 
         {/* Universities List */}
