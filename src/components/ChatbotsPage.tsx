@@ -113,44 +113,75 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
         PERSONALITIES[selectedBot] + "\n" +
         newHistory.map(m => `${m.role==="user"?"Usuario":"Asistente"}: ${m.text}`).join("\n");
 
+      console.log("Enviando prompt a la API:", fullPrompt);
+
       // conectar SSE
       const resp = await fetch("http://zaylar.com:12506/agent", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "text/event-stream"
+        },
         body: JSON.stringify({ prompt: fullPrompt })
       });
 
+      console.log("Respuesta de la API:", resp.status, resp.statusText);
+
       if (!resp.ok) {
-        throw new Error(`HTTP error! status: ${resp.status}`);
+        throw new Error(`HTTP error! status: ${resp.status} - ${resp.statusText}`);
       }
 
       const reader = resp.body!.getReader();
       const decoder = new TextDecoder();
       let assistantText = "";
+      let hasAddedAssistantMessage = false;
 
       // leer stream
       while (true) {
         const { value, done } = await reader.read();
         if (done) break;
         const chunk = decoder.decode(value, { stream: true });
+        
         // cada evento separado por doble salto
         chunk.split("\n\n").forEach(line => {
           if (!line.startsWith("data:")) return;
           try {
             const evt = JSON.parse(line.replace("data:", "").trim());
+            console.log("Evento SSE recibido:", evt);
+            
             // actualizar estado legible
             const txt = STATUS_TEXT[evt.status]?.(evt.message) ?? "";
             setStatusText(txt);
 
-            if (evt.status === "done") {
+            // Manejar respuesta incremental
+            if (evt.response && evt.response.trim()) {
               assistantText += evt.response;
-              const updated = [...newHistory, { role: "assistant", text: assistantText }];
-              setChatHistory(updated);
-              saveHistory(updated);
+              console.log("Texto del asistente actualizado:", assistantText);
+              
+              // Agregar o actualizar el mensaje del asistente
+              if (!hasAddedAssistantMessage) {
+                const updated = [...newHistory, { role: "assistant", text: assistantText }];
+                setChatHistory(updated);
+                hasAddedAssistantMessage = true;
+              } else {
+                // Actualizar el último mensaje del asistente
+                setChatHistory(prev => {
+                  const updated = [...prev];
+                  updated[updated.length - 1] = { role: "assistant", text: assistantText };
+                  return updated;
+                });
+              }
+            }
+
+            if (evt.status === "done") {
+              console.log("Streaming completado. Texto final:", assistantText);
+              // Guardar historial final
+              const finalHistory = [...newHistory, { role: "assistant", text: assistantText }];
+              saveHistory(finalHistory);
               setStatusText("");
             }
           } catch (e) {
-            console.error("Error parsing SSE event:", e);
+            console.error("Error parsing SSE event:", e, "Line:", line);
           }
         });
       }
