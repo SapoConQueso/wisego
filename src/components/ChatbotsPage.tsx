@@ -94,7 +94,7 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
     const text = inputRef.current?.value.trim();
     if (!text || !selectedBot) return;
     // añadir usuario
-    const newHistory = [...chatHistory, { role: "user", text }];
+    const newHistory = [...chatHistory, { role: "user" as const, text }];
     setChatHistory(newHistory);
     saveHistory(newHistory);
     inputRef.current!.value = "";
@@ -130,7 +130,7 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
 
           if (evt.status === "done") {
             assistantText += evt.response;
-            const updated = [...newHistory, { role: "assistant", text: assistantText }];
+            const updated = [...newHistory, { role: "assistant" as const, text: assistantText }];
             setChatHistory(updated);
             saveHistory(updated);
             setStatusText("");

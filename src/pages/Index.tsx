@@ -16,7 +16,7 @@ import { SecurityProvider } from "@/components/SecurityProvider";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Toaster } from "@/components/ui/sonner";
 
-type ViewType = "login" | "register" | "dashboard" | "chatbots" | "vocational-test" | "ai-chat" | "compare" | "map" | "profile" | "community" | "university-tour";
+type ViewType = "login" | "register" | "dashboard" | "chatbots" | "vocational-test" | "ai-chat" | "compare" | "map" | "profile" | "community" | "university-tour" | "scholarship-guide" | "mentor-match" | "cost-simulator" | "culture-fit";
 
 function AppContent() {
   const [currentView, setCurrentView] = useState<ViewType>("dashboard");

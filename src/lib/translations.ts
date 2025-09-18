@@ -283,6 +283,103 @@ export interface Translations {
     dark: string;
     toggle: string;
   };
+
+  // Nueva funcionalidades
+  scholarshipGuide: {
+    title: string;
+    subtitle: string;
+    steps: string;
+    documents: string;
+    requirements: string;
+    dates: string;
+    checklist: string;
+    step1Title: string;
+    step1Desc: string;
+    step2Title: string;
+    step2Desc: string;
+    step3Title: string;
+    step3Desc: string;
+    step4Title: string;
+    step4Desc: string;
+    documentsNeeded: string;
+    academicRecord: string;
+    identityDoc: string;
+    incomeProof: string;
+    personalStatement: string;
+    recommendationLetters: string;
+    deadlines: string;
+    nationalScholarships: string;
+    privateScholarships: string;
+    universityScholarships: string;
+  };
+
+  mentorMatch: {
+    title: string;
+    subtitle: string;
+    findMentor: string;
+    mentorDirectory: string;
+    requestSession: string;
+    videoCall: string;
+    chat: string;
+    matchmaking: string;
+    points: string;
+    verified: string;
+    available: string;
+    career: string;
+    university: string;
+    experience: string;
+    rating: string;
+    selectMentor: string;
+    sessionTypes: string;
+    quickChat: string;
+    videoSession: string;
+    noMentors: string;
+  };
+
+  costSimulator: {
+    title: string;
+    subtitle: string;
+    selectUniversity: string;
+    selectCareer: string;
+    duration: string;
+    calculate: string;
+    results: string;
+    tuition: string;
+    monthly: string;
+    totalCost: string;
+    years: string;
+    semesters: string;
+    estimated: string;
+    breakdown: string;
+    registration: string;
+    materials: string;
+    livingCosts: string;
+  };
+
+  cultureFit: {
+    title: string;
+    subtitle: string;
+    startTest: string;
+    question1: string;
+    question2: string;
+    question3: string;
+    question4: string;
+    question5: string;
+    question6: string;
+    competitive: string;
+    collaborative: string;
+    clubs: string;
+    studyOnly: string;
+    largeCampus: string;
+    smallCampus: string;
+    diversity: string;
+    tradition: string;
+    results: string;
+    compatibility: string;
+    topMatches: string;
+    whyMatch: string;
+    retakeTest: string;
+  };
 }
 
 export const translations: Record<Language, Translations> = {
@@ -545,8 +642,103 @@ export const translations: Record<Language, Translations> = {
       light: 'Modo Claro',
       dark: 'Modo Oscuro',
       toggle: 'Cambiar Tema'
-    }
-  },
+    },
+    scholarshipGuide: {
+        title: 'Guía de Postulación',
+        subtitle: 'Pasos simples para aplicar a becas exitosamente',
+        steps: 'Pasos del Proceso',
+        documents: 'Documentos Requeridos',
+        requirements: 'Requisitos',
+        dates: 'Fechas Importantes',
+        checklist: 'Lista de Verificación',
+        step1Title: '1. Investigación',
+        step1Desc: 'Identifica las becas disponibles que se alineen con tu perfil académico',
+        step2Title: '2. Preparación',
+        step2Desc: 'Reúne todos los documentos requeridos con anticipación',
+        step3Title: '3. Aplicación',
+        step3Desc: 'Completa la solicitud siguiendo todas las instrucciones',
+        step4Title: '4. Seguimiento',
+        step4Desc: 'Mantente atento a las fechas de respuesta y resultados',
+        documentsNeeded: 'Documentos Necesarios',
+        academicRecord: 'Certificado de estudios',
+        identityDoc: 'Documento de identidad',
+        incomeProof: 'Declaración de ingresos familiares',
+        personalStatement: 'Carta de motivación',
+        recommendationLetters: 'Cartas de recomendación',
+        deadlines: 'Fechas Límite',
+        nationalScholarships: 'Becas Nacionales: Marzo - Mayo',
+        privateScholarships: 'Becas Privadas: Durante todo el año',
+        universityScholarships: 'Becas Universitarias: Febrero - Abril'
+      },
+
+      mentorMatch: {
+        title: 'Mentor Match',
+        subtitle: 'Conecta con estudiantes y egresados de universidades',
+        findMentor: 'Encontrar Mentor',
+        mentorDirectory: 'Directorio de Mentores',
+        requestSession: 'Solicitar Sesión',
+        videoCall: 'Videollamada',
+        chat: 'Chat',
+        matchmaking: 'Matching Automático',
+        points: 'Puntos',
+        verified: 'Verificado',
+        available: 'Disponible',
+        career: 'Carrera',
+        university: 'Universidad',
+        experience: 'Experiencia',
+        rating: 'Calificación',
+        selectMentor: 'Seleccionar Mentor',
+        sessionTypes: 'Tipos de Sesión',
+        quickChat: 'Chat Rápido (15 min)',
+        videoSession: 'Sesión de Video (30 min)',
+        noMentors: 'No hay mentores disponibles para esta búsqueda'
+      },
+
+      costSimulator: {
+        title: 'Simulador de Costos',
+        subtitle: 'Calcula el costo total de tu carrera universitaria',
+        selectUniversity: 'Selecciona Universidad',
+        selectCareer: 'Selecciona Carrera',
+        duration: 'Duración de estudios',
+        calculate: 'Calcular',
+        results: 'Resultados',
+        tuition: 'Matrícula',
+        monthly: 'Mensualidad',
+        totalCost: 'Costo Total',
+        years: 'años',
+        semesters: 'semestres',
+        estimated: 'Estimación',
+        breakdown: 'Desglose de Costos',
+        registration: 'Matrícula anual',
+        materials: 'Materiales y libros',
+        livingCosts: 'Gastos de vida (opcional)'
+      },
+
+      cultureFit: {
+        title: 'Culture Fit Check',
+        subtitle: 'Descubre qué universidades se alinean mejor con tu personalidad',
+        startTest: 'Iniciar Test',
+        question1: '¿Prefieres un ambiente competitivo o colaborativo?',
+        question2: '¿Te gusta participar en clubs estudiantiles?',
+        question3: '¿Prefieres campus grandes o pequeños?',
+        question4: '¿Buscas diversidad cultural o tradición académica?',
+        question5: '¿Cómo prefieres estudiar principalmente?',
+        question6: '¿Qué tipo de actividades extracurriculares prefieres?',
+        competitive: 'Competitivo',
+        collaborative: 'Colaborativo',
+        clubs: 'Sí, me encantan',
+        studyOnly: 'Prefiero solo estudiar',
+        largeCampus: 'Grandes',
+        smallCampus: 'Pequeños e íntimos',
+        diversity: 'Diversidad cultural',
+        tradition: 'Tradición académica',
+        results: 'Tus Resultados',
+        compatibility: 'Compatibilidad Cultural',
+        topMatches: 'Top 3 Universidades para Ti',
+        whyMatch: '¿Por qué es un buen match?',
+        retakeTest: 'Volver a hacer el test'
+      }
+    },
   en: {
     nav: {
       about: 'About Us',
@@ -806,6 +998,102 @@ export const translations: Record<Language, Translations> = {
       light: 'Light Mode',
       dark: 'Dark Mode',
       toggle: 'Toggle Theme'
+    },
+
+    scholarshipGuide: {
+      title: 'Application Guide',
+      subtitle: 'Simple steps to apply for scholarships successfully',
+      steps: 'Process Steps',
+      documents: 'Required Documents',
+      requirements: 'Requirements',
+      dates: 'Important Dates',
+      checklist: 'Checklist',
+      step1Title: '1. Research',
+      step1Desc: 'Identify available scholarships that align with your academic profile',
+      step2Title: '2. Preparation',
+      step2Desc: 'Gather all required documents in advance',
+      step3Title: '3. Application',
+      step3Desc: 'Complete the application following all instructions',
+      step4Title: '4. Follow-up',
+      step4Desc: 'Stay alert for response dates and results',
+      documentsNeeded: 'Required Documents',
+      academicRecord: 'Academic transcripts',
+      identityDoc: 'Identity document',
+      incomeProof: 'Family income statement',
+      personalStatement: 'Motivation letter',
+      recommendationLetters: 'Recommendation letters',
+      deadlines: 'Deadlines',
+      nationalScholarships: 'National Scholarships: March - May',
+      privateScholarships: 'Private Scholarships: Year-round',
+      universityScholarships: 'University Scholarships: February - April'
+    },
+
+    mentorMatch: {
+      title: 'Mentor Match',
+      subtitle: 'Connect with current students and university graduates',
+      findMentor: 'Find Mentor',
+      mentorDirectory: 'Mentor Directory',
+      requestSession: 'Request Session',
+      videoCall: 'Video Call',
+      chat: 'Chat',
+      matchmaking: 'Automatic Matching',
+      points: 'Points',
+      verified: 'Verified',
+      available: 'Available',
+      career: 'Career',
+      university: 'University',
+      experience: 'Experience',
+      rating: 'Rating',
+      selectMentor: 'Select Mentor',
+      sessionTypes: 'Session Types',
+      quickChat: 'Quick Chat (15 min)',
+      videoSession: 'Video Session (30 min)',
+      noMentors: 'No mentors available for this search'
+    },
+
+    costSimulator: {
+      title: 'Cost Simulator',
+      subtitle: 'Calculate the total cost of your university career',
+      selectUniversity: 'Select University',
+      selectCareer: 'Select Career',
+      duration: 'Study duration',
+      calculate: 'Calculate',
+      results: 'Results',
+      tuition: 'Tuition',
+      monthly: 'Monthly fee',
+      totalCost: 'Total Cost',
+      years: 'years',
+      semesters: 'semesters',
+      estimated: 'Estimate',
+      breakdown: 'Cost Breakdown',
+      registration: 'Annual tuition',
+      materials: 'Materials and books',
+      livingCosts: 'Living expenses (optional)'
+    },
+
+    cultureFit: {
+      title: 'Culture Fit Check',
+      subtitle: 'Discover which universities best align with your personality',
+      startTest: 'Start Test',
+      question1: 'Do you prefer a competitive or collaborative environment?',
+      question2: 'Do you like participating in student clubs?',
+      question3: 'Do you prefer large or small campuses?',
+      question4: 'Are you looking for cultural diversity or academic tradition?',
+      question5: 'How do you prefer to study primarily?',
+      question6: 'What type of extracurricular activities do you prefer?',
+      competitive: 'Competitive',
+      collaborative: 'Collaborative',
+      clubs: 'Yes, I love them',
+      studyOnly: 'I prefer just studying',
+      largeCampus: 'Large',
+      smallCampus: 'Small and intimate',
+      diversity: 'Cultural diversity',
+      tradition: 'Academic tradition',
+      results: 'Your Results',
+      compatibility: 'Cultural Compatibility',
+      topMatches: 'Top 3 Universities for You',
+      whyMatch: 'Why is it a good match?',
+      retakeTest: 'Retake the test'
     }
   },
   qu: {
@@ -1067,6 +1355,102 @@ export const translations: Record<Language, Translations> = {
       light: 'Kanchay Modo',
       dark: 'Tutayaq Modo',
       toggle: 'Tema Tikray'
+    },
+
+    scholarshipGuide: {
+      title: 'Postulakuy Pusana',
+      subtitle: 'Facil kaq ruraykunaq beca-kuna postulakuypaq',
+      steps: 'Ruray Ruraykunas',
+      documents: 'Munasqa Qillqakunas',
+      requirements: 'Requisito-kuna',
+      dates: 'Hatun P\'unchaykunas',
+      checklist: 'Qhaway Lista',
+      step1Title: '1. Maskay',
+      step1Desc: 'Beca-kuna kaqkunata riqsiy yachana perfil-niki hina kasqanta',
+      step2Title: '2. Wakichay',
+      step2Desc: 'Tukuy munasqa qillqakunata ñawpaqmanta huñuy',
+      step3Title: '3. Postulakuy',
+      step3Desc: 'Postulakuyta hunt\'ay llapan yachachiykunata qatispa',
+      step4Title: '4. Qatiy',
+      step4Desc: 'Kutichiy p\'unchaykunamanq hinaspa ruwaykunamanqa rikchay',
+      documentsNeeded: 'Munasqa Qillqakunas',
+      academicRecord: 'Yachana certificado',
+      identityDoc: 'Riqsichiy qillqa',
+      incomeProof: 'Ayllu qullqinkunap declaración',
+      personalStatement: 'Munay qillqa',
+      recommendationLetters: 'Pusaq qillqakunas',
+      deadlines: 'Tukuy P\'unchaykuna',
+      nationalScholarships: 'Llaqta Beca-kuna: Marzo - Mayo',
+      privateScholarships: 'Sapaq Beca-kuna: Tukuy wata',
+      universityScholarships: 'Yachawasi Beca-kuna: Febrero - Abril'
+    },
+
+    mentorMatch: {
+      title: 'Mentor Tupay',
+      subtitle: 'Kunan yachakuqkunawan hinaspa yachawasi tukusqakunawan huñunakuy',
+      findMentor: 'Mentor Tarinapaq',
+      mentorDirectory: 'Mentor Suyu',
+      requestSession: 'Sesión Mañakuy',
+      videoCall: 'Video Waqyay',
+      chat: 'Rimanakuy',
+      matchmaking: 'Kikin Tupay',
+      points: 'Puntokunata',
+      verified: 'Takyachasqa',
+      available: 'Kachkan',
+      career: 'Llamkay',
+      university: 'Yachawasi',
+      experience: 'Yachay',
+      rating: 'Chanichay',
+      selectMentor: 'Mentor Akllay',
+      sessionTypes: 'Sesión Laya',
+      quickChat: 'Utqay Rimanakuy (15 min)',
+      videoSession: 'Video Sesión (30 min)',
+      noMentors: 'Manam mentor kanchu kay maskaymanqa'
+    },
+
+    costSimulator: {
+      title: 'Qullqi Yupaycha',
+      subtitle: 'Yachanayki tukuy qullqinta yupay',
+      selectUniversity: 'Yachawasi Akllay',
+      selectCareer: 'Llamkay Akllay',
+      duration: 'Yachana pachaw',
+      calculate: 'Yupay',
+      results: 'Ruwaykunas',
+      tuition: 'Qullqichay',
+      monthly: 'Killay',
+      totalCost: 'Tukuy Qullqi',
+      years: 'watakunas',
+      semesters: 'semestre-kuna',
+      estimated: 'Yupasqa',
+      breakdown: 'Qullqi T\'aqay',
+      registration: 'Wata matrícula',
+      materials: 'Materialkunata hinaspa liwru-kuna',
+      livingCosts: 'Kawsana gastokunas (akllana)'
+    },
+
+    cultureFit: {
+      title: 'Cultura Tupay Qhaway',
+      subtitle: 'Tariway mayqin yachaywasikunas aswan allinta tupanki',
+      startTest: 'Pruebaykita Qallariy',
+      question1: '¿Atipanakuy icha yanapanakuy pachama munanki?',
+      question2: '¿Yachakuq club-kunapichus gustanki?',
+      question3: '¿Hatun icha huch\'uy campus-kunatachus munanki?',
+      question4: '¿Imaymana cultura icha yachana tradición-tachu maskani?',
+      question5: '¿Imaynataq aswan yachayta munanki?',
+      question6: '¿Ima laya actividad extracurricular-kunataq munanki?',
+      competitive: 'Atipanakuy',
+      collaborative: 'Yanapanakuy',
+      clubs: 'Ari, munani',
+      studyOnly: 'Yachayllata munani',
+      largeCampus: 'Hatunkuna',
+      smallCampus: 'Huch\'uykuna hinaspa sumaqkuna',
+      diversity: 'Cultura imaymana kay',
+      tradition: 'Yachana tradición',
+      results: 'Ruwayniykikunas',
+      compatibility: 'Cultura Tupay',
+      topMatches: 'Kimsaq Aswan Allin Yachaywasikunas',
+      whyMatch: '¿Imarayku allin tupay?',
+      retakeTest: 'Kutillapas ruray pruebata'
     }
   },
   ay: {
@@ -1328,6 +1712,102 @@ export const translations: Record<Language, Translations> = {
       light: 'Qhanañ Modo',
       dark: 'Chʼamak Modo',
       toggle: 'Tema Mayjt\'aña'
+    },
+
+    scholarshipGuide: {
+      title: 'Postulañ Irptaña',
+      subtitle: 'Facil lurañanaka beca-kuna postulañataki',
+      steps: 'Luraña Lurañanaks',
+      documents: 'Munat Qillqanaks',
+      requirements: 'Requisitunaks',
+      dates: 'Jach\'a Urunakas',
+      checklist: 'Uñjañ Lista',
+      step1Title: '1. Thaqhaña',
+      step1Desc: 'Beca-kuna jilanaka yatiñ perfil-nikiamp katxaruxa riqsiña',
+      step2Title: '2. Wakichañ',
+      step2Desc: 'Taqi munat qillqakunata nayrat huñuña',
+      step3Title: '3. Postulañ',
+      step3Desc: 'Postulañaxa taqi yatichäwinaka arkaspa hunt\'aña',
+      step4Title: '4. Arktañ',
+      step4Desc: 'Kutichañ urunakapataki ukhamarak lurañanakapataki uñjañäni',
+      documentsNeeded: 'Munat Qillqanaks',
+      academicRecord: 'Yatiñ certificado',
+      identityDoc: 'Riqsichañ qillqa',
+      incomeProof: 'Familiat qullqi declaración',
+      personalStatement: 'Munañ qillqa',
+      recommendationLetters: 'Irptayañ qillqanaks',
+      deadlines: 'Tukuñ P\'unchaykunas',
+      nationalScholarships: 'Jacha Beca-naka: Marzo - Mayo',
+      privateScholarships: 'Sapäw Beca-naka: Taqi mara',
+      universityScholarships: 'Yatiñ uta Beca-naka: Febrero - Abril'
+    },
+
+    mentorMatch: {
+      title: 'Mentor Katxaña',
+      subtitle: 'Jichha yatiqirinakampi ukhamarak yatiñ uta tukuyatasinakamp chikancht\'asiña',
+      findMentor: 'Mentor Thaqhañataki',
+      mentorDirectory: 'Mentor Suyu',
+      requestSession: 'Sesión Mayiña',
+      videoCall: 'Video Jawsaña',
+      chat: 'Aruskipaña',
+      matchmaking: 'Kikipa Katxaña',
+      points: 'Puntunakas',
+      verified: 'Yaqhata',
+      available: 'Utji',
+      career: 'Luräwi',
+      university: 'Yatiñ uta',
+      experience: 'Yatiña',
+      rating: 'Chanichäña',
+      selectMentor: 'Mentor Ajlliña',
+      sessionTypes: 'Sesión Layanaks',
+      quickChat: 'Jank\'aki Aruskipaña (15 min)',
+      videoSession: 'Video Sesión (30 min)',
+      noMentors: 'Janiwa mentor utjkiti aka thaqhañaru'
+    },
+
+    costSimulator: {
+      title: 'Qullqi Jakthapiri',
+      subtitle: 'Yatiñaman taqi qullqi jakthäpiña',
+      selectUniversity: 'Yatiñ uta Ajlliña',
+      selectCareer: 'Luräwi Ajlliña',
+      duration: 'Yatiñ pachaw',
+      calculate: 'Jakthäpiña',
+      results: 'Lurañanaks',
+      tuition: 'Qullqichañ',
+      monthly: 'Phaxsi',
+      totalCost: 'Taqi Qullqi',
+      years: 'maranaks',
+      semesters: 'semestre-naka',
+      estimated: 'Jakthäpita',
+      breakdown: 'Qullqi Ch\'iqañä',
+      registration: 'Mara matrícula',
+      materials: 'Materialnaka ukhamarak liwru-naka',
+      livingCosts: 'Jakäñ gastukunas (ajlliñäwa)'
+    },
+
+    cultureFit: {
+      title: 'Cultura Katxaña Uñjañäni',
+      subtitle: 'Thaqhaña kuna yatiñ utanaka aswan suma katxañaxa',
+      startTest: 'Pruebaxa Qalltañäni',
+      question1: '¿Atipañakuña jan ukaxa yanapañakuña pachama munirita?',
+      question2: '¿Yatiqir club-kunanxa gustäta?',
+      question3: '¿Jach\'a jan ukaxa jisk\'a campus-kunata munirita?',
+      question4: '¿Kunayman cultura jan ukaxa yatiñ tradición thaqhta?',
+      question5: '¿Kunjamasa aswan yatiñaxa munirita?',
+      question6: '¿Kuna layar actividad extracurricularnaks munirita?',
+      competitive: 'Atipañakuña',
+      collaborative: 'Yanapañakuña',
+      clubs: 'Jïsa, munätha',
+      studyOnly: 'Yatiñallakiwa munaña',
+      largeCampus: 'Jach\'anaks',
+      smallCampus: 'Jisk\'anaka ukhamarak sumanaks',
+      diversity: 'Cultura kunayman kay',
+      tradition: 'Yatiñ tradición',
+      results: 'Lurañanakama',
+      compatibility: 'Cultura Katxaña',
+      topMatches: 'Kimsa Aswan Suma Yatiñ Utanaks',
+      whyMatch: '¿Kunarayku suma katxaña?',
+      retakeTest: 'Wasitat luraña pruebata'
     }
   }
 };
