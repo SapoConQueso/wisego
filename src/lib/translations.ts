@@ -8,6 +8,10 @@ export interface Translations {
     map: string;
     chatbots: string;
     community: string;
+    scholarshipGuide: string;
+    mentorMatch: string;
+    costSimulator: string;
+    cultureFit: string;
     profile: string;
     login: string;
     register: string;
@@ -390,6 +394,10 @@ export const translations: Record<Language, Translations> = {
       map: 'Mapa',
       chatbots: 'Chatbots',
       community: 'Comunidad',
+      scholarshipGuide: 'Guía de Becas',
+      mentorMatch: 'Mentor Match',
+      costSimulator: 'Simulador de Costos',
+      cultureFit: 'Culture Fit',
       profile: 'Perfil',
       login: 'Iniciar Sesión',
       register: 'Registrarse',
@@ -746,6 +754,10 @@ export const translations: Record<Language, Translations> = {
       map: 'Map',
       chatbots: 'Chatbots',
       community: 'Community',
+      scholarshipGuide: 'Scholarship Guide',
+      mentorMatch: 'Mentor Match',
+      costSimulator: 'Cost Simulator',
+      cultureFit: 'Culture Fit',
       profile: 'Profile',
       login: 'Sign In',
       register: 'Sign Up',
@@ -1103,6 +1115,10 @@ export const translations: Record<Language, Translations> = {
       map: 'Mapa',
       chatbots: 'Rimanakuq',
       community: 'Ayllu',
+      scholarshipGuide: 'Becakuna Pusaq',
+      mentorMatch: 'Yachachiq Tariy',
+      costSimulator: 'Chanin Yupay',
+      cultureFit: 'Kawsay Tupay',
       profile: 'Perfil',
       login: 'Yaykuy',
       register: 'Qillqakuy',
@@ -1460,6 +1476,10 @@ export const translations: Record<Language, Translations> = {
       map: 'Mapa',
       chatbots: 'Aruskipayiri',
       community: 'Marka',
+      scholarshipGuide: 'Becanakas Irpiri',
+      mentorMatch: 'Yatiñir Jikisiña',
+      costSimulator: 'Chanin Jakhuña',
+      cultureFit: 'Jakañas Uñjäwi',
       profile: 'Perfil',
       login: 'Mantañani',
       register: 'Qillqantañani',

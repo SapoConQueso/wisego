@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
 import { LanguageSelector } from "./LanguageSelector";
-import { Menu, Search, ChevronRight, Info, BarChart3, MapPin, MessageSquare, User, LogOut, Users, X, Crown } from "lucide-react";
+import { Menu, Search, ChevronRight, Info, BarChart3, MapPin, MessageSquare, User, LogOut, Users, X, Crown, FileText, UserCheck, Calculator, Heart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useSearch } from "@/hooks/useSearch";
@@ -30,6 +30,10 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
     { icon: MapPin, label: t.nav.map, action: () => onNavigate("map") },
     { icon: MessageSquare, label: t.nav.chatbots, action: () => onNavigate("chatbots") },
     { icon: Users, label: t.nav.community, action: () => onNavigate("community") },
+    { icon: FileText, label: t.nav.scholarshipGuide, action: () => onNavigate("scholarship-guide") },
+    { icon: UserCheck, label: t.nav.mentorMatch, action: () => onNavigate("mentor-match") },
+    { icon: Calculator, label: t.nav.costSimulator, action: () => onNavigate("cost-simulator") },
+    { icon: Heart, label: t.nav.cultureFit, action: () => onNavigate("culture-fit") },
   ];
 
   const partners = [

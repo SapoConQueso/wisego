@@ -11,6 +11,10 @@ import { MapPage } from "@/components/MapPageSimple";
 import { ProfilePage } from "@/components/ProfilePage";
 import { CommunityPage } from "@/components/CommunityPage";
 import { UniversityTourPage } from "@/components/UniversityTourPage";
+import { ScholarshipGuidePage } from "@/components/ScholarshipGuidePage";
+import { MentorMatchPage } from "@/components/MentorMatchPage";
+import { CostSimulatorPage } from "@/components/CostSimulatorPage";
+import { CultureFitPage } from "@/components/CultureFitPage";
 import { AuthProvider, useAuth } from "@/components/AuthProvider";
 import { SecurityProvider } from "@/components/SecurityProvider";
 import { LanguageProvider } from "@/contexts/LanguageContext";
@@ -108,6 +112,18 @@ function AppContent() {
       
       case "university-tour":
         return <UniversityTourPage onNavigate={(view) => setCurrentView(view as ViewType)} />;
+      
+      case "scholarship-guide":
+        return <ScholarshipGuidePage onNavigate={(view) => setCurrentView(view as ViewType)} />;
+      
+      case "mentor-match":
+        return <MentorMatchPage onNavigate={(view) => setCurrentView(view as ViewType)} />;
+      
+      case "cost-simulator":
+        return <CostSimulatorPage onNavigate={(view) => setCurrentView(view as ViewType)} />;
+      
+      case "culture-fit":
+        return <CultureFitPage onNavigate={(view) => setCurrentView(view as ViewType)} />;
       
       default:
         return null;
