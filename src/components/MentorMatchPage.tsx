@@ -70,13 +70,13 @@ const mockMentors: Mentor[] = [
 export function MentorMatchPage({ onNavigate }: MentorMatchPageProps) {
   const { currentLanguage } = useLanguage();
   const t = getTranslation(currentLanguage);
-  const [selectedCareer, setSelectedCareer] = useState<string>("");
-  const [selectedUniversity, setSelectedUniversity] = useState<string>("");
+  const [selectedCareer, setSelectedCareer] = useState<string>("all");
+  const [selectedUniversity, setSelectedUniversity] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredMentors = mockMentors.filter(mentor => {
-    const matchesCareer = !selectedCareer || mentor.career.toLowerCase().includes(selectedCareer.toLowerCase());
-    const matchesUniversity = !selectedUniversity || mentor.university.toLowerCase().includes(selectedUniversity.toLowerCase());
+    const matchesCareer = selectedCareer === "all" || !selectedCareer || mentor.career.toLowerCase().includes(selectedCareer.toLowerCase());
+    const matchesUniversity = selectedUniversity === "all" || !selectedUniversity || mentor.university.toLowerCase().includes(selectedUniversity.toLowerCase());
     const matchesSearch = !searchQuery || mentor.name.toLowerCase().includes(searchQuery.toLowerCase());
     
     return matchesCareer && matchesUniversity && matchesSearch;
@@ -125,7 +125,7 @@ export function MentorMatchPage({ onNavigate }: MentorMatchPageProps) {
                     <SelectValue placeholder="Selecciona carrera" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todas las carreras</SelectItem>
+                    <SelectItem value="all">Todas las carreras</SelectItem>
                     <SelectItem value="ingenieria">Ingeniería</SelectItem>
                     <SelectItem value="administracion">Administración</SelectItem>
                     <SelectItem value="medicina">Medicina</SelectItem>
@@ -141,7 +141,7 @@ export function MentorMatchPage({ onNavigate }: MentorMatchPageProps) {
                     <SelectValue placeholder="Selecciona universidad" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todas las universidades</SelectItem>
+                    <SelectItem value="all">Todas las universidades</SelectItem>
                     <SelectItem value="san marcos">San Marcos</SelectItem>
                     <SelectItem value="catolica">Católica</SelectItem>
                     <SelectItem value="uni">UNI</SelectItem>
