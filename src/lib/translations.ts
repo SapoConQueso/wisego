@@ -362,29 +362,14 @@ export interface Translations {
 
   cultureFit: {
     title: string;
-    selectMode: string;
-    universityMode: string;
-    universityModeDesc: string;
-    vocationalMode: string;
-    vocationalModeDesc: string;
-    universitySubtitle: string;
-    vocationalSubtitle: string;
-    universityQuestion1: string;
-    universityQuestion2: string;
-    universityQuestion3: string;
-    universityQuestion4: string;
-    universityQuestion5: string;
-    universityQuestion6: string;
-    universityQuestion7: string;
-    universityQuestion8: string;
-    vocationalQuestion1: string;
-    vocationalQuestion2: string;
-    vocationalQuestion3: string;
-    vocationalQuestion4: string;
-    vocationalQuestion5: string;
-    vocationalQuestion6: string;
-    vocationalQuestion7: string;
-    vocationalQuestion8: string;
+    subtitle: string;
+    startTest: string;
+    question1: string;
+    question2: string;
+    question3: string;
+    question4: string;
+    question5: string;
+    question6: string;
     competitive: string;
     collaborative: string;
     clubs: string;
@@ -393,38 +378,10 @@ export interface Translations {
     smallCampus: string;
     diversity: string;
     tradition: string;
-    urbanCampus: string;
-    suburbanCampus: string;
-    smallClasses: string;
-    largeClasses: string;
-    researchFocus: string;
-    practicalFocus: string;
-    activeSocial: string;
-    quietStudy: string;
-    teamWork: string;
-    independentWork: string;
-    analyticalThinking: string;
-    creativeThinking: string;
-    peopleOriented: string;
-    taskOriented: string;
-    handsOn: string;
-    theoretical: string;
-    officeBased: string;
-    fieldBased: string;
-    structuredHours: string;
-    flexibleHours: string;
-    leadershipRole: string;
-    specialistRole: string;
-    socialImpact: string;
-    economicImpact: string;
     results: string;
     compatibility: string;
-    universityCompatibility: string;
-    careerCompatibility: string;
-    careerMatch: string;
     topMatches: string;
-    topUniversities: string;
-    topCareers: string;
+    whyMatch: string;
     retakeTest: string;
   };
 }
@@ -767,69 +724,26 @@ export const translations: Record<Language, Translations> = {
 
       cultureFit: {
         title: 'Culture Fit Check',
-        selectMode: 'Elige el tipo de análisis que prefieres:',
-        universityMode: 'Análisis Universitario',
-        universityModeDesc: 'Encuentra las universidades que mejor se adapten a tu personalidad y estilo de vida',
-        vocationalMode: 'Análisis Vocacional',
-        vocationalModeDesc: 'Descubre las carreras profesionales más alineadas con tu forma de ser y trabajar',
-        universitySubtitle: 'Descubre qué universidades se alinean mejor con tu personalidad',
-        vocationalSubtitle: 'Encuentra las carreras que mejor se adapten a tu personalidad profesional',
-        universityQuestion1: '¿Qué tipo de ambiente académico prefieres?',
-        universityQuestion2: '¿Cómo te gusta pasar tu tiempo libre en la universidad?',
-        universityQuestion3: '¿Qué tamaño de campus prefieres?',
-        universityQuestion4: '¿Qué valoras más en una institución?',
-        universityQuestion5: '¿Dónde prefieres que esté ubicado tu campus?',
-        universityQuestion6: '¿Qué tamaño de clases prefieres?',
-        universityQuestion7: '¿Qué enfoque académico te atrae más?',
-        universityQuestion8: '¿Cómo te gusta que sea la vida social universitaria?',
-        vocationalQuestion1: '¿Cómo prefieres trabajar?',
-        vocationalQuestion2: '¿Cómo abordas los problemas?',
-        vocationalQuestion3: '¿Qué te motiva más en el trabajo?',
-        vocationalQuestion4: '¿Cuál es tu estilo de aprendizaje preferido?',
-        vocationalQuestion5: '¿En qué tipo de ambiente te sientes más cómodo?',
-        vocationalQuestion6: '¿Qué tipo de horario prefieres?',
-        vocationalQuestion7: '¿Hacia dónde te ves creciendo profesionalmente?',
-        vocationalQuestion8: '¿Qué tipo de impacto quieres generar?',
-        competitive: 'Ambiente competitivo',
-        collaborative: 'Ambiente colaborativo',
-        clubs: 'Participar en clubs y actividades',
-        studyOnly: 'Enfocarme solo en estudiar',
-        largeCampus: 'Campus grandes y diversos',
-        smallCampus: 'Campus pequeños e íntimos',
+        subtitle: 'Descubre qué universidades se alinean mejor con tu personalidad',
+        startTest: 'Iniciar Test',
+        question1: '¿Prefieres un ambiente competitivo o colaborativo?',
+        question2: '¿Te gusta participar en clubs estudiantiles?',
+        question3: '¿Prefieres campus grandes o pequeños?',
+        question4: '¿Buscas diversidad cultural o tradición académica?',
+        question5: '¿Cómo prefieres estudiar principalmente?',
+        question6: '¿Qué tipo de actividades extracurriculares prefieres?',
+        competitive: 'Competitivo',
+        collaborative: 'Colaborativo',
+        clubs: 'Sí, me encantan',
+        studyOnly: 'Prefiero solo estudiar',
+        largeCampus: 'Grandes',
+        smallCampus: 'Pequeños e íntimos',
         diversity: 'Diversidad cultural',
         tradition: 'Tradición académica',
-        urbanCampus: 'Campus urbano céntrico',
-        suburbanCampus: 'Campus suburbano tranquilo',
-        smallClasses: 'Clases pequeñas (hasta 25 personas)',
-        largeClasses: 'Clases grandes (más de 25 personas)',
-        researchFocus: 'Enfoque en investigación',
-        practicalFocus: 'Enfoque práctico',
-        activeSocial: 'Vida social activa y eventos',
-        quietStudy: 'Ambiente tranquilo para estudiar',
-        teamWork: 'Trabajo en equipo',
-        independentWork: 'Trabajo independiente',
-        analyticalThinking: 'Pensamiento analítico',
-        creativeThinking: 'Pensamiento creativo',
-        peopleOriented: 'Orientado a las personas',
-        taskOriented: 'Orientado a las tareas',
-        handsOn: 'Aprendizaje práctico',
-        theoretical: 'Aprendizaje teórico',
-        officeBased: 'Ambiente de oficina',
-        fieldBased: 'Trabajo de campo',
-        structuredHours: 'Horarios estructurados',
-        flexibleHours: 'Horarios flexibles',
-        leadershipRole: 'Roles de liderazgo',
-        specialistRole: 'Roles especializados',
-        socialImpact: 'Impacto social',
-        economicImpact: 'Impacto económico',
-        results: '¡Resultados!',
-        compatibility: 'Compatibilidad cultural',
-        universityCompatibility: 'Compatibilidad universitaria',
-        careerCompatibility: 'Compatibilidad vocacional',
-        careerMatch: 'Match vocacional',
-        topMatches: 'Tus mejores matches:',
-        topUniversities: 'Universidades recomendadas:',
-        topCareers: 'Carreras recomendadas:',
+        results: 'Tus Resultados',
+        compatibility: 'Compatibilidad Cultural',
+        topMatches: 'Top 3 Universidades para Ti',
+        whyMatch: '¿Por qué es un buen match?',
         retakeTest: 'Volver a hacer el test'
       }
     },
@@ -1171,69 +1085,26 @@ export const translations: Record<Language, Translations> = {
 
     cultureFit: {
       title: 'Culture Fit Check',
-      selectMode: 'Choose the type of analysis you prefer:',
-      universityMode: 'University Analysis',
-      universityModeDesc: 'Find universities that best match your personality and lifestyle',
-      vocationalMode: 'Vocational Analysis',
-      vocationalModeDesc: 'Discover professional careers most aligned with your way of being and working',
-      universitySubtitle: 'Discover which universities align best with your personality',
-      vocationalSubtitle: 'Find careers that best match your professional personality',
-      universityQuestion1: 'What type of academic environment do you prefer?',
-      universityQuestion2: 'How do you like to spend your free time at university?',
-      universityQuestion3: 'What campus size do you prefer?',
-      universityQuestion4: 'What do you value most in an institution?',
-      universityQuestion5: 'Where do you prefer your campus to be located?',
-      universityQuestion6: 'What class size do you prefer?',
-      universityQuestion7: 'What academic approach attracts you most?',
-      universityQuestion8: 'How do you like university social life to be?',
-      vocationalQuestion1: 'How do you prefer to work?',
-      vocationalQuestion2: 'How do you approach problems?',
-      vocationalQuestion3: 'What motivates you most at work?',
-      vocationalQuestion4: 'What is your preferred learning style?',
-      vocationalQuestion5: 'What type of environment makes you feel most comfortable?',
-      vocationalQuestion6: 'What type of schedule do you prefer?',
-      vocationalQuestion7: 'Where do you see yourself growing professionally?',
-      vocationalQuestion8: 'What type of impact do you want to generate?',
-      competitive: 'Competitive environment',
-      collaborative: 'Collaborative environment',
-      clubs: 'Participate in clubs and activities',
-      studyOnly: 'Focus only on studying',
-      largeCampus: 'Large and diverse campuses',
-      smallCampus: 'Small and intimate campuses',
+      subtitle: 'Discover which universities best align with your personality',
+      startTest: 'Start Test',
+      question1: 'Do you prefer a competitive or collaborative environment?',
+      question2: 'Do you like participating in student clubs?',
+      question3: 'Do you prefer large or small campuses?',
+      question4: 'Are you looking for cultural diversity or academic tradition?',
+      question5: 'How do you prefer to study primarily?',
+      question6: 'What type of extracurricular activities do you prefer?',
+      competitive: 'Competitive',
+      collaborative: 'Collaborative',
+      clubs: 'Yes, I love them',
+      studyOnly: 'I prefer just studying',
+      largeCampus: 'Large',
+      smallCampus: 'Small and intimate',
       diversity: 'Cultural diversity',
       tradition: 'Academic tradition',
-      urbanCampus: 'Urban downtown campus',
-      suburbanCampus: 'Quiet suburban campus',
-      smallClasses: 'Small classes (up to 25 people)',
-      largeClasses: 'Large classes (more than 25 people)',
-      researchFocus: 'Research focus',
-      practicalFocus: 'Practical focus',
-      activeSocial: 'Active social life and events',
-      quietStudy: 'Quiet environment for studying',
-      teamWork: 'Team work',
-      independentWork: 'Independent work',
-      analyticalThinking: 'Analytical thinking',
-      creativeThinking: 'Creative thinking',
-      peopleOriented: 'People oriented',
-      taskOriented: 'Task oriented',
-      handsOn: 'Hands-on learning',
-      theoretical: 'Theoretical learning',
-      officeBased: 'Office environment',
-      fieldBased: 'Field work',
-      structuredHours: 'Structured hours',
-      flexibleHours: 'Flexible hours',
-      leadershipRole: 'Leadership roles',
-      specialistRole: 'Specialist roles',
-      socialImpact: 'Social impact',
-      economicImpact: 'Economic impact',
-      results: 'Results!',
-      compatibility: 'Cultural compatibility',
-      universityCompatibility: 'University compatibility',
-      careerCompatibility: 'Vocational compatibility',
-      careerMatch: 'Vocational match',
-      topMatches: 'Your best matches:',
-      topUniversities: 'Recommended universities:',
-      topCareers: 'Recommended careers:',
+      results: 'Your Results',
+      compatibility: 'Cultural Compatibility',
+      topMatches: 'Top 3 Universities for You',
+      whyMatch: 'Why is it a good match?',
       retakeTest: 'Retake the test'
     }
   },
@@ -1575,75 +1446,29 @@ export const translations: Record<Language, Translations> = {
 
     cultureFit: {
       title: 'Cultura Tupay Qhaway',
-      selectMode: 'Akllasqa tukukay hap\'iykunata munasqayki:',
-      universityMode: 'Yachaywasikunamanta T\'aqwirisqa',
-      universityModeDesc: 'Yachaywasikunata tariway sunquykunawan kasqayta',
-      vocationalMode: 'Llamkanamanta T\'aqwirisqa',
-      vocationalModeDesc: 'Llamkaykunata tariway sunquykunawan kasqayta',
-      universitySubtitle: 'Tariway mayqin yachaywasikunas aswan allinta tupanki',
-      vocationalSubtitle: 'Tariway mayqin llamkanakuna aswan allinta tupanki',
-      universityQuestion1: '¿Ima laya yachay pachama munanki?',
-      universityQuestion2: '¿Imaynatan mana yachay pachapi kankuna?',
-      universityQuestion3: '¿Ima sayayniyuq campus munanki?',
-      universityQuestion4: '¿Imata aswan chaninchanki?',
-      universityQuestion5: '¿Maypitak campus kananpaq munanki?',
-      universityQuestion6: '¿Ima sayayniyuq yachaywasikuna munanki?',
-      universityQuestion7: '¿Ima laya yachay munanki?',
-      universityQuestion8: '¿Imaynatan yachaywasipi wiñarina munanki?',
-      vocationalQuestion1: '¿Imaynatan llamkay munanki?',
-      vocationalQuestion2: '¿Imaynatan sasachakuykunata t\'aqwinki?',
-      vocationalQuestion3: '¿Imatak aswan kallpachasunki llamkaypi?',
-      vocationalQuestion4: '¿Ima yachana kamachiyta munanki?',
-      vocationalQuestion5: '¿Ima pachapi aswan allinta tarishanki?',
-      vocationalQuestion6: '¿Ima laya pachapi llamkay munanki?',
-      vocationalQuestion7: '¿Maymantak wiñaspa rinakusaq nispa qhawarishanki?',
-      vocationalQuestion8: '¿Ima laya ruwaykunata ruray munanki?',
-      competitive: 'Atipanakuy pacha',
-      collaborative: 'Yanapanakuy pacha',
-      clubs: 'Club-kunapiwan llamkayta',
-      studyOnly: 'Yachayllata ruray',
-      largeCampus: 'Hatun campus-kuna',
-      smallCampus: 'Huch\'uy campus-kuna',
-      diversity: 'Cultura kunayman kay',
+      subtitle: 'Tariway mayqin yachaywasikunas aswan allinta tupanki',
+      startTest: 'Pruebaykita Qallariy',
+      question1: '¿Atipanakuy icha yanapanakuy pachama munanki?',
+      question2: '¿Yachakuq club-kunapichus gustanki?',
+      question3: '¿Hatun icha huch\'uy campus-kunatachus munanki?',
+      question4: '¿Imaymana cultura icha yachana tradición-tachu maskani?',
+      question5: '¿Imaynataq aswan yachayta munanki?',
+      question6: '¿Ima laya actividad extracurricular-kunataq munanki?',
+      competitive: 'Atipanakuy',
+      collaborative: 'Yanapanakuy',
+      clubs: 'Ari, munani',
+      studyOnly: 'Yachayllata munani',
+      largeCampus: 'Hatunkuna',
+      smallCampus: 'Huch\'uykuna hinaspa sumaqkuna',
+      diversity: 'Cultura imaymana kay',
       tradition: 'Yachana tradición',
-      urbanCampus: 'Llaqta ukhupi campus',
-      suburbanCampus: 'Thak llaqi campus',
-      smallClasses: 'Huch\'uy yachaywasiykuna',
-      largeClasses: 'Hatun yachaywasiykuna',
-      researchFocus: 'Maskaykuna ruray',
-      practicalFocus: 'Ruwaykunapi yachay',
-      activeSocial: 'Kuskaylla wiñarina',
-      quietStudy: 'Ch\'in yachana',
-      teamWork: 'T\'aqakunawan llamkay',
-      independentWork: 'Sapalla llamkay',
-      analyticalThinking: 'Yuyaykunata t\'aqwiy',
-      creativeThinking: 'Kamana yuyay',
-      peopleOriented: 'Runaman qhawasqa',
-      taskOriented: 'Ruwaykunaman qhawasqa',
-      handsOn: 'Maki ruwaywan yachay',
-      theoretical: 'Yachay simi',
-      officeBased: 'Oficinapi llamkay',
-      fieldBased: 'Chakrapi llamkay',
-      structuredHours: 'Kamachisqa pachakuna',
-      flexibleHours: 'Muyupayachiy pachakuna',
-      leadershipRole: 'Pusaq kaypi kana',
-      specialistRole: 'Yachaq kaypi kana',
-      socialImpact: 'Runakunaman yanapay',
-      economicImpact: 'Qullqi pachapi yanapay',
-      results: 'Tukuykuna!',
-      compatibility: 'Cultura tupay',
-      universityCompatibility: 'Yachaywasi tupay',
-      careerCompatibility: 'Llamkana tupay',
-      careerMatch: 'Llamkana tupay',
-      topMatches: 'Aswan allinta tupaqkuna:',
-      topUniversities: 'Yuyaysapa yachaywasiykuna:',
-      topCareers: 'Yuyaysapa llamkaykuna:',
-      retakeTest: 'Hukmanta ruwana pruebaykita'
+      results: 'Ruwayniykikunas',
+      compatibility: 'Cultura Tupay',
+      topMatches: 'Kimsaq Aswan Allin Yachaywasikunas',
+      whyMatch: '¿Imarayku allin tupay?',
+      retakeTest: 'Kutillapas ruray pruebata'
     }
   },
-  ay: {
-    nav: {
-      about: 'Jiwasanxa',
   ay: {
     nav: {
       about: 'Jiwasanaka',
@@ -1982,69 +1807,26 @@ export const translations: Record<Language, Translations> = {
 
     cultureFit: {
       title: 'Cultura Katxaña Uñjañäni',
-      selectMode: 'Ajllita kunas uñjañäni munasmawa:',
-      universityMode: 'Yatiñ Utanakar Uñjäwi',
-      universityModeDesc: 'Yatiñ utanaka thaqhaña suma katxañataki',
-      vocationalMode: 'Irnaqäwi Uñjäwi',
-      vocationalModeDesc: 'Irnaqäwinaka thaqhaña suma katxañataki',
-      universitySubtitle: 'Thaqhaña kuna yatiñ utanaka aswan suma katxañaxa',
-      vocationalSubtitle: 'Thaqhaña kuna irnaqäwinaka aswan suma katxañaxa',
-      universityQuestion1: '¿Kuna layar yatiñ pacha muniri?',
-      universityQuestion2: '¿Kunjamasa ch\'amäwi pachara muniri?',
-      universityQuestion3: '¿Kuna saya campus-kunas muniri?',
-      universityQuestion4: '¿Kunas aswan phuqhantatäta?',
-      universityQuestion5: '¿Kawkinsa campus utjaña muniri?',
-      universityQuestion6: '¿Kuna saya yatiña utanaka muniri?',
-      universityQuestion7: '¿Kuna laya yatiña muniri?',
-      universityQuestion8: '¿Kunjamasa yatiñ utan jilañä muniri?',
-      vocationalQuestion1: '¿Kunjamasa irnaqañä muniri?',
-      vocationalQuestion2: '¿Kunjamasa jan walt\'äwinaka askichaña?',
-      vocationalQuestion3: '¿Kunas aswan ch\'amanchiri irnaqañanxa?',
-      vocationalQuestion4: '¿Kuna yatiña thakhi muniri?',
-      vocationalQuestion5: '¿Kuna pachansa aswan suma jikxatäsmawa?',
-      vocationalQuestion6: '¿Kuna laya pacha irnaqaña muniri?',
-      vocationalQuestion7: '¿Kawkinsa jilañaxa luririna sañämawa?',
-      vocationalQuestion8: '¿Kuna laya lurawinaka luraña muniri?',
-      competitive: 'Atipañakuña pacha',
-      collaborative: 'Yanapañakuña pacha',
-      clubs: 'Club-nakanwa irnaqaña',
-      studyOnly: 'Yatiñakiwa luraña',
-      largeCampus: 'Jach\'a campus-naka',
-      smallCampus: 'Jisk\'a campus-naka',
-      diversity: 'Cultura kunaymankäwi',
-      tradition: 'Yatiña aruskipäwi',
-      urbanCampus: 'Marka taypinxa campus',
-      suburbanCampus: 'Jank\'aki campus',
-      smallClasses: 'Jisk\'a yatiña utanaka',
-      largeClasses: 'Jach\'a yatiña utanaka',
-      researchFocus: 'Thaqhañanaka luraña',
-      practicalFocus: 'Lurawinakanxa yatiña',
-      activeSocial: 'Kusisita jilañä',
-      quietStudy: 'Iyaw\'asiña yatiña',
-      teamWork: 'T\'aqanakampi irnaqaña',
-      independentWork: 'Mayja irnaqaña',
-      analyticalThinking: 'Amuyt\'awinaka ch\'iqaña',
-      creativeThinking: 'Amuyt\'äwi lurañä',
-      peopleOriented: 'Jaqinakarhu uñt\'ata',
-      taskOriented: 'Luräwinarhu uñt\'ata',
-      handsOn: 'Amparamp yatiña',
-      theoretical: 'Yatiña arunaka',
-      officeBased: 'Oficinapi irnaqaña',
-      fieldBased: 'Aynoqanxa irnaqaña',
-      structuredHours: 'Wakichata pachanaka',
-      flexibleHours: 'Muyurayaña pachanaka',
-      leadershipRole: 'Irpiri kajäwi',
-      specialistRole: 'Yatiri kajäwi',
-      socialImpact: 'Jaqinakarhu yanapäwi',
-      economicImpact: 'Qullqi pacharu yanapäwi',
-      results: 'Tukuyäwi!',
-      compatibility: 'Cultura katxäwi',
-      universityCompatibility: 'Yatiñ uta katxäwi',
-      careerCompatibility: 'Irnaqäwi katxäwi',
-      careerMatch: 'Irnaqäwi katxäwi',
-      topMatches: 'Aswan suma katxäwinaka:',
-      topUniversities: 'Yuyaysapa yatiñ utanaka:',
-      topCareers: 'Yuyaysapa irnaqäwinaka:',
+      subtitle: 'Thaqhaña kuna yatiñ utanaka aswan suma katxañaxa',
+      startTest: 'Pruebaxa Qalltañäni',
+      question1: '¿Atipañakuña jan ukaxa yanapañakuña pachama munirita?',
+      question2: '¿Yatiqir club-kunanxa gustäta?',
+      question3: '¿Jach\'a jan ukaxa jisk\'a campus-kunata munirita?',
+      question4: '¿Kunayman cultura jan ukaxa yatiñ tradición thaqhta?',
+      question5: '¿Kunjamasa aswan yatiñaxa munirita?',
+      question6: '¿Kuna layar actividad extracurricularnaks munirita?',
+      competitive: 'Atipañakuña',
+      collaborative: 'Yanapañakuña',
+      clubs: 'Jïsa, munätha',
+      studyOnly: 'Yatiñallakiwa munaña',
+      largeCampus: 'Jach\'anaks',
+      smallCampus: 'Jisk\'anaka ukhamarak sumanaks',
+      diversity: 'Cultura kunayman kay',
+      tradition: 'Yatiñ tradición',
+      results: 'Lurañanakama',
+      compatibility: 'Cultura Katxaña',
+      topMatches: 'Kimsa Aswan Suma Yatiñ Utanaks',
+      whyMatch: '¿Kunarayku suma katxaña?',
       retakeTest: 'Wasitat luraña pruebata'
     }
   }
