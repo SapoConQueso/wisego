@@ -26,6 +26,10 @@ interface Mentor {
   points: number;
   available: boolean;
   avatar: string;
+  specialties: string[];
+  availableHours: string;
+  bio: string;
+  experience: string;
 }
 
 const mockMentors: Mentor[] = [
@@ -39,7 +43,11 @@ const mockMentors: Mentor[] = [
     sessions: 47,
     points: 240,
     available: true,
-    avatar: 'MG'
+    avatar: 'MG',
+    specialties: ['Desarrollo Web', 'Machine Learning', 'Bases de Datos'],
+    availableHours: 'Lunes a Viernes 2-6 PM',
+    bio: 'Desarrolladora Full-Stack con 3 años de experiencia',
+    experience: '3 años en tech companies'
   },
   {
     id: '2', 
@@ -51,7 +59,11 @@ const mockMentors: Mentor[] = [
     sessions: 23,
     points: 115,
     available: true,
-    avatar: 'CM'
+    avatar: 'CM',
+    specialties: ['Marketing Digital', 'Finanzas', 'Emprendimiento'],
+    availableHours: 'Sábados y Domingos 10 AM - 2 PM',
+    bio: 'Estudiante de último año especializado en marketing',
+    experience: 'Prácticas en multinacionales'
   },
   {
     id: '3',
@@ -63,7 +75,91 @@ const mockMentors: Mentor[] = [
     sessions: 38,
     points: 190,
     available: false,
-    avatar: 'AT'
+    avatar: 'AT',
+    specialties: ['Estructuras', 'Construcción', 'AutoCAD'],
+    availableHours: 'No disponible',
+    bio: 'Ingeniera con experiencia en proyectos de infraestructura',
+    experience: '2 años en constructoras'
+  },
+  {
+    id: '4',
+    name: 'Luis Fernández',
+    university: 'Universidad de Lima',
+    career: 'Medicina',
+    type: 'graduate',
+    rating: 4.9,
+    sessions: 52,
+    points: 280,
+    available: true,
+    avatar: 'LF',
+    specialties: ['Medicina Interna', 'Investigación', 'Residencia'],
+    availableHours: 'Martes y Jueves 7-9 PM',
+    bio: 'Médico residente especializado en medicina interna',
+    experience: 'Residente en Hospital Nacional'
+  },
+  {
+    id: '5',
+    name: 'Patricia Vega',
+    university: 'Universidad Peruana de Ciencias Aplicadas',
+    career: 'Psicología',
+    type: 'student',
+    rating: 4.6,
+    sessions: 15,
+    points: 85,
+    available: true,
+    avatar: 'PV',
+    specialties: ['Psicología Clínica', 'Terapia', 'Investigación'],
+    availableHours: 'Lunes, Miércoles y Viernes 4-6 PM',
+    bio: 'Estudiante de psicología con interés en terapia cognitiva',
+    experience: 'Prácticas en centros de salud mental'
+  },
+  {
+    id: '6',
+    name: 'Roberto Silva',
+    university: 'Universidad Católica Santa María',
+    career: 'Derecho',
+    type: 'graduate',
+    rating: 4.8,
+    sessions: 41,
+    points: 215,
+    available: true,
+    avatar: 'RS',
+    specialties: ['Derecho Corporativo', 'Contratos', 'Litigios'],
+    availableHours: 'Fines de semana 9 AM - 1 PM',
+    bio: 'Abogado especializado en derecho empresarial',
+    experience: '4 años en estudios jurídicos'
+  },
+  {
+    id: '7',
+    name: 'Elena Castro',
+    university: 'Universidad Nacional de Trujillo',
+    career: 'Arquitectura',
+    type: 'student',
+    rating: 4.5,
+    sessions: 18,
+    points: 95,
+    available: true,
+    avatar: 'EC',
+    specialties: ['Diseño Urbano', 'Sostenibilidad', 'BIM'],
+    availableHours: 'Tardes de 3-5 PM',
+    bio: 'Estudiante apasionada por la arquitectura sostenible',
+    experience: 'Proyectos académicos destacados'
+  },
+  {
+    id: '8',
+    name: 'Diego Morales',
+    university: 'Universidad Nacional de Ingeniería',
+    career: 'Ingeniería Industrial',
+    type: 'graduate',
+    rating: 4.7,
+    sessions: 34,
+    points: 170,
+    available: false,
+    avatar: 'DM',
+    specialties: ['Procesos', 'Lean Manufacturing', 'Calidad'],
+    availableHours: 'No disponible',
+    bio: 'Ingeniero con experiencia en optimización de procesos',
+    experience: '3 años en industria manufacturera'
   }
 ];
 
@@ -72,14 +168,22 @@ export function MentorMatchPage({ onNavigate }: MentorMatchPageProps) {
   const t = getTranslation(currentLanguage);
   const [selectedCareer, setSelectedCareer] = useState<string>("all");
   const [selectedUniversity, setSelectedUniversity] = useState<string>("all");
+  const [selectedType, setSelectedType] = useState<string>("all");
+  const [selectedAvailability, setSelectedAvailability] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredMentors = mockMentors.filter(mentor => {
     const matchesCareer = selectedCareer === "all" || !selectedCareer || mentor.career.toLowerCase().includes(selectedCareer.toLowerCase());
     const matchesUniversity = selectedUniversity === "all" || !selectedUniversity || mentor.university.toLowerCase().includes(selectedUniversity.toLowerCase());
-    const matchesSearch = !searchQuery || mentor.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesType = selectedType === "all" || mentor.type === selectedType;
+    const matchesAvailability = selectedAvailability === "all" || 
+      (selectedAvailability === "available" && mentor.available) ||
+      (selectedAvailability === "unavailable" && !mentor.available);
+    const matchesSearch = !searchQuery || 
+      mentor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      mentor.specialties.some(spec => spec.toLowerCase().includes(searchQuery.toLowerCase()));
     
-    return matchesCareer && matchesUniversity && matchesSearch;
+    return matchesCareer && matchesUniversity && matchesType && matchesAvailability && matchesSearch;
   });
 
   const handleRequestSession = (mentorId: string, sessionType: 'chat' | 'video') => {
@@ -117,7 +221,7 @@ export function MentorMatchPage({ onNavigate }: MentorMatchPageProps) {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
               <div>
                 <label className="text-sm font-medium mb-2 block">{t.mentorMatch.career}</label>
                 <Select value={selectedCareer} onValueChange={setSelectedCareer}>
@@ -130,6 +234,8 @@ export function MentorMatchPage({ onNavigate }: MentorMatchPageProps) {
                     <SelectItem value="administracion">Administración</SelectItem>
                     <SelectItem value="medicina">Medicina</SelectItem>
                     <SelectItem value="derecho">Derecho</SelectItem>
+                    <SelectItem value="psicologia">Psicología</SelectItem>
+                    <SelectItem value="arquitectura">Arquitectura</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -146,14 +252,44 @@ export function MentorMatchPage({ onNavigate }: MentorMatchPageProps) {
                     <SelectItem value="catolica">Católica</SelectItem>
                     <SelectItem value="uni">UNI</SelectItem>
                     <SelectItem value="lima">Universidad de Lima</SelectItem>
+                    <SelectItem value="upc">UPC</SelectItem>
+                    <SelectItem value="trujillo">UN Trujillo</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div>
-                <label className="text-sm font-medium mb-2 block">Buscar por nombre</label>
+                <label className="text-sm font-medium mb-2 block">Tipo</label>
+                <Select value={selectedType} onValueChange={setSelectedType}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Tipo de mentor" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos</SelectItem>
+                    <SelectItem value="student">Estudiantes</SelectItem>
+                    <SelectItem value="graduate">Egresados</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-2 block">Disponibilidad</label>
+                <Select value={selectedAvailability} onValueChange={setSelectedAvailability}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Disponibilidad" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos</SelectItem>
+                    <SelectItem value="available">Disponibles</SelectItem>
+                    <SelectItem value="unavailable">No disponibles</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-2 block">Buscar</label>
                 <Input 
-                  placeholder="Buscar mentor..."
+                  placeholder="Nombre o especialidad..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -205,41 +341,55 @@ export function MentorMatchPage({ onNavigate }: MentorMatchPageProps) {
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2 mb-4">
-                      <p className="text-sm"><strong>{t.mentorMatch.university}:</strong> {mentor.university}</p>
-                      <p className="text-sm"><strong>{t.mentorMatch.career}:</strong> {mentor.career}</p>
-                      <p className="text-sm flex items-center gap-2">
-                        <Award className="h-4 w-4 text-primary"/>
-                        {mentor.points} {t.mentorMatch.points} • {mentor.sessions} sesiones
-                      </p>
-                    </div>
-                    
-                    {mentor.available && (
-                      <div className="space-y-2">
-                        <h4 className="text-sm font-medium">{t.mentorMatch.sessionTypes}</h4>
-                        <div className="flex gap-2">
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            className="flex-1 text-xs"
-                            onClick={() => handleRequestSession(mentor.id, 'chat')}
-                          >
-                            <MessageCircle className="h-3 w-3 mr-1"/>
-                            {t.mentorMatch.quickChat}
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            className="flex-1 text-xs"
-                            onClick={() => handleRequestSession(mentor.id, 'video')}
-                          >
-                            <Video className="h-3 w-3 mr-1"/>
-                            {t.mentorMatch.videoSession}
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-                  </CardContent>
+                   <CardContent>
+                     <div className="space-y-2 mb-4">
+                       <p className="text-sm"><strong>{t.mentorMatch.university}:</strong> {mentor.university}</p>
+                       <p className="text-sm"><strong>{t.mentorMatch.career}:</strong> {mentor.career}</p>
+                       <p className="text-xs text-muted-foreground mb-2">{mentor.bio}</p>
+                       <div className="flex flex-wrap gap-1 mb-2">
+                         {mentor.specialties.map((specialty, idx) => (
+                           <Badge key={idx} variant="secondary" className="text-xs">
+                             {specialty}
+                           </Badge>
+                         ))}
+                       </div>
+                       <p className="text-xs text-muted-foreground">
+                         <strong>Experiencia:</strong> {mentor.experience}
+                       </p>
+                       <p className="text-xs text-muted-foreground">
+                         <strong>Horarios:</strong> {mentor.availableHours}
+                       </p>
+                       <p className="text-sm flex items-center gap-2">
+                         <Award className="h-4 w-4 text-primary"/>
+                         {mentor.points} {t.mentorMatch.points} • {mentor.sessions} sesiones
+                       </p>
+                     </div>
+                     
+                     {mentor.available && (
+                       <div className="space-y-2">
+                         <h4 className="text-sm font-medium">{t.mentorMatch.sessionTypes}</h4>
+                         <div className="flex gap-2">
+                           <Button 
+                             size="sm" 
+                             variant="outline"
+                             className="flex-1 text-xs"
+                             onClick={() => handleRequestSession(mentor.id, 'chat')}
+                           >
+                             <MessageCircle className="h-3 w-3 mr-1"/>
+                             {t.mentorMatch.quickChat}
+                           </Button>
+                           <Button 
+                             size="sm" 
+                             className="flex-1 text-xs"
+                             onClick={() => handleRequestSession(mentor.id, 'video')}
+                           >
+                             <Video className="h-3 w-3 mr-1"/>
+                             {t.mentorMatch.videoSession}
+                           </Button>
+                         </div>
+                       </div>
+                     )}
+                   </CardContent>
                 </Card>
               ))}
             </div>
