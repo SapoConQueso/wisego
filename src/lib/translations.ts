@@ -370,14 +370,51 @@ export interface Translations {
     question4: string;
     question5: string;
     question6: string;
+    question7: string;
+    question8: string;
+    question9: string;
+    question10: string;
+    // Respuestas para pregunta 1 (ambiente)
     competitive: string;
     collaborative: string;
-    clubs: string;
-    studyOnly: string;
+    balanced: string;
+    // Respuestas para pregunta 2 (estilo de estudio)
+    groupStudy: string;
+    individualStudy: string;
+    mixedStudy: string;
+    // Respuestas para pregunta 3 (tamaño de campus)
     largeCampus: string;
+    mediumCampus: string;
     smallCampus: string;
-    diversity: string;
-    tradition: string;
+    // Respuestas para pregunta 4 (actividades)
+    manyActivities: string;
+    fewActivities: string;
+    academicFocus: string;
+    // Respuestas para pregunta 5 (diversidad)
+    highDiversity: string;
+    culturalTradition: string;
+    localFocus: string;
+    // Respuestas para pregunta 6 (apoyo)
+    intensiveSupport: string;
+    independentLearning: string;
+    peerSupport: string;
+    // Respuestas para pregunta 7 (innovación)
+    cuttingEdge: string;
+    traditional: string;
+    adaptable: string;
+    // Respuestas para pregunta 8 (social)
+    veryActive: string;
+    moderate: string;
+    studyFocused: string;
+    // Respuestas para pregunta 9 (presión)
+    highPressure: string;
+    relaxed: string;
+    structured: string;
+    // Respuestas para pregunta 10 (ubicación)
+    urbanCenter: string;
+    residential: string;
+    mixed: string;
+    // Resultados
     results: string;
     compatibility: string;
     topMatches: string;
@@ -723,23 +760,60 @@ export const translations: Record<Language, Translations> = {
       title: 'Culture Fit Check',
       subtitle: 'Descubre qué universidades se alinean mejor con tu personalidad',
       startTest: 'Iniciar Test',
-      question1: '¿Prefieres un ambiente competitivo o colaborativo?',
-      question2: '¿Te gusta participar en clubs estudiantiles?',
-      question3: '¿Prefieres campus grandes o pequeños?',
-      question4: '¿Buscas diversidad cultural o tradición académica?',
-      question5: '¿Cómo prefieres estudiar principalmente?',
-      question6: '¿Qué tipo de actividades extracurriculares prefieres?',
-      competitive: 'Competitivo',
-      collaborative: 'Colaborativo',
-      clubs: 'Sí, me gustan',
-      studyOnly: 'Solo estudiar',
-      largeCampus: 'Grandes',
-      smallCampus: 'Pequeños e íntimos',
-      diversity: 'Diversidad cultural',
-      tradition: 'Tradición académica',
+      question1: '¿Qué tipo de ambiente prefieres?',
+      question2: '¿Cómo prefieres estudiar?',
+      question3: '¿Qué tamaño de campus te atrae más?',
+      question4: '¿Qué nivel de actividades extracurriculares buscas?',
+      question5: '¿Qué tipo de diversidad valoras más?',
+      question6: '¿Qué nivel de apoyo académico prefieres?',
+      question7: '¿Qué enfoque educativo te motiva más?',
+      question8: '¿Qué tan activo quieres ser socialmente?',
+      question9: '¿Qué nivel de presión académica manejas mejor?',
+      question10: '¿Qué tipo de ubicación prefieres?',
+      // Respuestas pregunta 1
+      competitive: 'Competitivo y desafiante',
+      collaborative: 'Colaborativo y cooperativo',
+      balanced: 'Equilibrado entre ambos',
+      // Respuestas pregunta 2
+      groupStudy: 'En grupos de estudio',
+      individualStudy: 'De forma individual',
+      mixedStudy: 'Combinando ambos métodos',
+      // Respuestas pregunta 3
+      largeCampus: 'Campus grandes con muchas facilidades',
+      mediumCampus: 'Campus medianos y manejables',
+      smallCampus: 'Campus pequeños e íntimos',
+      // Respuestas pregunta 4
+      manyActivities: 'Muchas actividades y clubs',
+      fewActivities: 'Pocas pero de calidad',
+      academicFocus: 'Enfoque principalmente académico',
+      // Respuestas pregunta 5
+      highDiversity: 'Alta diversidad cultural',
+      culturalTradition: 'Tradición cultural específica',
+      localFocus: 'Enfoque local y regional',
+      // Respuestas pregunta 6
+      intensiveSupport: 'Apoyo intensivo y seguimiento',
+      independentLearning: 'Aprendizaje independiente',
+      peerSupport: 'Apoyo entre compañeros',
+      // Respuestas pregunta 7
+      cuttingEdge: 'Vanguardia e innovación',
+      traditional: 'Métodos tradicionales probados',
+      adaptable: 'Adaptable a nuevas tendencias',
+      // Respuestas pregunta 8
+      veryActive: 'Muy activo en eventos sociales',
+      moderate: 'Moderadamente social',
+      studyFocused: 'Enfocado en los estudios',
+      // Respuestas pregunta 9
+      highPressure: 'Alta presión y exigencia',
+      relaxed: 'Ambiente relajado y flexible',
+      structured: 'Estructura clara y organizada',
+      // Respuestas pregunta 10
+      urbanCenter: 'Centro urbano dinámico',
+      residential: 'Zona residencial tranquila',
+      mixed: 'Mixto entre ambos',
+      // Resultados
       results: 'Resultados',
       compatibility: 'Compatibilidad Cultural',
-      topMatches: 'Top 3 Universidades Compatibles',
+      topMatches: 'Top 5 Universidades Compatibles',
       whyMatch: '¿Por qué es compatible?',
       retakeTest: 'Repetir Test'
     }
@@ -1080,23 +1154,60 @@ export const translations: Record<Language, Translations> = {
       title: 'Culture Fit Check',
       subtitle: 'Discover which universities best align with your personality',
       startTest: 'Start Test',
-      question1: 'Do you prefer a competitive or collaborative environment?',
-      question2: 'Do you like participating in student clubs?',
-      question3: 'Do you prefer large or small campuses?',
-      question4: 'Are you looking for cultural diversity or academic tradition?',
-      question5: 'How do you prefer to study primarily?',
-      question6: 'What type of extracurricular activities do you prefer?',
-      competitive: 'Competitive',
-      collaborative: 'Collaborative',
-      clubs: 'Yes, I like them',
-      studyOnly: 'Just study',
-      largeCampus: 'Large',
-      smallCampus: 'Small and intimate',
-      diversity: 'Cultural diversity',
-      tradition: 'Academic tradition',
+      question1: 'What type of environment do you prefer?',
+      question2: 'How do you prefer to study?',
+      question3: 'What campus size appeals to you most?',
+      question4: 'What level of extracurricular activities do you seek?',
+      question5: 'What type of diversity do you value most?',
+      question6: 'What level of academic support do you prefer?',
+      question7: 'What educational approach motivates you most?',
+      question8: 'How socially active do you want to be?',
+      question9: 'What level of academic pressure do you handle best?',
+      question10: 'What type of location do you prefer?',
+      // Answers question 1
+      competitive: 'Competitive and challenging',
+      collaborative: 'Collaborative and cooperative',
+      balanced: 'Balanced between both',
+      // Answers question 2
+      groupStudy: 'In study groups',
+      individualStudy: 'Individually',
+      mixedStudy: 'Combining both methods',
+      // Answers question 3
+      largeCampus: 'Large campuses with many facilities',
+      mediumCampus: 'Medium and manageable campuses',
+      smallCampus: 'Small and intimate campuses',
+      // Answers question 4
+      manyActivities: 'Many activities and clubs',
+      fewActivities: 'Few but quality ones',
+      academicFocus: 'Primarily academic focus',
+      // Answers question 5
+      highDiversity: 'High cultural diversity',
+      culturalTradition: 'Specific cultural tradition',
+      localFocus: 'Local and regional focus',
+      // Answers question 6
+      intensiveSupport: 'Intensive support and monitoring',
+      independentLearning: 'Independent learning',
+      peerSupport: 'Peer support',
+      // Answers question 7
+      cuttingEdge: 'Cutting-edge innovation',
+      traditional: 'Proven traditional methods',
+      adaptable: 'Adaptable to new trends',
+      // Answers question 8
+      veryActive: 'Very active in social events',
+      moderate: 'Moderately social',
+      studyFocused: 'Study-focused',
+      // Answers question 9
+      highPressure: 'High pressure and demands',
+      relaxed: 'Relaxed and flexible environment',
+      structured: 'Clear and organized structure',
+      // Answers question 10
+      urbanCenter: 'Dynamic urban center',
+      residential: 'Quiet residential area',
+      mixed: 'Mix of both',
+      // Results
       results: 'Results',
       compatibility: 'Cultural Compatibility',
-      topMatches: 'Top 3 Compatible Universities',
+      topMatches: 'Top 5 Compatible Universities',
       whyMatch: 'Why is it compatible?',
       retakeTest: 'Retake Test'
     }
@@ -1437,23 +1548,60 @@ export const translations: Record<Language, Translations> = {
       title: 'Cultura Tupay Qhaway',
       subtitle: 'Tariway mayqin yachaywasikunas aswan allinta tupanki',
       startTest: 'Pruebaykita Qallariy',
-      question1: '¿Atipanakuy icha yanapanakuy pachama munanki?',
-      question2: '¿Yachakuq club-kunapichus gustanki?',
-      question3: '¿Hatun icha huch\'uy campus-kunatachus munanki?',
-      question4: '¿Imaymana cultura icha yachana tradición-tachu maskani?',
-      question5: '¿Imaynataq aswan yachayta munanki?',
-      question6: '¿Ima laya actividad extracurricular-kunataq munanki?',
-      competitive: 'Atipanakuy',
-      collaborative: 'Yanapanakuy',
-      clubs: 'Arí, gustawan',
-      studyOnly: 'Yachakullaywan',
-      largeCampus: 'Hatunkuna',
-      smallCampus: 'Huch\'uykuna hinaspa sumaykuna',
-      diversity: 'Cultura imaymana kay',
-      tradition: 'Yachana tradición',
+      question1: '¿Ima laya pachama munanki?',
+      question2: '¿Imaynataq yachayta munanki?',
+      question3: '¿Ima hatunchay campus musuqsunki?',
+      question4: '¿Ima nivel extracurricular ruwaykunata maskani?',
+      question5: '¿Ima laya imaymana kayta chaninchanki?',
+      question6: '¿Ima nivel yachana yanapaykunata munanki?',
+      question7: '¿Ima yachachiy enfoque kallpachaykunki?',
+      question8: '¿Hayk\'a ruway social kanki munanki?',
+      question9: '¿Ima nivel yachana ñit\'iykunata allinta ruwanki?',
+      question10: '¿Ima laya kitita munanki?',
+      // Kutichiykunata 1
+      competitive: 'Atipanakuy hinaspa sasachakuy',
+      collaborative: 'Yanapanakuy hinaspa yanapanakuy',
+      balanced: 'Iskayninpa chawpinpi kuskay',
+      // Kutichiykunata 2
+      groupStudy: 'Huñu yachaykunapi',
+      individualStudy: 'Sapallay',
+      mixedStudy: 'Iskay métodokunatapas huñuspa',
+      // Kutichiykunata 3
+      largeCampus: 'Hatun campuskunata ashka facilidadkunawan',
+      mediumCampus: 'Chawpi hinaspa kamachiy atiy campuskuna',
+      smallCampus: 'Huch\'uy hinaspa sumay campuskuna',
+      // Kutichiykunata 4
+      manyActivities: 'Ashka ruwaykunata hinaspa clubkuna',
+      fewActivities: 'Pisi ichaqa allin',
+      academicFocus: 'Aswanta yachana rikch\'ay',
+      // Kutichiykunata 5
+      highDiversity: 'Hatun cultura imaymana kay',
+      culturalTradition: 'Sapaq cultura tradición',
+      localFocus: 'Llaqta hinaspa suyu rikch\'ay',
+      // Kutichiykunata 6
+      intensiveSupport: 'Sinchi yanapay hinaspa qhaway',
+      independentLearning: 'Independiente yachay',
+      peerSupport: 'Compañerokunapa yanapay',
+      // Kutichiykunata 7
+      cuttingEdge: 'Ñawpaq hinaspa musuqyachiy',
+      traditional: 'Tradicional ruwaykuna probadokuna',
+      adaptable: 'Musuq tendenciakunaman adaptakuy',
+      // Kutichiykunata 8
+      veryActive: 'Ancha ruway social eventokunapiqa',
+      moderate: 'Chawpimanta social',
+      studyFocused: 'Yachaykunapi rikch\'asqa',
+      // Kutichiykunata 9
+      highPressure: 'Hatun ñit\'iy hinaspa exigencia',
+      relaxed: 'Samay hinaspa flexible pacha',
+      structured: 'Sut\'i hinaspa organizasqa estructura',
+      // Kutichiykunata 10
+      urbanCenter: 'Dinámico llaqta chawpi',
+      residential: 'Ch\'uyanchaq residential área',
+      mixed: 'Iskayninmanta chaqrusqa',
+      // Ruwaykunata
       results: 'Ruwaykunata',
       compatibility: 'Cultura Tupay',
-      topMatches: 'Kimsa Aswan Allin Yachaywasikunata',
+      topMatches: 'Pichqa Aswan Allin Yachaywasikunata',
       whyMatch: '¿Imarayku allin tupay?',
       retakeTest: 'Wakmanta ruray pruebaykita'
     }
@@ -1794,23 +1942,60 @@ export const translations: Record<Language, Translations> = {
       title: 'Cultura Katxaña Uñjañäni',
       subtitle: 'Thaqhaña kuna yatiñ utanaka aswan suma katxañaxa',
       startTest: 'Pruebaxa Qalltañäni',
-      question1: '¿Atipañakuña jan ukaxa yanapañakuña pachama munirita?',
-      question2: '¿Yatiqir club-kunanxa gustäta?',
-      question3: '¿Jach\'a jan ukaxa jisk\'a campus-kunata munirita?',
-      question4: '¿Kunayman cultura jan ukaxa yatiñ tradición thaqhta?',
-      question5: '¿Kunjamasa aswan yatiñaxa munirita?',
-      question6: '¿Kuna layar actividad extracurricularnaks munirita?',
-      competitive: 'Atipañakuña',
-      collaborative: 'Yanapañakuña',
-      clubs: 'Jïsa, munätha',
-      studyOnly: 'Yatiñallakiwa munaña',
-      largeCampus: 'Jach\'anaks',
-      smallCampus: 'Jisk\'anaka ukhamarak sumanaks',
-      diversity: 'Cultura kunayman kay',
-      tradition: 'Yatiñ tradición',
+      question1: '¿Kuna laya pachama munirita?',
+      question2: '¿Kunjamasa yatiñaxa munirita?',
+      question3: '¿Kuna jach\'anchañ campus-xa aswan musuqsuni?',
+      question4: '¿Kuna nivel extracurricular lurañanaka thaqhta?',
+      question5: '¿Kuna laya kunayman kayxa aswan chanichañita?',
+      question6: '¿Kuna nivel yatiña yanapañanaka munirita?',
+      question7: '¿Kuna yatichiña enfoque aswan ch\'amanchañita?',
+      question8: '¿Qhawqhasa luriri social uñjañapataki munirita?',
+      question9: '¿Kuna nivel yatiña ch\'amakañanaka aswan suma apnaqita?',
+      question10: '¿Kuna laya utjañaxa munirita?',
+      // Jaysañanaka 1
+      competitive: 'Atipañakuña ukhamarak ch\'amak luraña',
+      collaborative: 'Yanapañakuña ukhamarak yanapañakuña',
+      balanced: 'Panïrinakapa taypipaxa chika',
+      // Jaysañanaka 2
+      groupStudy: 'Yatiña tantachawinankanxa',
+      individualStudy: 'Sapakiwa',
+      mixedStudy: 'Panïri métodokuna mayachasa',
+      // Jaysañanaka 3
+      largeCampus: 'Jach\'a campus-naka walja facilidadanakampixa',
+      mediumCampus: 'Taypi ukhamarak apnaqañjama campus-naka',
+      smallCampus: 'Jisk\'a ukhamarak suma campus-naka',
+      // Jaysañanaka 4
+      manyActivities: 'Walja lurañanaka ukhamarak club-naka',
+      fewActivities: 'Jisk\'akiwa ukampisa suma',
+      academicFocus: 'Aswanxa yatiña uñjañäni',
+      // Jaysañanaka 5
+      highDiversity: 'Jach\'a cultura kunayman kay',
+      culturalTradition: 'Maya cultura tradición',
+      localFocus: 'Markasa ukhamarak suyu uñjañäni',
+      // Jaysañanaka 6
+      intensiveSupport: 'Ch\'ama yanapañäni ukhamarak uñjañäni',
+      independentLearning: 'Independiente yatiñäni',
+      peerSupport: 'Yäqanakana yanapañäni',
+      // Jaysañanaka 7
+      cuttingEdge: 'Nayraqata ukhamarak machaq luraña',
+      traditional: 'Tradicional lurañanaka yant\'ata',
+      adaptable: 'Machaq tendencianakaru uñt\'ayañäni',
+      // Jaysañanaka 8
+      veryActive: 'Ancha luriri social eventokunanxa',
+      moderate: 'Taypi social',
+      studyFocused: 'Yatiñankanxa uñjata',
+      // Jaysañanaka 9
+      highPressure: 'Jach\'a ch\'amakañäni ukhamarak thaqhäñanaka',
+      relaxed: 'Samart\'äñ ukhamarak flexible pachasa',
+      structured: 'Qhana ukhamarak wakicht\'ata estructura',
+      // Jaysañanaka 10
+      urbanCenter: 'Dinámico marka chawpi',
+      residential: 'Ch\'uxña jakañ chiqasa',
+      mixed: 'Panïrinakamanta chaqru',
+      // Lurañanaka
       results: 'Lurañanakama',
       compatibility: 'Cultura Katxaña',
-      topMatches: 'Kimsa Aswan Suma Yatiñ Utanaks',
+      topMatches: 'Pichqa Aswan Suma Yatiñ Utanaks',
       whyMatch: '¿Kunarayku suma katxaña?',
       retakeTest: 'Wasitat luraña pruebata'
     }
