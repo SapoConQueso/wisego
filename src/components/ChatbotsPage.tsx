@@ -90,54 +90,60 @@ export function ChatbotsPage({ onNavigate }: ChatbotsPageProps) {
     setSelectedBot(bot);
   };
 
+  // Respuestas predeterminadas por tipo de bot
+  const VOCATIONAL_RESPONSES = [
+    "Si lo tuyo es comunicar, conectar con personas, contar historias o generar ideas, pero prefieres evadir temas matemáticos complejos, podrías considerar carreras como Comunicación Social, Relaciones Públicas, Marketing Digital, Diseño Gráfico o Psicología (enfocada en el área de intervención o educación). Estas áreas valoran tu habilidad para comunicar, trabajar en equipo y entender personas. Luego podremos ver universidades e institutos que ofrecen esas opciones con mallas adaptadas a tus intereses.",
+    
+    "Sí — nuestro test está diseñado para identificar tus intereses, tus habilidades y tus preferencias de trabajo (por ejemplo: prefiero crear ideas vs. prefiero analizar datos). Al responder secciones sobre '¿quieres inventar cosas o resolver procesos?' y '¿te interesa el arte/la comunicación o la tecnología/la lógica?', podremos indicarte si estás más orientado hacia una carrera creativa (diseño, comunicación, artes) o una carrera técnica (ingeniería, informática, análisis). De esa manera, tendrás una propuesta personalizada y no una lista genérica.",
+    
+    `Si tu objetivo es ayudar, impactar en la vida de las personas, pero quieres explorar otras rutas distintas a medicina o psicología clínica, existen múltiples opciones:
+
+• Educación / Pedagogía: profesor, orientador educativo, formador de contenido.
+• Trabajo social comunitario o desarrollo humano: proyectos ONG, inclusión cultural.
+• Comunicación para cambio social: comunicación institucional, campañas de salud, marketing social.
+• Diseño de servicios / experiencia de usuario: ayudar a mejorar productos o servicios para personas.
+
+Podremos explorar opciones en nuestra base de datos de universidades e institutos para encontrar aquellas que ofrezcan mallas orientadas al impacto social, y filtrar por modalidad, costo y ubicación.`
+  ];
+
+  const GENERAL_RESPONSES = [
+    `Según datos recientes del mercado peruano, la carrera de Ingeniería Industrial es una de las más demandadas por las empresas en 2025, gracias a las tendencias de automatización y mejora de procesos.
+
+En Lima destacan instituciones con alta empleabilidad para esta carrera, por ejemplo la Universidad de Lima, que figura en rankings internacionales por empleabilidad estudiantil.
+
+En WiseGO! podemos revisar nuestra base de datos y mostrar una lista filtrada con universidades que publican sus tasas de egreso y empleo, comparar costos, ubicación y valor agregado para que elijas con criterio.`,
+    
+    `¡Buena pregunta! En nuestra sección de Eventos tienes un listado actualizado de próximos Open Days, ferias universitarias y talleres vocacionales. Por ejemplo, si estás en Lima, te sugerimos revisar los eventos en los distritos de San Isidro, Miraflores y Surco en los próximos 2 a 4 semanas.
+
+También puedes filtrar por modalidad presencial o virtual, y te podemos enviar una alerta cuando falten pocos días para el evento. ¿Te gustaría que te busque uno ahora mismo?`
+  ];
+
   const sendMessage = async () => {
     const text = inputRef.current?.value.trim();
     if (!text || !selectedBot) return;
-    // añadir usuario
+    
+    // añadir mensaje de usuario
     const newHistory = [...chatHistory, { role: "user" as const, text }];
     setChatHistory(newHistory);
     saveHistory(newHistory);
     inputRef.current!.value = "";
 
-    // formatear prompt con personalidad + chat previo
-    const fullPrompt =
-      PERSONALITIES[selectedBot] + "\n" +
-      newHistory.map(m => `${m.role==="user"?"Usuario":"Asistente"}: ${m.text}`).join("\n");
+    // Simulación de procesamiento
+    setStatusText("Procesando...");
+    
+    // Simular delay
+    await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 1200));
 
-    // conectar SSE
-    const resp = await fetch("http://zaylar.com:12506/agent", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt: fullPrompt })
-    });
-    const reader = resp.body!.getReader();
-    const decoder = new TextDecoder();
-    let assistantText = "";
+    // Seleccionar respuesta según el bot y el número de mensaje
+    const responses = selectedBot === "vocational" ? VOCATIONAL_RESPONSES : GENERAL_RESPONSES;
+    const userMessagesCount = newHistory.filter(m => m.role === "user").length;
+    const responseIndex = (userMessagesCount - 1) % responses.length;
+    const assistantText = responses[responseIndex];
 
-    // leer stream
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) break;
-      const chunk = decoder.decode(value, { stream: true });
-      // cada evento separado por doble salto
-      chunk.split("\n\n").forEach(line => {
-        if (!line.startsWith("data:")) return;
-        try {
-          const evt = JSON.parse(line.replace("data:", "").trim());
-          // actualizar estado legible
-          const txt = STATUS_TEXT[evt.status]?.(evt.message) ?? "";
-          setStatusText(txt);
-
-          if (evt.status === "done") {
-            assistantText += evt.response;
-            const updated = [...newHistory, { role: "assistant" as const, text: assistantText }];
-            setChatHistory(updated);
-            saveHistory(updated);
-            setStatusText("");
-          }
-        } catch {}
-      });
-    }
+    const updated = [...newHistory, { role: "assistant" as const, text: assistantText }];
+    setChatHistory(updated);
+    saveHistory(updated);
+    setStatusText("");
   };
 
   // pantalla de selección

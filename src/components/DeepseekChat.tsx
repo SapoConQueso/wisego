@@ -49,73 +49,33 @@ export function DeepseekChat({ onNavigate, title, systemPrompt = "Eres un asiste
 
   useEffect(scrollToBottom, [messages]);
 
-  // Simulación de respuesta de IA (reemplazará la llamada real más tarde)
+  // Contador de mensajes del usuario para respuestas en secuencia
+  const [userMessageCount, setUserMessageCount] = useState(0);
+
+  // Respuestas predeterminadas del Test Vocacional
+  const VOCATIONAL_RESPONSES = [
+    "Si lo tuyo es comunicar, conectar con personas, contar historias o generar ideas, pero prefieres evadir temas matemáticos complejos, podrías considerar carreras como Comunicación Social, Relaciones Públicas, Marketing Digital, Diseño Gráfico o Psicología (enfocada en el área de intervención o educación). Estas áreas valoran tu habilidad para comunicar, trabajar en equipo y entender personas. Luego podremos ver universidades e institutos que ofrecen esas opciones con mallas adaptadas a tus intereses.",
+    
+    "Sí — nuestro test está diseñado para identificar tus intereses, tus habilidades y tus preferencias de trabajo (por ejemplo: prefiero crear ideas vs. prefiero analizar datos). Al responder secciones sobre '¿quieres inventar cosas o resolver procesos?' y '¿te interesa el arte/la comunicación o la tecnología/la lógica?', podremos indicarte si estás más orientado hacia una carrera creativa (diseño, comunicación, artes) o una carrera técnica (ingeniería, informática, análisis). De esa manera, tendrás una propuesta personalizada y no una lista genérica.",
+    
+    `Si tu objetivo es ayudar, impactar en la vida de las personas, pero quieres explorar otras rutas distintas a medicina o psicología clínica, existen múltiples opciones:
+
+• Educación / Pedagogía: profesor, orientador educativo, formador de contenido.
+• Trabajo social comunitario o desarrollo humano: proyectos ONG, inclusión cultural.
+• Comunicación para cambio social: comunicación institucional, campañas de salud, marketing social.
+• Diseño de servicios / experiencia de usuario: ayudar a mejorar productos o servicios para personas.
+
+Podremos explorar opciones en nuestra base de datos de universidades e institutos para encontrar aquellas que ofrezcan mallas orientadas al impacto social, y filtrar por modalidad, costo y ubicación.`
+  ];
+
+  // Simulación de respuesta de IA (respuestas predeterminadas en orden)
   const simulateAIResponse = async (userMessage: string): Promise<string> => {
     // Simulamos un delay para hacer parecer que está procesando
-    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
+    await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 1500));
     
-    // Respuestas predefinidas inteligentes basadas en palabras clave
-    const responses = {
-      saludo: [
-        "¡Hola! Me alegra poder ayudarte con tu orientación educativa. ¿Tienes alguna carrera específica en mente?",
-        "¡Perfecto! Estoy aquí para guiarte en tu búsqueda educativa. ¿Qué te interesa estudiar?",
-        "¡Excelente! Puedo ayudarte a explorar diferentes opciones educativas. ¿Cuáles son tus intereses principales?"
-      ],
-      carrera: [
-        "Hay muchas carreras fascinantes disponibles. ¿Podrías contarme más sobre tus intereses y habilidades para poder recomendarte mejor?",
-        "Para ayudarte a elegir la carrera ideal, me gustaría conocer: ¿qué materias te gustan más? ¿Prefieres trabajar con personas, datos, o proyectos creativos?",
-        "Excelente pregunta sobre carreras. ¿Hay algún campo específico que te llame la atención? Por ejemplo: tecnología, salud, arte, negocios, etc."
-      ],
-      universidad: [
-        "Las universidades en Perú ofrecen excelentes programas. ¿Tienes preferencia por alguna región específica o modalidad de estudio?",
-        "Hay muchas opciones universitarias. Para recomendarte mejor, ¿qué factores son más importantes para ti: ubicación, costos, prestigio, o especialización?",
-        "Te puedo ayudar a comparar universidades. ¿Estás considerando universidades públicas, privadas, o ambas opciones?"
-      ],
-      ingenieria: [
-        "¡La ingeniería es un campo excelente! Hay muchas especializaciones: industrial, sistemas, civil, mecánica, etc. ¿Alguna te interesa más?",
-        "Las carreras de ingeniería tienen gran demanda laboral. ¿Te inclinas más hacia la tecnología, la construcción, o los procesos industriales?",
-        "Perfecto, la ingeniería ofrece muchas oportunidades. ¿Prefieres trabajar con software, hardware, infraestructura, o procesos?"
-      ],
-      medicina: [
-        "La medicina es una carrera muy noble y demandante. ¿Te atrae más la práctica clínica, la investigación, o alguna especialidad específica?",
-        "Estudiar medicina requiere mucha dedicación pero es muy gratificante. ¿Has considerado las diferentes ramas como pediatría, cirugía, o medicina familiar?",
-        "Excelente elección considerar medicina. ¿Te interesa más el contacto directo con pacientes o la investigación médica?"
-      ],
-      administracion: [
-        "La administración de empresas es muy versátil. ¿Te interesa más el área de finanzas, marketing, recursos humanos, o operaciones?",
-        "Los negocios ofrecen muchas oportunidades. ¿Tienes interés en emprender tu propio negocio o trabajar en empresas establecidas?",
-        "La gestión empresarial es clave en todas las industrias. ¿Qué tipo de organizaciones te atraen más: startups, corporaciones, ONG?"
-      ],
-      default: [
-        "Esa es una excelente pregunta. Basándome en mi experiencia en orientación educativa, te recomiendo considerar varios factores importantes.",
-        "Me parece muy interesante tu consulta. Para darte una respuesta más específica, ¿podrías contarme un poco más sobre tu situación actual?",
-        "Gracias por tu pregunta. En mi experiencia ayudando estudiantes, he visto que es importante considerar tanto tus intereses como las oportunidades del mercado laboral."
-      ]
-    };
-
-    // Detectar palabras clave en el mensaje del usuario
-    const message = userMessage.toLowerCase();
-    let responseCategory = 'default';
-    
-    if (message.includes('hola') || message.includes('buenos') || message.includes('saludos')) {
-      responseCategory = 'saludo';
-    } else if (message.includes('carrera') || message.includes('estudiar') || message.includes('profesión')) {
-      responseCategory = 'carrera';
-    } else if (message.includes('universidad') || message.includes('instituto') || message.includes('centro de estudios')) {
-      responseCategory = 'universidad';
-    } else if (message.includes('ingeniería') || message.includes('ingenieria') || message.includes('ingeniero')) {
-      responseCategory = 'ingenieria';
-    } else if (message.includes('medicina') || message.includes('doctor') || message.includes('médico') || message.includes('salud')) {
-      responseCategory = 'medicina';
-    } else if (message.includes('administración') || message.includes('administracion') || message.includes('negocios') || message.includes('empresas')) {
-      responseCategory = 'administracion';
-    }
-
-    // Seleccionar una respuesta aleatoria de la categoría
-    const categoryResponses = responses[responseCategory as keyof typeof responses];
-    const randomResponse = categoryResponses[Math.floor(Math.random() * categoryResponses.length)];
-    
-    return randomResponse;
+    // Devolver respuesta en orden secuencial
+    const responseIndex = userMessageCount % VOCATIONAL_RESPONSES.length;
+    return VOCATIONAL_RESPONSES[responseIndex];
   };
 
   const sendMessage = async () => {
@@ -143,6 +103,7 @@ export function DeepseekChat({ onNavigate, title, systemPrompt = "Eres un asiste
       };
 
       setMessages(prev => [...prev, botMessage]);
+      setUserMessageCount(prev => prev + 1);
     } catch (error) {
       // Agregar mensaje de error como respuesta del bot
       const errorMessage: Message = {
