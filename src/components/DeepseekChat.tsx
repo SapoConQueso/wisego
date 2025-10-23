@@ -70,8 +70,8 @@ Podremos explorar opciones en nuestra base de datos de universidades e instituto
 
   // Simulación de respuesta de IA (respuestas predeterminadas en orden)
   const simulateAIResponse = async (userMessage: string): Promise<string> => {
-    // Simulamos un delay más largo (3-5 segundos) para parecer más realista
-    await new Promise(resolve => setTimeout(resolve, 3000 + Math.random() * 2000));
+    // Simulamos un delay para hacer parecer que está procesando
+    await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 1500));
     
     // Devolver respuesta en orden secuencial
     const responseIndex = userMessageCount % VOCATIONAL_RESPONSES.length;
@@ -188,15 +188,8 @@ Podremos explorar opciones en nuestra base de datos de universidades e instituto
                 <Card className="bg-muted">
                   <CardContent className="p-3">
                     <div className="flex items-center space-x-2">
-                      <Bot className="h-5 w-5" />
-                      <div className="flex items-center space-x-1">
-                        <span className="text-sm">Procesando</span>
-                        <span className="flex space-x-1">
-                          <span className="animate-bounce text-sm" style={{ animationDelay: '0ms' }}>.</span>
-                          <span className="animate-bounce text-sm" style={{ animationDelay: '150ms' }}>.</span>
-                          <span className="animate-bounce text-sm" style={{ animationDelay: '300ms' }}>.</span>
-                        </span>
-                      </div>
+                      <Bot className="h-5 w-5 animate-pulse" />
+                      <p className="text-sm">{t.chat.typing || "Escribiendo..."}</p>
                     </div>
                   </CardContent>
                 </Card>

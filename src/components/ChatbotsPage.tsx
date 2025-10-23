@@ -128,11 +128,11 @@ También puedes filtrar por modalidad presencial o virtual, y te podemos enviar 
     saveHistory(newHistory);
     inputRef.current!.value = "";
 
-    // Simulación de procesamiento con delay más largo
-    setStatusText("Procesando");
+    // Simulación de procesamiento
+    setStatusText("Procesando...");
     
-    // Simular delay de 3-5 segundos para parecer más realista
-    await new Promise(resolve => setTimeout(resolve, 3000 + Math.random() * 2000));
+    // Simular delay
+    await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 1200));
 
     // Seleccionar respuesta según el bot y el número de mensaje
     const responses = selectedBot === "vocational" ? VOCATIONAL_RESPONSES : GENERAL_RESPONSES;
@@ -236,17 +236,8 @@ También puedes filtrar por modalidad presencial o virtual, y te podemos enviar 
           </div>
         ))}
         {statusText && (
-          <div className="text-left">
-            <div className="inline-block p-2 rounded bg-muted text-foreground">
-              <div className="flex items-center space-x-1">
-                <span>{statusText}</span>
-                <span className="flex space-x-1">
-                  <span className="animate-bounce" style={{ animationDelay: '0ms' }}>.</span>
-                  <span className="animate-bounce" style={{ animationDelay: '150ms' }}>.</span>
-                  <span className="animate-bounce" style={{ animationDelay: '300ms' }}>.</span>
-                </span>
-              </div>
-            </div>
+          <div className="text-center text-sm italic text-muted-foreground">
+            {statusText}
           </div>
         )}
       </div>
