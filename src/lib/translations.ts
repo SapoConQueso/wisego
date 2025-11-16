@@ -25,6 +25,10 @@ export interface Translations {
     subtitle: string;
     searchPlaceholder: string;
     quickActions: string;
+    compareDesc: string;
+    mapDesc: string;
+    chatbotsDesc: string;
+    communityDesc: string;
     announcement: string;
     announcementButton: string;
     moreInfo: string;
@@ -446,6 +450,10 @@ export const translations: Record<Language, Translations> = {
       subtitle: 'Hazlo claro. Hazlo sabio. Hazlo Wise.',
       searchPlaceholder: 'Buscar carreras, universidades, funciones...',
       quickActions: 'Accesos Rápidos',
+      compareDesc: 'Compara universidades e institutos',
+      mapDesc: 'Explora instituciones en el mapa',
+      chatbotsDesc: 'Asistentes con IA y test vocacional',
+      communityDesc: 'Conéctate con otros estudiantes',
       announcement: '¡Ya están abiertas las inscripciones para el Open ULima!',
       announcementButton: '¡Inscripciones aquí!',
       moreInfo: 'Más información',
@@ -840,6 +848,10 @@ export const translations: Record<Language, Translations> = {
       subtitle: 'Make it clear. Make it wise. Make it Wise.',
       searchPlaceholder: 'Search careers, universities, functions...',
       quickActions: 'Quick Actions',
+      compareDesc: 'Compare universities and institutes',
+      mapDesc: 'Explore institutions on the map',
+      chatbotsDesc: 'AI assistants and vocational test',
+      communityDesc: 'Connect with other students',
       announcement: 'Open ULima registrations are now open!',
       announcementButton: 'Register here!',
       moreInfo: 'More information',
@@ -1234,6 +1246,10 @@ export const translations: Record<Language, Translations> = {
       subtitle: 'Sut\'ita ruway. Yachayniyuqta ruway. Wise ruway.',
       searchPlaceholder: 'Llamk\'anakunata, yachaywasikunata maskay...',
       quickActions: 'Utqaylla Ruraykunata',
+      compareDesc: 'Yachaywasikunata tupachiy',
+      mapDesc: 'Yachaywasikunata mapapi riy',
+      chatbotsDesc: 'IA yanapakuq hinaspa llamkana yachay',
+      communityDesc: 'Wak yachakuqkunawan tinkunakuy',
       announcement: '¡ULima kichayninña kichakun!',
       announcementButton: '¡Kaypi qillqakuy!',
       moreInfo: 'Aswan willakuy',
@@ -1628,6 +1644,10 @@ export const translations: Record<Language, Translations> = {
       subtitle: 'Qhanañchañäni. Yatiñani luraña. Wise luraña.',
       searchPlaceholder: 'Irnaqäwinaka, yatiñ utanaka, lurañanakampixa thaqhañäni...',
       quickActions: 'Jayyäñäña Lurañanaka',
+      compareDesc: 'Yatiñ utanaka chimpuña',
+      mapDesc: 'Yatiñ utanaka mapana uñjañäni',
+      chatbotsDesc: 'IA yanapirinaka ukat irnaqäña yatiña',
+      communityDesc: 'Mayacht\'ata yatirinakampi chikt\'atañäni',
       announcement: '¡ULima jist\'arañawa wakisiri kichasiña!',
       announcementButton: '¡Akana qillqantañäni!',
       moreInfo: 'Juk\'ampi yatiñanaka',

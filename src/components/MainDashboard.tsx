@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
 import { LanguageSelector } from "./LanguageSelector";
-import { Menu, Search, ChevronRight, Info, BarChart3, MapPin, MessageSquare, User, LogOut, Users, X, Crown, FileText, UserCheck, Calculator, Heart } from "lucide-react";
+import { Menu, Search, ChevronRight, Info, BarChart3, MapPin, MessageSquare, User, LogOut, Users, X, Crown, FileText, UserCheck, Calculator, Heart, Bell } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useSearch } from "@/hooks/useSearch";
@@ -12,6 +12,9 @@ import { useAuth } from "@/components/AuthProvider";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslation } from "@/lib/translations";
+import { useNotifications } from "@/hooks/useNotifications";
+import { NotificationsPanel } from "./NotificationsPanel";
+import { NewFeatureDialog } from "./NewFeatureDialog";
 
 interface MainDashboardProps {
   onNavigate: (view: string) => void;
@@ -22,8 +25,10 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
   const { user, isGuest, signOut } = useAuth();
   const { searchQuery, setSearchQuery, searchResults, hasResults } = useSearch(onNavigate);
   const [showSearchResults, setShowSearchResults] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
   const { currentLanguage } = useLanguage();
   const t = getTranslation(currentLanguage);
+  const { unreadCount } = useNotifications();
 
   const menuItems = [
     { icon: BarChart3, label: t.nav.compare, action: () => onNavigate("compare") },
@@ -61,15 +66,32 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
 
   return (
     <div className="min-h-screen bg-background">
+      <NewFeatureDialog />
+      
       {/* Header */}
-      <header className="bg-primary text-primary-foreground p-3 sm:p-4 shadow-lg border-b border-border">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2 min-w-0 flex-shrink">
+      <header className="bg-primary text-primary-foreground p-3 sm:p-4 shadow-lg border-b border-border sticky top-0 z-50">
+        <div className="flex items-center justify-between max-w-7xl mx-auto">
+          <div className="flex items-center space-x-2 min-w-0 flex-shrink cursor-pointer" onClick={() => onNavigate("dashboard")}>
             <WiseGoLogo size="sm" />
             <span className="text-lg sm:text-xl font-bold font-title tracking-wide hidden xs:block">WiseGO!</span>
           </div>
           
           <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+            {!isGuest && user && (
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="relative text-primary-foreground hover:bg-primary-foreground/20"
+                onClick={() => setShowNotifications(true)}
+              >
+                <Bell className="h-5 w-5" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 h-5 w-5 bg-destructive rounded-full text-xs flex items-center justify-center animate-pulse">
+                    {unreadCount}
+                  </span>
+                )}
+              </Button>
+            )}
             <div className="hidden sm:block">
               <LanguageSelector />
             </div>
@@ -230,29 +252,57 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
         </div>
       </div>
 
-      {/* Main Content */}
-      <main className="p-4 space-y-6">
-        {/* Hero Section */}
-        <div className="bg-card text-card-foreground rounded-2xl p-8 text-center relative overflow-hidden border border-border shadow-lg">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5"></div>
-          <div className="absolute inset-0 opacity-10">
-            <svg width="100%" height="100%" viewBox="0 0 400 200" className="h-full">
-              <defs>
-                <pattern id="heroPattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <circle cx="20" cy="20" r="2" fill="currentColor" opacity="0.3"/>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#heroPattern)" />
-            </svg>
-          </div>
-          <div className="relative z-10">
-            <WiseGoLogo size="lg" className="mx-auto mb-6" />
-            <h1 className="text-4xl sm:text-5xl font-bold font-title mb-4 tracking-wide">{t.dashboard.title}</h1>
-            <p className="text-lg sm:text-xl font-subtitle text-muted-foreground max-w-2xl mx-auto">
+      <main className="pb-12">
+      {/* Hero Section - Redesigned */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/20"></div>
+        <div className="absolute inset-0 bg-[url('/lovable-uploads/pattern.svg')] opacity-5"></div>
+        
+        <div className="relative py-12 sm:py-16 px-4 max-w-7xl mx-auto">
+          <div className="text-center animate-fade-in">
+            <Badge className="mb-4 text-sm px-4 py-1.5" variant="secondary">
+              ✨ Nuevas funcionalidades disponibles
+            </Badge>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-foreground mb-6 font-title">
+              {t.dashboard.title}
+            </h1>
+            <p className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
               {t.dashboard.subtitle}
             </p>
+            
+            {/* Quick Action Pills */}
+            <div className="flex flex-wrap justify-center gap-3 mt-8">
+              <Button 
+                variant="wisego" 
+                size="lg" 
+                onClick={() => onNavigate("compare")}
+                className="gap-2 shadow-lg hover:shadow-xl transition-all"
+              >
+                <BarChart3 className="h-4 w-4" />
+                Comparar Universidades
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg" 
+                onClick={() => onNavigate("chatbots")}
+                className="gap-2 border-2 hover:bg-accent"
+              >
+                <MessageSquare className="h-4 w-4" />
+                Test Vocacional
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg" 
+                onClick={() => onNavigate("map")}
+                className="gap-2 border-2 hover:bg-accent"
+              >
+                <MapPin className="h-4 w-4" />
+                Explorar Mapa
+              </Button>
+            </div>
           </div>
         </div>
+      </section>
 
         {/* Guest Welcome Banner */}
         {isGuest && (
@@ -277,76 +327,97 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
           </div>
         )}
 
-        {/* Announcement */}
-        <div className="bg-card border border-border rounded-2xl p-6 shadow-lg relative">
-          {/* AD Badge */}
-          <div className="absolute top-3 right-3 bg-muted/80 text-muted-foreground text-xs font-bold px-2 py-1 rounded border border-border/50">
-            AD
-          </div>
-          <div className="flex items-start space-x-4">
-            <div className="bg-accent p-3 rounded-xl shadow-lg">
-              <Info className="h-6 w-6 text-accent-foreground" />
+        {/* Quick Actions - Improved Grid */}
+        <section className="py-12 px-4 bg-muted/30">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl font-bold text-foreground mb-3 font-title">Herramientas Disponibles</h2>
+              <p className="text-muted-foreground text-lg">Explora todas las funciones de WiseGO!</p>
             </div>
-            <div className="flex-1">
-              <p className="text-base font-medium font-title text-card-foreground mb-4">
-                {t.dashboard.announcement}
-              </p>
-              <div className="flex flex-wrap gap-3">
-                <Button 
-                  size="sm" 
-                  onClick={() => window.open("https://www.ulima.edu.pe", "_blank")}
-                  className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full shadow-lg border border-accent/50 font-subtitle"
-                >
-                  {t.dashboard.announcementButton}
-                </Button>
-              </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <Card className="hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary cursor-pointer group hover:-translate-y-2" onClick={() => onNavigate("compare")}>
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500/20 to-blue-600/30 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                    <BarChart3 className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <h3 className="font-bold text-lg mb-2">{t.nav.compare}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{t.dashboard.compareDesc}</p>
+                </CardContent>
+              </Card>
+
+              <Card className="hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary cursor-pointer group hover:-translate-y-2" onClick={() => onNavigate("map")}>
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-green-500/20 to-green-600/30 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                    <MapPin className="w-8 h-8 text-green-600 dark:text-green-400" />
+                  </div>
+                  <h3 className="font-bold text-lg mb-2">{t.nav.map}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{t.dashboard.mapDesc}</p>
+                </CardContent>
+              </Card>
+
+              <Card className="hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary cursor-pointer group hover:-translate-y-2" onClick={() => onNavigate("chatbots")}>
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-500/20 to-purple-600/30 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                    <MessageSquare className="w-8 h-8 text-purple-600 dark:text-purple-400" />
+                  </div>
+                  <h3 className="font-bold text-lg mb-2">{t.nav.chatbots}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{t.dashboard.chatbotsDesc}</p>
+                </CardContent>
+              </Card>
+
+              <Card className="hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary cursor-pointer group hover:-translate-y-2" onClick={() => onNavigate("community")}>
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-pink-500/20 to-pink-600/30 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                    <Users className="w-8 h-8 text-pink-600 dark:text-pink-400" />
+                  </div>
+                  <h3 className="font-bold text-lg mb-2">{t.nav.community}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{t.dashboard.communityDesc}</p>
+                </CardContent>
+              </Card>
+
+              <Card className="hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary cursor-pointer group hover:-translate-y-2" onClick={() => onNavigate("scholarship-guide")}>
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-yellow-500/20 to-yellow-600/30 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                    <FileText className="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
+                  </div>
+                  <h3 className="font-bold text-lg mb-2">{t.nav.scholarshipGuide}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">Encuentra y aplica a becas disponibles</p>
+                </CardContent>
+              </Card>
+
+              <Card className="hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary cursor-pointer group hover:-translate-y-2" onClick={() => onNavigate("mentor-match")}>
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-indigo-500/20 to-indigo-600/30 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                    <UserCheck className="w-8 h-8 text-indigo-600 dark:text-indigo-400" />
+                  </div>
+                  <h3 className="font-bold text-lg mb-2">{t.nav.mentorMatch}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">Conecta con mentores y asesores</p>
+                </CardContent>
+              </Card>
+
+              <Card className="hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary cursor-pointer group hover:-translate-y-2" onClick={() => onNavigate("cost-simulator")}>
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-teal-500/20 to-teal-600/30 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                    <Calculator className="w-8 h-8 text-teal-600 dark:text-teal-400" />
+                  </div>
+                  <h3 className="font-bold text-lg mb-2">{t.nav.costSimulator}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">Calcula el costo total de tu carrera</p>
+                </CardContent>
+              </Card>
+
+              <Card className="hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary cursor-pointer group hover:-translate-y-2" onClick={() => onNavigate("culture-fit")}>
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-red-500/20 to-red-600/30 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                    <Heart className="w-8 h-8 text-red-600 dark:text-red-400" />
+                  </div>
+                  <h3 className="font-bold text-lg mb-2">{t.nav.cultureFit}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">Descubre qué universidades encajan contigo</p>
+                </CardContent>
+              </Card>
             </div>
           </div>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="bg-card border border-border rounded-2xl p-6 shadow-lg">
-          <h2 className="text-2xl sm:text-3xl font-bold font-title mb-8 text-center text-card-foreground">{t.dashboard.quickActions}</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {menuItems.map((item, index) => (
-              <Button
-                key={index}
-                variant="ghost"
-                className="h-24 sm:h-28 flex flex-col items-center justify-center space-y-3 bg-muted/30 border border-border rounded-xl hover:bg-muted hover:scale-105 transition-all duration-300 group"
-                onClick={item.action}
-              >
-                <item.icon className="h-6 w-6 sm:h-8 sm:w-8 text-foreground group-hover:text-accent transition-colors" />
-                <span className="text-xs sm:text-sm font-medium font-subtitle text-muted-foreground group-hover:text-foreground text-center leading-tight">{item.label}</span>
-              </Button>
-            ))}
-          </div>
-        </div>
-
-        {/* ¿Por qué elegir WiseGo? */}
-        <div className="bg-card border border-border rounded-2xl p-6 shadow-lg">
-          <h2 className="text-2xl sm:text-3xl font-bold font-title mb-6 text-center text-card-foreground">
-            {t.about.whyChoose} <span className="text-accent">WiseGO!</span>?
-          </h2>
-          <p className="text-base text-muted-foreground leading-relaxed text-center max-w-4xl mx-auto">
-            {t.about.whyChooseText}
-          </p>
-        </div>
-
-        {/* Nuestra Visión */}
-        <div className="bg-primary text-primary-foreground rounded-2xl p-6 shadow-lg">
-          <h3 className="text-2xl sm:text-3xl font-bold font-title mb-6 text-center">{t.about.ourVision}</h3>
-          <p className="text-base leading-relaxed text-center max-w-4xl mx-auto">
-            {t.about.visionText}
-          </p>
-        </div>
-
-        {/* Nuestra Misión */}
-        <div className="bg-accent text-accent-foreground rounded-2xl p-6 shadow-lg">
-          <h3 className="text-2xl sm:text-3xl font-bold font-title mb-6 text-center">{t.about.ourMission}</h3>
-          <p className="text-base leading-relaxed text-center max-w-4xl mx-auto">
-            {t.about.missionText}
-          </p>
-        </div>
+        </section>
 
         {/* Nuestros Socios Clave */}
         <div className="bg-card border border-border rounded-2xl p-8 shadow-lg">
@@ -371,6 +442,12 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
           </div>
         </div>
       </main>
+      {/* Notifications Sheet */}
+      <Sheet open={showNotifications} onOpenChange={setShowNotifications}>
+        <SheetContent side="right" className="w-full sm:w-[400px] p-0">
+          <NotificationsPanel onClose={() => setShowNotifications(false)} />
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
