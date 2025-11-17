@@ -98,6 +98,119 @@ export type Database = {
         }
         Relationships: []
       }
+      review_votes: {
+        Row: {
+          created_at: string
+          id: string
+          review_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          review_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          review_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_votes_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "university_reviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      university_reviews: {
+        Row: {
+          category: string
+          comment: string
+          created_at: string
+          helpful_count: number | null
+          id: string
+          is_verified: boolean | null
+          rating: number
+          university_name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          comment: string
+          created_at?: string
+          helpful_count?: number | null
+          id?: string
+          is_verified?: boolean | null
+          rating: number
+          university_name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          comment?: string
+          created_at?: string
+          helpful_count?: number | null
+          id?: string
+          is_verified?: boolean | null
+          rating?: number
+          university_name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      virtual_tours: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          duration_minutes: number | null
+          id: string
+          is_featured: boolean | null
+          thumbnail_url: string | null
+          title: string
+          university_name: string
+          updated_at: string
+          video_url: string
+          view_count: number | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_featured?: boolean | null
+          thumbnail_url?: string | null
+          title: string
+          university_name: string
+          updated_at?: string
+          video_url: string
+          view_count?: number | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_featured?: boolean | null
+          thumbnail_url?: string | null
+          title?: string
+          university_name?: string
+          updated_at?: string
+          video_url?: string
+          view_count?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
