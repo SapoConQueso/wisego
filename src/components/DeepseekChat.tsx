@@ -68,14 +68,12 @@ export function DeepseekChat({ onNavigate, title, systemPrompt = "Eres un asiste
 Podremos explorar opciones en nuestra base de datos de universidades e institutos para encontrar aquellas que ofrezcan mallas orientadas al impacto social, y filtrar por modalidad, costo y ubicación.`
   ];
 
-  // Simulación de respuesta de IA (respuestas predeterminadas en orden)
+  // Mensaje de servicio no disponible
   const simulateAIResponse = async (userMessage: string): Promise<string> => {
-    // Simulamos un delay para hacer parecer que está procesando
-    await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 1500));
+    // Simulamos un delay breve
+    await new Promise(resolve => setTimeout(resolve, 500));
     
-    // Devolver respuesta en orden secuencial
-    const responseIndex = userMessageCount % VOCATIONAL_RESPONSES.length;
-    return VOCATIONAL_RESPONSES[responseIndex];
+    return "Lo sentimos, el servicio de chat con IA se encuentra temporalmente fuera de línea por mantenimiento. Estamos trabajando para mejorar tu experiencia. Por favor, intenta nuevamente más tarde o explora nuestras otras herramientas disponibles.";
   };
 
   const sendMessage = async () => {
