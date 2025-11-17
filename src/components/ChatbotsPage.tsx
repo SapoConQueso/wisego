@@ -132,13 +132,10 @@ También puedes filtrar por modalidad presencial o virtual, y te podemos enviar 
     setStatusText("Procesando...");
     
     // Simular delay
-    await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 1200));
+    await new Promise(resolve => setTimeout(resolve, 500));
 
-    // Seleccionar respuesta según el bot y el número de mensaje
-    const responses = selectedBot === "vocational" ? VOCATIONAL_RESPONSES : GENERAL_RESPONSES;
-    const userMessagesCount = newHistory.filter(m => m.role === "user").length;
-    const responseIndex = (userMessagesCount - 1) % responses.length;
-    const assistantText = responses[responseIndex];
+    // Mensaje de servicio no disponible
+    const assistantText = "Lo sentimos, el servicio de chat con IA se encuentra temporalmente fuera de línea por mantenimiento. Estamos trabajando para mejorar tu experiencia. Por favor, intenta nuevamente más tarde o explora nuestras otras herramientas disponibles.";
 
     const updated = [...newHistory, { role: "assistant" as const, text: assistantText }];
     setChatHistory(updated);
