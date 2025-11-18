@@ -15,6 +15,9 @@ import { getTranslation } from "@/lib/translations";
 import { useNotifications } from "@/hooks/useNotifications";
 import { NotificationsPanel } from "./NotificationsPanel";
 import { NewFeatureDialog } from "./NewFeatureDialog";
+import { EducationalAdBanner } from "./EducationalAdBanner";
+import { PremiumPlansModal } from "./PremiumPlansModal";
+import { useSubscription } from "@/hooks/useSubscription";
 
 interface MainDashboardProps {
   onNavigate: (view: string) => void;
