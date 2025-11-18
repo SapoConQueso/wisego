@@ -14,6 +14,93 @@ export type Database = {
   }
   public: {
     Tables: {
+      community_posts: {
+        Row: {
+          career: string
+          comments_count: number | null
+          content: string
+          created_at: string | null
+          id: string
+          post_type: string
+          university_name: string
+          updated_at: string | null
+          user_id: string
+          votes_count: number | null
+        }
+        Insert: {
+          career: string
+          comments_count?: number | null
+          content: string
+          created_at?: string | null
+          id?: string
+          post_type: string
+          university_name: string
+          updated_at?: string | null
+          user_id: string
+          votes_count?: number | null
+        }
+        Update: {
+          career?: string
+          comments_count?: number | null
+          content?: string
+          created_at?: string | null
+          id?: string
+          post_type?: string
+          university_name?: string
+          updated_at?: string | null
+          user_id?: string
+          votes_count?: number | null
+        }
+        Relationships: []
+      }
+      educational_ads: {
+        Row: {
+          ad_type: string
+          clicks_count: number | null
+          created_at: string | null
+          description: string
+          end_date: string
+          id: string
+          image_url: string | null
+          impressions_count: number | null
+          is_active: boolean | null
+          link_url: string | null
+          start_date: string
+          title: string
+          university_name: string | null
+        }
+        Insert: {
+          ad_type: string
+          clicks_count?: number | null
+          created_at?: string | null
+          description: string
+          end_date: string
+          id?: string
+          image_url?: string | null
+          impressions_count?: number | null
+          is_active?: boolean | null
+          link_url?: string | null
+          start_date: string
+          title: string
+          university_name?: string | null
+        }
+        Update: {
+          ad_type?: string
+          clicks_count?: number | null
+          created_at?: string | null
+          description?: string
+          end_date?: string
+          id?: string
+          image_url?: string | null
+          impressions_count?: number | null
+          is_active?: boolean | null
+          link_url?: string | null
+          start_date?: string
+          title?: string
+          university_name?: string | null
+        }
+        Relationships: []
+      }
       favorites: {
         Row: {
           created_at: string
@@ -67,6 +154,73 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      post_comments: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          post_id: string
+          user_id: string
+          votes_count: number | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          post_id: string
+          user_id: string
+          votes_count?: number | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          post_id?: string
+          user_id?: string
+          votes_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      post_votes: {
+        Row: {
+          created_at: string | null
+          id: string
+          post_id: string
+          user_id: string
+          vote_type: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          post_id: string
+          user_id: string
+          vote_type: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          post_id?: string
+          user_id?: string
+          vote_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_votes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -126,6 +280,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      subscriptions: {
+        Row: {
+          created_at: string | null
+          current_period_end: string | null
+          current_period_start: string | null
+          id: string
+          plan_type: string
+          status: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          plan_type: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          plan_type?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       university_reviews: {
         Row: {
