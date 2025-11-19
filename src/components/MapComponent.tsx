@@ -12,6 +12,7 @@ interface University {
 }
 
 const universities: University[] = [
+  // Perú - Lima
   {
     id: "1",
     name: "Universidad de Lima",
@@ -46,6 +47,143 @@ const universities: University[] = [
     location: "San Martín de Porres, Lima",
     type: "Privada",
     coordinates: [-77.0703, -12.0256]
+  },
+  {
+    id: "6",
+    name: "Universidad Nacional de Ingeniería",
+    location: "Rímac, Lima",
+    type: "Pública",
+    coordinates: [-77.0489, -12.0219]
+  },
+  {
+    id: "7",
+    name: "Universidad Peruana de Ciencias Aplicadas",
+    location: "Santiago de Surco, Lima",
+    type: "Privada",
+    coordinates: [-76.9922, -12.1083]
+  },
+  {
+    id: "8",
+    name: "Universidad Nacional Agraria La Molina",
+    location: "La Molina, Lima",
+    type: "Pública",
+    coordinates: [-76.9461, -12.0828]
+  },
+  // Perú - Provincias
+  {
+    id: "9",
+    name: "Universidad Nacional de Trujillo",
+    location: "Trujillo, La Libertad",
+    type: "Pública",
+    coordinates: [-79.0286, -8.1116]
+  },
+  {
+    id: "10",
+    name: "Universidad Nacional San Agustín de Arequipa",
+    location: "Arequipa, Arequipa",
+    type: "Pública",
+    coordinates: [-71.5375, -16.4090]
+  },
+  {
+    id: "11",
+    name: "Universidad Nacional del Altiplano",
+    location: "Puno, Puno",
+    type: "Pública",
+    coordinates: [-70.0199, -15.8402]
+  },
+  {
+    id: "12",
+    name: "Universidad Nacional San Antonio Abad del Cusco",
+    location: "Cusco, Cusco",
+    type: "Pública",
+    coordinates: [-71.9675, -13.5319]
+  },
+  // Internacional - Latinoamérica
+  {
+    id: "13",
+    name: "Universidad de Buenos Aires",
+    location: "Buenos Aires, Argentina",
+    type: "Pública",
+    coordinates: [-58.3816, -34.6037]
+  },
+  {
+    id: "14",
+    name: "Universidad Nacional Autónoma de México",
+    location: "Ciudad de México, México",
+    type: "Pública",
+    coordinates: [-99.1332, 19.4326]
+  },
+  {
+    id: "15",
+    name: "Universidad de São Paulo",
+    location: "São Paulo, Brasil",
+    type: "Pública",
+    coordinates: [-46.6333, -23.5505]
+  },
+  {
+    id: "16",
+    name: "Universidad de Chile",
+    location: "Santiago, Chile",
+    type: "Pública",
+    coordinates: [-70.6693, -33.4489]
+  },
+  {
+    id: "17",
+    name: "Universidad de Los Andes",
+    location: "Bogotá, Colombia",
+    type: "Privada",
+    coordinates: [-74.0721, 4.7110]
+  },
+  // Internacional - Europa
+  {
+    id: "18",
+    name: "Universidad de Barcelona",
+    location: "Barcelona, España",
+    type: "Pública",
+    coordinates: [2.1734, 41.3851]
+  },
+  {
+    id: "19",
+    name: "Universidad Complutense de Madrid",
+    location: "Madrid, España",
+    type: "Pública",
+    coordinates: [-3.7038, 40.4168]
+  },
+  {
+    id: "20",
+    name: "Universidad de Salamanca",
+    location: "Salamanca, España",
+    type: "Pública",
+    coordinates: [-5.6640, 40.9651]
+  },
+  // Internacional - Norteamérica
+  {
+    id: "21",
+    name: "Harvard University",
+    location: "Cambridge, Massachusetts, USA",
+    type: "Privada",
+    coordinates: [-71.0589, 42.3601]
+  },
+  {
+    id: "22",
+    name: "MIT",
+    location: "Cambridge, Massachusetts, USA",
+    type: "Privada",
+    coordinates: [-71.0942, 42.3601]
+  },
+  {
+    id: "23",
+    name: "Stanford University",
+    location: "Stanford, California, USA",
+    type: "Privada",
+    coordinates: [-122.1697, 37.4275]
+  },
+  {
+    id: "24",
+    name: "University of Toronto",
+    location: "Toronto, Ontario, Canadá",
+    type: "Pública",
+    coordinates: [-79.3832, 43.6532]
   }
 ];
 
@@ -58,6 +196,14 @@ const openGoogleMaps = (university: University) => {
 export function MapComponent() {
   return (
     <div className="relative w-full space-y-8">
+      {/* University Counter Badge */}
+      <div className="flex justify-center mb-4">
+        <Badge variant="secondary" className="text-lg px-6 py-2 font-semibold">
+          <MapPin className="h-5 w-5 mr-2" />
+          {universities.length} Universidades Disponibles
+        </Badge>
+      </div>
+
       {/* Animated Location Header */}
       <div className="relative bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg p-8 overflow-hidden mb-6">
         {/* Animated Background Elements */}
