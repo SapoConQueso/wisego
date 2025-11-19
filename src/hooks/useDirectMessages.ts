@@ -9,21 +9,26 @@ export interface DirectMessage {
   message: string;
   is_read: boolean;
   created_at: string;
-  sender?: {
-    username: string;
-    full_name: string;
-    avatar_url: string;
-  };
-  receiver?: {
-    username: string;
-    full_name: string;
-    avatar_url: string;
-  };
+}
+
+export interface ConversationPartner {
+  user_id: string;
+  username: string | null;
+  full_name: string | null;
+  avatar_url: string | null;
+}
+
+export interface Conversation {
+  partnerId: string;
+  partner: ConversationPartner | null;
+  lastMessage: DirectMessage;
+  unreadCount: number;
 }
 
 export const useDirectMessages = (userId?: string) => {
   const [messages, setMessages] = useState<DirectMessage[]>([]);
-  const [conversations, setConversations] = useState<any[]>([]);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [profiles, setProfiles] = useState<Map<string, ConversationPartner>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
@@ -33,8 +38,9 @@ export const useDirectMessages = (userId?: string) => {
       return;
     }
 
-    fetchMessages();
-    fetchConversations();
+    fetchProfiles().then(() => {
+      fetchMessages();
+    });
 
     const channel = supabase
       .channel('direct_messages')
@@ -48,7 +54,6 @@ export const useDirectMessages = (userId?: string) => {
         },
         () => {
           fetchMessages();
-          fetchConversations();
         }
       )
       .subscribe();
@@ -58,16 +63,26 @@ export const useDirectMessages = (userId?: string) => {
     };
   }, [userId]);
 
+  const fetchProfiles = async () => {
+    const { data } = await supabase
+      .from('profiles')
+      .select('user_id, username, full_name, avatar_url');
+
+    if (data) {
+      const profileMap = new Map<string, ConversationPartner>();
+      data.forEach(profile => {
+        profileMap.set(profile.user_id, profile);
+      });
+      setProfiles(profileMap);
+    }
+  };
+
   const fetchMessages = async () => {
     if (!userId) return;
 
     const { data, error } = await supabase
       .from('direct_messages')
-      .select(`
-        *,
-        sender:profiles!direct_messages_sender_id_fkey(username, full_name, avatar_url),
-        receiver:profiles!direct_messages_receiver_id_fkey(username, full_name, avatar_url)
-      `)
+      .select('*')
       .or(`sender_id.eq.${userId},receiver_id.eq.${userId}`)
       .order('created_at', { ascending: true });
 
@@ -78,49 +93,40 @@ export const useDirectMessages = (userId?: string) => {
         description: "No se pudieron cargar los mensajes",
         variant: "destructive",
       });
-    } else {
-      setMessages(data || []);
+      setIsLoading(false);
+      return;
     }
+    
+    setMessages(data || []);
+    buildConversations(data || []);
     setIsLoading(false);
   };
 
-  const fetchConversations = async () => {
+  const buildConversations = (msgs: DirectMessage[]) => {
     if (!userId) return;
 
-    const { data, error } = await supabase
-      .from('direct_messages')
-      .select(`
-        *,
-        sender:profiles!direct_messages_sender_id_fkey(username, full_name, avatar_url),
-        receiver:profiles!direct_messages_receiver_id_fkey(username, full_name, avatar_url)
-      `)
-      .or(`sender_id.eq.${userId},receiver_id.eq.${userId}`)
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('Error fetching conversations:', error);
-    } else {
-      // Group by conversation partner
-      const grouped = (data || []).reduce((acc: any[], msg: DirectMessage) => {
-        const partnerId = msg.sender_id === userId ? msg.receiver_id : msg.sender_id;
-        const existing = acc.find(c => c.partnerId === partnerId);
-        
-        if (!existing) {
-          acc.push({
-            partnerId,
-            partner: msg.sender_id === userId ? msg.receiver : msg.sender,
-            lastMessage: msg,
-            unreadCount: msg.receiver_id === userId && !msg.is_read ? 1 : 0,
-          });
-        } else if (msg.receiver_id === userId && !msg.is_read) {
+    const grouped = msgs.reduce((acc: Conversation[], msg: DirectMessage) => {
+      const partnerId = msg.sender_id === userId ? msg.receiver_id : msg.sender_id;
+      const existing = acc.find(c => c.partnerId === partnerId);
+      
+      if (!existing) {
+        acc.push({
+          partnerId,
+          partner: profiles.get(partnerId) || null,
+          lastMessage: msg,
+          unreadCount: msg.receiver_id === userId && !msg.is_read ? 1 : 0,
+        });
+      } else {
+        existing.lastMessage = msg;
+        if (msg.receiver_id === userId && !msg.is_read) {
           existing.unreadCount++;
         }
-        
-        return acc;
-      }, []);
+      }
       
-      setConversations(grouped);
-    }
+      return acc;
+    }, []);
+    
+    setConversations(grouped);
   };
 
   const sendMessage = async (receiverId: string, message: string) => {
@@ -168,8 +174,11 @@ export const useDirectMessages = (userId?: string) => {
       console.error('Error marking message as read:', error);
     } else {
       fetchMessages();
-      fetchConversations();
     }
+  };
+
+  const getPartner = (partnerId: string): ConversationPartner | null => {
+    return profiles.get(partnerId) || null;
   };
 
   return {
@@ -178,6 +187,7 @@ export const useDirectMessages = (userId?: string) => {
     isLoading,
     sendMessage,
     markAsRead,
+    getPartner,
     refetch: fetchMessages,
   };
 };

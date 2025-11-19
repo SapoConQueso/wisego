@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
 import { LanguageSelector } from "./LanguageSelector";
+import { DirectMessagesDialog } from "./DirectMessagesDialog";
 import { Menu, Search, ChevronRight, Info, BarChart3, MapPin, MessageSquare, User, LogOut, Users, X, Crown, FileText, UserCheck, Calculator, Heart, Bell } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -101,6 +102,11 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
             <div className="hidden sm:block">
               <ThemeToggle />
             </div>
+            {!isGuest && user && (
+              <div className="hidden sm:block">
+                <DirectMessagesDialog />
+              </div>
+            )}
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="sm" className="text-primary-foreground hover:bg-primary-foreground/20 transition-all duration-200 hover:scale-105 h-8 w-8 p-0 sm:h-auto sm:w-auto sm:p-2">
