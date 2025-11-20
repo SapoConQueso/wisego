@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { MessageCircle, Send, ArrowLeft } from "lucide-react";
+import { MessageCircle, Send, ArrowLeft, Trash2 } from "lucide-react";
 import { useDirectMessages } from "@/hooks/useDirectMessages";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -20,7 +20,7 @@ export function DirectMessagesDialog() {
   const { toast } = useToast();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const { messages, conversations, isLoading, sendMessage, markAsRead } = useDirectMessages(currentUser?.id);
+  const { messages, conversations, isLoading, sendMessage, markAsRead, deleteMessage } = useDirectMessages(currentUser?.id);
 
   useEffect(() => {
     checkUser();
@@ -73,8 +73,14 @@ export function DirectMessagesDialog() {
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !selectedConversation) return;
 
-    await sendMessage(selectedConversation, newMessage);
-    setNewMessage("");
+    const success = await sendMessage(selectedConversation, newMessage);
+    if (success) {
+      setNewMessage("");
+    }
+  };
+
+  const handleDeleteMessage = async (messageId: string) => {
+    await deleteMessage(messageId);
   };
 
   const conversationMessages = messages.filter(
@@ -219,10 +225,10 @@ export function DirectMessagesDialog() {
                 {conversationMessages.map(msg => (
                   <div
                     key={msg.id}
-                    className={`mb-4 flex ${msg.sender_id === currentUser?.id ? 'justify-end' : 'justify-start'}`}
+                    className={`mb-4 flex group ${msg.sender_id === currentUser?.id ? 'justify-end' : 'justify-start'}`}
                   >
                     <div
-                      className={`max-w-[70%] rounded-lg p-3 ${
+                      className={`max-w-[70%] rounded-lg p-3 relative ${
                         msg.sender_id === currentUser?.id
                           ? 'bg-primary text-primary-foreground'
                           : 'bg-muted'
@@ -232,6 +238,16 @@ export function DirectMessagesDialog() {
                       <p className="text-xs opacity-70 mt-1">
                         {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </p>
+                      {msg.sender_id === currentUser?.id && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="absolute -top-2 -right-2 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={() => handleDeleteMessage(msg.id)}
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      )}
                     </div>
                   </div>
                 ))}
