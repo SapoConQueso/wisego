@@ -73,11 +73,11 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
       <NewFeatureDialog />
       
       {/* Header */}
-      <header className="bg-primary text-primary-foreground p-3 sm:p-4 shadow-lg border-b border-border sticky top-0 z-50">
+      <header className="bg-primary text-primary-foreground p-3 sm:p-4 shadow-lg border-b-2 border-accent/30 sticky top-0 z-50 backdrop-blur-sm">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
-          <div className="flex items-center space-x-2 min-w-0 flex-shrink cursor-pointer" onClick={() => onNavigate("dashboard")}>
+          <div className="flex items-center space-x-2 min-w-0 flex-shrink cursor-pointer hover:scale-105 transition-transform duration-200" onClick={() => onNavigate("dashboard")}>
             <WiseGoLogo size="sm" />
-            <span className="text-lg sm:text-xl font-bold font-title tracking-wide hidden xs:block">WiseGO!</span>
+            <span className="text-lg sm:text-xl font-bold font-title tracking-wide hidden xs:block gradient-text-white">WiseGO!</span>
           </div>
           
           <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
@@ -218,7 +218,7 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
                 <Button 
                   size="sm"
                   onClick={() => onNavigate("profile")}
-                  className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-3 sm:px-4 shadow-lg text-xs sm:text-sm"
+                  className="bg-accent text-accent-foreground hover:bg-accent/90 hover:scale-105 transition-all duration-200 rounded-full px-3 sm:px-4 shadow-lg text-xs sm:text-sm"
                 >
                   <span className="hidden sm:inline">{isGuest ? "👤 Invitado" : (user?.user_metadata?.username || user?.email?.split('@')[0] || 'Usuario')} 👤</span>
                   <span className="sm:hidden">👤 {isGuest ? "Invitado" : "Perfil"}</span>
@@ -285,7 +285,7 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
                 variant="wisego" 
                 size="lg" 
                 onClick={() => onNavigate("compare")}
-                className="gap-2 shadow-lg hover:shadow-xl transition-all"
+                className="gap-2 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
               >
                 <BarChart3 className="h-4 w-4" />
                 Comparar Universidades
@@ -294,7 +294,7 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
                 variant="outline" 
                 size="lg" 
                 onClick={() => onNavigate("chatbots")}
-                className="gap-2 border-2 hover:bg-accent"
+                className="gap-2 border-2 hover:bg-accent hover:scale-105 transition-all duration-200"
               >
                 <MessageSquare className="h-4 w-4" />
                 Test Vocacional
@@ -345,39 +345,39 @@ export function MainDashboard({ onNavigate, onLogout }: MainDashboardProps) {
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              <Card className="hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary cursor-pointer group hover:-translate-y-2" onClick={() => onNavigate("compare")}>
+              <Card className="hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary cursor-pointer group hover:-translate-y-2 animate-smooth-fade-in" onClick={() => onNavigate("compare")}>
                 <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500/20 to-blue-600/30 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500/20 to-blue-600/30 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
                     <BarChart3 className="w-8 h-8 text-blue-600 dark:text-blue-400" />
                   </div>
-                  <h3 className="font-bold text-lg mb-2">{t.nav.compare}</h3>
+                  <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors">{t.nav.compare}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{t.dashboard.compareDesc}</p>
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary cursor-pointer group hover:-translate-y-2" onClick={() => onNavigate("map")}>
+              <Card className="hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary cursor-pointer group hover:-translate-y-2 animate-smooth-fade-in" onClick={() => onNavigate("map")}>
                 <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-green-500/20 to-green-600/30 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-green-500/20 to-green-600/30 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
                     <MapPin className="w-8 h-8 text-green-600 dark:text-green-400" />
                   </div>
-                  <h3 className="font-bold text-lg mb-2">{t.nav.map}</h3>
+                  <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors">{t.nav.map}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{t.dashboard.mapDesc}</p>
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary cursor-pointer group hover:-translate-y-2" onClick={() => onNavigate("chatbots")}>
+              <Card className="hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary cursor-pointer group hover:-translate-y-2 animate-smooth-fade-in" onClick={() => onNavigate("chatbots")}>
                 <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-500/20 to-purple-600/30 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-500/20 to-purple-600/30 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
                     <MessageSquare className="w-8 h-8 text-purple-600 dark:text-purple-400" />
                   </div>
-                  <h3 className="font-bold text-lg mb-2">{t.nav.chatbots}</h3>
+                  <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors">{t.nav.chatbots}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{t.dashboard.chatbotsDesc}</p>
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary cursor-pointer group hover:-translate-y-2" onClick={() => onNavigate("community")}>
+              <Card className="hover:shadow-2xl transition-all duration-300 border-2 hover:border-primary cursor-pointer group hover:-translate-y-2 animate-smooth-fade-in" onClick={() => onNavigate("community")}>
                 <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-pink-500/20 to-pink-600/30 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-pink-500/20 to-pink-600/30 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
                     <Users className="w-8 h-8 text-pink-600 dark:text-pink-400" />
                   </div>
                   <h3 className="font-bold text-lg mb-2">{t.nav.community}</h3>

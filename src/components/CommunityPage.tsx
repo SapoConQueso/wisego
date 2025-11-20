@@ -231,7 +231,7 @@ export function CommunityPage({ onNavigate, userSession }: CommunityPageProps) {
         ) : (
           <div className="space-y-4">
             {posts.map((post) => (
-              <Card key={post.id}>
+              <Card key={post.id} className="hover:shadow-lg transition-all duration-200 animate-smooth-fade-in">
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-3">

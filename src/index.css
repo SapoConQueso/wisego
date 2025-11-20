@@ -129,6 +129,10 @@ All colors MUST be HSL.
     @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
   }
 
+  .gradient-text-white {
+    @apply bg-gradient-to-r from-white via-primary-foreground to-accent bg-clip-text text-transparent;
+  }
+
   .hero-pattern {
     background-image: 
       radial-gradient(circle at 25% 25%, hsl(var(--accent)) 0%, transparent 25%),
