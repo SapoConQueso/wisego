@@ -35,12 +35,23 @@ export function WiseGoLogo({ size = "md", className = "" }: WiseGoLogoProps) {
       }
 
       // Check if user already has admin role
-      const { data: existingRole } = await supabase
+      const { data: existingRole, error: checkError } = await supabase
         .from('user_roles')
         .select('*')
         .eq('user_id', user.id)
         .eq('role', 'admin')
-        .single();
+        .maybeSingle();
+
+      if (checkError) {
+        console.error('Error checking role:', checkError);
+        toast({
+          title: "Error",
+          description: "Error al verificar roles: " + checkError.message,
+          variant: "destructive",
+        });
+        setClickCount(0);
+        return;
+      }
 
       if (existingRole) {
         toast({
@@ -60,9 +71,10 @@ export function WiseGoLogo({ size = "md", className = "" }: WiseGoLogoProps) {
         });
 
       if (error) {
+        console.error('Error granting admin:', error);
         toast({
           title: "Error",
-          description: "No se pudo otorgar el rol de admin",
+          description: "Error al otorgar rol: " + error.message,
           variant: "destructive",
         });
       } else {

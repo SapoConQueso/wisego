@@ -10,15 +10,21 @@ export function LanguageSelector() {
 
   return (
     <Select value={currentLanguage} onValueChange={changeLanguage}>
-      <SelectTrigger className="w-36 bg-accent/10 border-accent/30 text-foreground hover:bg-accent/20">
-        <Languages className="h-4 w-4 mr-2" />
-        <SelectValue />
+      <SelectTrigger className="w-40 bg-background border-primary/30 hover:border-primary/50 hover:bg-primary/5 transition-all duration-200">
+        <div className="flex items-center gap-2">
+          <Languages className="h-4 w-4 text-primary" />
+          <SelectValue />
+        </div>
       </SelectTrigger>
-      <SelectContent className="bg-card border border-border">
+      <SelectContent className="bg-card border border-border shadow-lg">
         {supportedLanguages.map((lang) => (
-          <SelectItem key={lang.code} value={lang.code}>
+          <SelectItem 
+            key={lang.code} 
+            value={lang.code}
+            className="hover:bg-primary/10 cursor-pointer transition-colors"
+          >
             <span className="flex items-center gap-2">
-              <span>{lang.flag}</span>
+              <span className="text-xl">{lang.flag}</span>
               <span className="font-medium">{lang.nativeName}</span>
             </span>
           </SelectItem>
