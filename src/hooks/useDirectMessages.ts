@@ -154,12 +154,32 @@ export const useDirectMessages = (userId?: string) => {
         description: "No se pudo enviar el mensaje",
         variant: "destructive",
       });
+      return false;
+    }
+    return true;
+  };
+
+  const deleteMessage = async (messageId: string) => {
+    const { error } = await supabase
+      .from('direct_messages')
+      .delete()
+      .eq('id', messageId)
+      .eq('sender_id', userId);
+
+    if (error) {
+      console.error('Error deleting message:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo eliminar el mensaje",
+        variant: "destructive",
+      });
+      return false;
     } else {
       toast({
-        title: "Mensaje enviado",
-        description: "Tu mensaje ha sido enviado exitosamente",
+        title: "Mensaje eliminado",
+        description: "El mensaje ha sido eliminado",
       });
-      fetchMessages();
+      return true;
     }
   };
 
@@ -187,6 +207,7 @@ export const useDirectMessages = (userId?: string) => {
     isLoading,
     sendMessage,
     markAsRead,
+    deleteMessage,
     getPartner,
     refetch: fetchMessages,
   };
