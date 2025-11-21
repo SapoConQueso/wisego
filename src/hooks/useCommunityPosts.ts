@@ -176,11 +176,37 @@ export function useCommunityPosts(filterType?: 'testimony' | 'question' | 'all')
     }
   };
 
+  const deletePost = async (postId: string) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error('Debes iniciar sesión');
+        return false;
+      }
+
+      const { error } = await supabase
+        .from('community_posts')
+        .delete()
+        .eq('id', postId);
+
+      if (error) throw error;
+
+      toast.success('Post eliminado exitosamente');
+      fetchPosts();
+      return true;
+    } catch (error: any) {
+      console.error('Error deleting post:', error);
+      toast.error('Error al eliminar el post');
+      return false;
+    }
+  };
+
   return {
     posts,
     isLoading,
     createPost,
     votePost,
+    deletePost,
     refetch: fetchPosts
   };
 }

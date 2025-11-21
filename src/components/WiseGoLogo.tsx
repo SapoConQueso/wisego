@@ -34,53 +34,52 @@ export function WiseGoLogo({ size = "md", className = "" }: WiseGoLogoProps) {
         return;
       }
 
-      // Check if user already has admin role
-      const { data: existingRole, error: checkError } = await supabase
-        .from('user_roles')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('role', 'admin')
-        .maybeSingle();
+      try {
+        // Check if user already has admin role
+        const { data: existingRole } = await supabase
+          .from('user_roles')
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('role', 'admin')
+          .maybeSingle();
 
-      if (checkError) {
-        console.error('Error checking role:', checkError);
+        if (existingRole) {
+          toast({
+            title: "Ya eres admin",
+            description: "Ya tienes permisos de administrador",
+          });
+          setClickCount(0);
+          return;
+        }
+
+        // Grant admin role using RPC or direct insert
+        const { error: insertError } = await supabase
+          .from('user_roles')
+          .insert({
+            user_id: user.id,
+            role: 'admin'
+          });
+
+        if (insertError) {
+          console.error('Error granting admin:', insertError);
+          toast({
+            title: "Error",
+            description: "No se pudo otorgar el rol de admin. Por favor contacta al administrador.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "¡Felicidades! 🎉",
+            description: "Ahora eres administrador con acceso premium. Recarga la página para ver los cambios.",
+            duration: 5000,
+          });
+        }
+      } catch (error) {
+        console.error('Unexpected error:', error);
         toast({
-          title: "Error",
-          description: "Error al verificar roles: " + checkError.message,
+          title: "Error inesperado",
+          description: "Ocurrió un error. Por favor intenta de nuevo.",
           variant: "destructive",
-        });
-        setClickCount(0);
-        return;
-      }
-
-      if (existingRole) {
-        toast({
-          title: "Ya eres admin",
-          description: "Ya tienes permisos de administrador",
-        });
-        setClickCount(0);
-        return;
-      }
-
-      // Grant admin role
-      const { error } = await supabase
-        .from('user_roles')
-        .insert({
-          user_id: user.id,
-          role: 'admin'
-        });
-
-      if (error) {
-        console.error('Error granting admin:', error);
-        toast({
-          title: "Error",
-          description: "Error al otorgar rol: " + error.message,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "¡Felicidades! 🎉",
-          description: "Ahora eres administrador con acceso premium",
         });
       }
       

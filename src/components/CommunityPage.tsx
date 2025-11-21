@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { WiseGoLogo } from "./WiseGoLogo";
 import { ThemeToggle } from "./ThemeToggle";
@@ -10,8 +10,10 @@ import {
   ChevronDown, 
   Plus,
   CheckCircle,
-  Clock
+  Clock,
+  Trash2
 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
@@ -37,13 +39,32 @@ export function CommunityPage({ onNavigate, userSession }: CommunityPageProps) {
   const [newPostUniversity, setNewPostUniversity] = useState("");
   const [newPostCareer, setNewPostCareer] = useState("");
   
+  const [isAdmin, setIsAdmin] = useState(false);
   const { toast } = useToast();
   const { currentLanguage } = useLanguage();
   const t = getTranslation(currentLanguage);
   
-  const { posts, isLoading, createPost, votePost } = useCommunityPosts(
+  const { posts, isLoading, createPost, votePost, deletePost } = useCommunityPosts(
     selectedFilter === 'all' ? undefined : selectedFilter
   );
+
+  useEffect(() => {
+    checkAdminRole();
+  }, []);
+
+  const checkAdminRole = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { data } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', user.id)
+      .eq('role', 'admin')
+      .maybeSingle();
+
+    setIsAdmin(!!data);
+  };
 
   const handleNewPost = async () => {
     if (userSession.isGuest) {
@@ -235,8 +256,8 @@ export function CommunityPage({ onNavigate, userSession }: CommunityPageProps) {
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-3">
-                      <Avatar>
-                        <AvatarFallback>
+                      <Avatar className="ring-2 ring-primary/20">
+                        <AvatarFallback className="bg-primary/10 text-primary font-semibold">
                           {(post.profiles?.full_name || post.profiles?.username || 'U')[0].toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
@@ -245,9 +266,9 @@ export function CommunityPage({ onNavigate, userSession }: CommunityPageProps) {
                           <span className="font-semibold">
                             {post.profiles?.full_name || post.profiles?.username || 'Usuario'}
                           </span>
-                          <Badge variant="secondary">{post.university_name}</Badge>
+                          <Badge variant="secondary" className="shadow-sm">{post.university_name}</Badge>
                           {post.post_type === 'testimony' && (
-                            <Badge variant="default" className="gap-1">
+                            <Badge variant="default" className="gap-1 shadow-sm">
                               <CheckCircle className="h-3 w-3" />
                               Testimonio
                             </Badge>
@@ -260,6 +281,20 @@ export function CommunityPage({ onNavigate, userSession }: CommunityPageProps) {
                         </div>
                       </div>
                     </div>
+                    {isAdmin && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => {
+                          if (confirm('¿Estás seguro de que quieres eliminar este post?')) {
+                            deletePost(post.id);
+                          }
+                        }}
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
                   </div>
                 </CardHeader>
                 <CardContent>
