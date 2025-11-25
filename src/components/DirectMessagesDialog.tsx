@@ -117,12 +117,12 @@ export function DirectMessagesDialog() {
           )}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl h-[600px] p-0 animate-smooth-scale border-2 border-primary/20 shadow-2xl">
+      <DialogContent className="max-w-2xl h-[600px] p-0 border border-border bg-card">
         <div className="flex h-full">
           {/* Conversations List */}
-          <div className={`${selectedConversation ? 'hidden md:flex' : 'flex'} flex-col w-full md:w-1/3 border-r border-border/50 bg-muted/30`}>
-            <DialogHeader className="p-4 border-b border-border/50 bg-background/80 backdrop-blur-sm">
-              <DialogTitle className="text-xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Mensajes</DialogTitle>
+          <div className={`${selectedConversation ? 'hidden md:flex' : 'flex'} flex-col w-full md:w-1/3 border-r border-border bg-background`}>
+            <DialogHeader className="p-4 border-b border-border bg-card">
+              <DialogTitle className="text-xl font-bold text-foreground">Mensajes</DialogTitle>
               <Input
                 placeholder="Buscar usuarios..."
                 value={searchQuery}
@@ -130,7 +130,7 @@ export function DirectMessagesDialog() {
                   setSearchQuery(e.target.value);
                   searchUsers(e.target.value);
                 }}
-                className="mt-2 border-primary/20 focus:border-primary/40 transition-colors"
+                className="mt-2 bg-background text-foreground border-border focus:border-primary focus:ring-1 focus:ring-primary/20"
               />
             </DialogHeader>
 
@@ -140,19 +140,19 @@ export function DirectMessagesDialog() {
                   {users.map(user => (
                     <button
                       key={user.user_id}
-                      className="w-full flex items-center gap-3 p-3 hover:bg-primary/10 rounded-lg transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] border border-transparent hover:border-primary/20"
+                      className="w-full flex items-center gap-3 p-3 hover:bg-accent rounded-lg transition-colors"
                       onClick={() => {
                         setSelectedConversation(user.user_id);
                         setSearchQuery("");
                         setUsers([]);
                       }}
                     >
-                      <Avatar className="ring-2 ring-primary/30 shadow-md">
+                      <Avatar className="border-2 border-primary/20">
                         <AvatarImage src={user.avatar_url} />
-                        <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10 font-semibold">{user.username?.[0]?.toUpperCase() || '?'}</AvatarFallback>
+                        <AvatarFallback className="bg-primary/10 text-primary font-semibold">{user.username?.[0]?.toUpperCase() || '?'}</AvatarFallback>
                       </Avatar>
                       <div className="flex-1 text-left">
-                        <p className="font-semibold text-sm">{user.full_name || user.username}</p>
+                        <p className="font-semibold text-sm text-foreground">{user.full_name || user.username}</p>
                         <p className="text-xs text-muted-foreground">@{user.username}</p>
                       </div>
                     </button>
@@ -163,19 +163,21 @@ export function DirectMessagesDialog() {
                   {conversations.map(conv => (
                     <button
                       key={conv.partnerId}
-                      className="w-full flex items-center gap-3 p-3 hover:bg-primary/10 rounded-lg transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] relative border border-transparent hover:border-primary/20"
+                      className={`w-full flex items-center gap-3 p-3 hover:bg-accent rounded-lg transition-colors relative ${
+                        selectedConversation === conv.partnerId ? 'bg-accent' : ''
+                      }`}
                       onClick={() => setSelectedConversation(conv.partnerId)}
                     >
-                      <Avatar className="ring-2 ring-primary/30 shadow-md">
+                      <Avatar className="border-2 border-primary/20">
                         <AvatarImage src={conv.partner?.avatar_url} />
-                        <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10 font-semibold">{conv.partner?.username?.[0]?.toUpperCase() || '?'}</AvatarFallback>
+                        <AvatarFallback className="bg-primary/10 text-primary font-semibold">{conv.partner?.username?.[0]?.toUpperCase() || '?'}</AvatarFallback>
                       </Avatar>
                       <div className="flex-1 text-left min-w-0">
-                        <p className="font-semibold text-sm truncate">{conv.partner?.full_name || conv.partner?.username}</p>
+                        <p className="font-semibold text-sm text-foreground truncate">{conv.partner?.full_name || conv.partner?.username}</p>
                         <p className="text-xs text-muted-foreground truncate">{conv.lastMessage?.message}</p>
                       </div>
                       {conv.unreadCount > 0 && (
-                        <Badge variant="destructive" className="h-6 w-6 p-0 flex items-center justify-center text-xs animate-pulse shadow-lg">
+                        <Badge variant="destructive" className="h-6 w-6 p-0 flex items-center justify-center text-xs">
                           {conv.unreadCount}
                         </Badge>
                       )}
@@ -193,26 +195,26 @@ export function DirectMessagesDialog() {
 
           {/* Chat Area */}
           {selectedConversation ? (
-            <div className="flex flex-col w-full md:w-2/3 bg-background/50 backdrop-blur-sm">
-              <div className="flex items-center gap-3 p-4 border-b border-border/50 bg-gradient-to-r from-primary/5 to-transparent">
+            <div className="flex flex-col w-full md:w-2/3 bg-background">
+              <div className="flex items-center gap-3 p-4 border-b border-border bg-card">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="md:hidden hover:bg-primary/10 transition-colors"
+                  className="md:hidden"
                   onClick={() => setSelectedConversation(null)}
                 >
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
                 {conversations.find(c => c.partnerId === selectedConversation)?.partner && (
                   <>
-                    <Avatar className="ring-2 ring-primary/40 shadow-lg">
+                    <Avatar className="border-2 border-primary/20">
                       <AvatarImage src={conversations.find(c => c.partnerId === selectedConversation)?.partner?.avatar_url} />
-                      <AvatarFallback className="bg-gradient-to-br from-primary/30 to-primary/10 text-primary font-bold text-lg">
+                      <AvatarFallback className="bg-primary/10 text-primary font-bold">
                         {conversations.find(c => c.partnerId === selectedConversation)?.partner?.username?.[0]?.toUpperCase() || '?'}
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="font-bold text-foreground text-lg">
+                      <p className="font-bold text-foreground">
                         {conversations.find(c => c.partnerId === selectedConversation)?.partner?.full_name || 
                          conversations.find(c => c.partnerId === selectedConversation)?.partner?.username}
                       </p>
@@ -221,31 +223,31 @@ export function DirectMessagesDialog() {
                 )}
               </div>
 
-              <ScrollArea className="flex-1 p-4 bg-gradient-to-b from-muted/20 to-transparent">
+              <ScrollArea className="flex-1 p-4 bg-muted/30">
                 {conversationMessages.map(msg => (
                   <div
                     key={msg.id}
-                    className={`mb-4 flex group ${msg.sender_id === currentUser?.id ? 'justify-end' : 'justify-start'} animate-smooth-fade-in`}
+                    className={`mb-4 flex group ${msg.sender_id === currentUser?.id ? 'justify-end' : 'justify-start'}`}
                   >
                     <div
-                      className={`max-w-[70%] rounded-2xl p-3 relative shadow-lg transition-all duration-300 hover:shadow-xl ${
+                      className={`max-w-[70%] rounded-2xl p-3 relative ${
                         msg.sender_id === currentUser?.id
-                          ? 'bg-gradient-to-br from-primary to-primary/80 text-primary-foreground'
-                          : 'bg-gradient-to-br from-muted to-muted/80 text-foreground border border-border/50'
+                          ? 'bg-primary text-primary-foreground'
+                          : 'bg-card text-foreground border border-border'
                       }`}
                     >
-                      <p className="text-sm break-words leading-relaxed">{msg.message}</p>
-                      <p className="text-xs opacity-70 mt-2 font-medium">
+                      <p className="text-sm break-words">{msg.message}</p>
+                      <p className={`text-xs mt-1 ${msg.sender_id === currentUser?.id ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
                         {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </p>
                       {msg.sender_id === currentUser?.id && (
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="absolute -top-2 -right-2 h-7 w-7 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-full shadow-lg hover:scale-110"
+                          className="absolute -top-2 -right-2 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-full"
                           onClick={() => handleDeleteMessage(msg.id)}
                         >
-                          <Trash2 className="h-3.5 w-3.5" />
+                          <Trash2 className="h-3 w-3" />
                         </Button>
                       )}
                     </div>
@@ -254,29 +256,29 @@ export function DirectMessagesDialog() {
                 <div ref={messagesEndRef} />
               </ScrollArea>
 
-              <div className="p-4 border-t border-border/50 flex gap-2 bg-gradient-to-t from-muted/30 to-transparent backdrop-blur-sm">
+              <div className="p-4 border-t border-border bg-card flex gap-2">
                 <Input
                   placeholder="Escribe un mensaje..."
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
-                  className="flex-1 border-primary/20 focus:border-primary/40 transition-colors shadow-sm"
+                  className="flex-1 bg-background text-foreground"
                 />
                 <Button 
                   onClick={handleSendMessage} 
                   size="icon"
                   disabled={!newMessage.trim()}
-                  className="shrink-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 active:scale-95"
+                  className="shrink-0"
                 >
                   <Send className="h-4 w-4" />
                 </Button>
               </div>
             </div>
           ) : (
-            <div className="hidden md:flex flex-1 items-center justify-center text-muted-foreground">
+            <div className="hidden md:flex flex-1 items-center justify-center text-muted-foreground bg-background">
               <div className="text-center">
-                <MessageCircle className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                <p>Selecciona una conversación</p>
+                <MessageCircle className="h-12 w-12 mx-auto mb-2 text-muted-foreground/50" />
+                <p className="text-foreground">Selecciona una conversación</p>
               </div>
             </div>
           )}
